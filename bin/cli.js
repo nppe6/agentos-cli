@@ -5,7 +5,7 @@ const packageJson = require('../package.json');
 const registerAgentCommands = require('../lib/commands/agent');
 
 program
-  .name('agent-cli')
+  .name('agentos-cli')
   .description('Inject Agent OS workflow files into existing projects.')
   .version(packageJson.version, '-v, --version', 'output the version number');
 

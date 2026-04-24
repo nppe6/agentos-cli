@@ -8,7 +8,7 @@ const agentInit = require('../lib/actions/agent-init');
 const { PACKAGE_SYNC_SCRIPT } = require('../lib/utils/agent-os');
 
 function createTempProject() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'agent-cli-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'agentos-cli-'));
 }
 
 function writeJson(filePath, value) {

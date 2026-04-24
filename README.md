@@ -1,4 +1,4 @@
-# agent-cli
+# agentos-cli
 
 用于将现有的 AI 工作流配置整套注入到任意现有项目。
 
@@ -15,15 +15,15 @@ npm install
 npm link
 ```
 
-全局安装后可直接使用 `agent-cli`。
-如果 PowerShell 拦截脚本，可改用 `agent-cli.cmd`。
+全局安装后可直接使用 `agentos-cli`。
+如果 PowerShell 拦截脚本，可改用 `agentos-cli.cmd`。
 
 ## 命令说明
 
 ```bash
-agent-cli -h
-agent-cli -v
-agent-cli agent init [target]
+agentos-cli -h
+agentos-cli -v
+agentos-cli agent init [target]
 ```
 
 - `-h, --help`：查看帮助信息。
@@ -58,14 +58,14 @@ agent-cli agent init [target]
 ## 示例
 
 ```bash
-agent-cli agent init
-agent-cli agent init D:\work\easy\test
-agent-cli agent init -t D:\work\easy\test --force
+agentos-cli agent init
+agentos-cli agent init D:\work\easy\test
+agentos-cli agent init -t D:\work\easy\test --force
 ```
 
 ## 发布与更新
 
 - 本地开发完成后，可重新执行 `npm link`，全局命令会同步到最新代码。
 - 如果后续发布到 npm，建议先更新 `package.json` 中的 `version`。
-- 已安装全局包的机器可通过 `npm update -g agent-cli` 获取新版本。
-- 如果只是不再需要本地全局链接，可执行 `npm unlink -g agent-cli`。
+- 已安装全局包的机器可通过 `npm update -g agentos-cli` 获取新版本。
+- 如果只是不再需要本地全局链接，可执行 `npm unlink -g agentos-cli`。

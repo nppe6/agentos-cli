@@ -1,10 +1,10 @@
 {
-  "name": "agent-cli",
+  "name": "agentos-cli",
   "version": "1.0.0",
   "description": "CLI for injecting Agent OS workflow files into existing projects.",
   "main": "bin/cli.js",
   "bin": {
-    "agent-cli": "bin/cli.js"
+    "agentos-cli": "bin/cli.js"
   },
   "scripts": {
     "test": "node --test"
