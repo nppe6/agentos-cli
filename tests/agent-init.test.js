@@ -37,6 +37,10 @@ test('injects full workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'scripts', 'search.py')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'data')), true);
 
   const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
   assert.equal(packageJson.scripts['agent-os:sync'], PACKAGE_SYNC_SCRIPT);
@@ -47,6 +51,7 @@ test('injects full workflow into a clean project', async () => {
   assert.match(agentsContent, /内置降级流程/);
   assert.match(agentsContent, /项目上下文初始化/);
   assert.match(agentsContent, /Spec \/ Task 约定/);
+  assert.match(agentsContent, /ui-ux-pro-max/);
   assert.match(claudeContent, /优先使用 `Compound Engineering`/);
   assert.match(claudeContent, /内置降级流程/);
 });

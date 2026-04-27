@@ -37,6 +37,7 @@
 ## 项目级 skills 触发
 
 - 设计稿 / MasterGo / 视觉还原 / 切图 / 设计转代码：`mastergo-to-code`
+- UI/UX / 页面设计 / 视觉优化 / 交互体验 / 响应式 / 可访问性 / 表单表格图表体验：`ui-ux-pro-max`
 - Vue 开发默认：`vue-best-practices`
 - Vue 路由：`vue-router-best-practices`
 - Vue 状态管理：`vue-pinia-best-practices`
