@@ -29,7 +29,7 @@ test('injects full workflow into a clean project', async () => {
     }
   });
 
-  await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track' });
+  await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
 
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
@@ -62,7 +62,7 @@ test('aborts when overwrite is rejected', async () => {
 
   const result = await agentInit(
     projectDirectory,
-    { preset: 'vue', gitMode: 'track' },
+    { preset: 'vue', gitMode: 'track', tools: ['codex', 'claude'] },
     { promptOverwrite: async () => false }
   );
 
@@ -78,7 +78,7 @@ test('overwrites existing workflow files after confirmation', async () => {
 
   const result = await agentInit(
     projectDirectory,
-    { preset: 'vue', gitMode: 'track' },
+    { preset: 'vue', gitMode: 'track', tools: ['codex', 'claude'] },
     { promptOverwrite: async () => true }
   );
 
@@ -93,7 +93,7 @@ test('appends workflow ignore block at the end of .gitignore', async () => {
   const projectDirectory = createTempProject();
   fs.writeFileSync(path.join(projectDirectory, '.gitignore'), 'dist/\ncoverage/\n', 'utf8');
 
-  const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'ignore' });
+  const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'ignore', tools: ['codex', 'claude'] });
 
   assert.equal(result.gitMode, 'ignore');
   const gitignoreContent = fs.readFileSync(path.join(projectDirectory, '.gitignore'), 'utf8');
@@ -125,7 +125,7 @@ test('track mode only removes the managed block from .gitignore', async () => {
     'utf8'
   );
 
-  const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track' });
+  const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
 
   assert.equal(result.gitMode, 'track');
   const gitignoreContent = fs.readFileSync(path.join(projectDirectory, '.gitignore'), 'utf8');
@@ -137,7 +137,7 @@ test('prompts for git mode when it is not provided', async () => {
 
   const result = await agentInit(
     projectDirectory,
-    { preset: 'vue', force: true },
+    { preset: 'vue', force: true, tools: ['codex', 'claude'] },
     { promptGitMode: async () => 'ignore' }
   );
 
@@ -155,7 +155,7 @@ test('warns that ignore mode is for personal temporary workflows', async () => {
   };
 
   try {
-    const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'ignore' });
+    const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'ignore', tools: ['codex', 'claude'] });
     assert.equal(result.gitMode, 'ignore');
   }
   finally {
@@ -163,6 +163,113 @@ test('warns that ignore mode is for personal temporary workflows', async () => {
   }
 
   assert.match(logs.join('\n'), /团队项目通常建议提交 AI 工作流文件/);
+});
+
+test('injects only codex files when codex is the only selected tool', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'demo-project',
+    version: '1.0.0'
+  });
+
+  const result = await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex'] });
+
+  assert.deepEqual(result.tools, ['codex']);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts')), false);
+
+  const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
+  assert.equal(packageJson.scripts, undefined);
+});
+
+test('ignore mode only writes selected tool entries', async () => {
+  const projectDirectory = createTempProject();
+
+  await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'ignore', tools: ['codex'] });
+
+  const gitignoreContent = fs.readFileSync(path.join(projectDirectory, '.gitignore'), 'utf8');
+  assert.match(gitignoreContent, /AGENTS\.md/);
+  assert.match(gitignoreContent, /\.codex\//);
+  assert.doesNotMatch(gitignoreContent, /CLAUDE\.md/);
+  assert.doesNotMatch(gitignoreContent, /\.claude\//);
+  assert.doesNotMatch(gitignoreContent, /\.agent-os\//);
+  assert.doesNotMatch(gitignoreContent, /scripts\/sync-agent-os\.ps1/);
+});
+
+test('removing unified mode preserves unrelated package scripts', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'demo-project',
+    version: '1.0.0',
+    scripts: {
+      dev: 'vite'
+    }
+  });
+
+  await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
+  await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex'] });
+
+  const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
+  assert.deepEqual(packageJson.scripts, { dev: 'vite' });
+});
+
+test('reinitializing from both tools to codex removes unselected managed files', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'demo-project',
+    version: '1.0.0'
+  });
+  const logs = [];
+  const originalLog = console.log;
+
+  await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
+
+  console.log = (message) => {
+    logs.push(String(message));
+  };
+
+  try {
+    await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex'] });
+  }
+  finally {
+    console.log = originalLog;
+  }
+
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts')), false);
+
+  const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
+  assert.equal(packageJson.scripts, undefined);
+  assert.match(logs.join('\n'), /未选择的受管内容已删除/);
+  assert.match(logs.join('\n'), /CLAUDE\.md/);
+  assert.match(logs.join('\n'), /\.agent-os\//);
+});
+
+test('prompts for selected tools when tools are not provided', async () => {
+  const projectDirectory = createTempProject();
+
+  const result = await agentInit(
+    projectDirectory,
+    { preset: 'vue', force: true, gitMode: 'track' },
+    { promptTools: async () => ['claude'] }
+  );
+
+  assert.deepEqual(result.tools, ['claude']);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
 });
 
 function escapeRegExp(value) {
