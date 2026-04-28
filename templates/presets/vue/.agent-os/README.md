@@ -1,11 +1,13 @@
 # Agent OS
 
-`.agent-os` 是这个仓库里 Claude 和 Codex 工作流文件的唯一项目级源目录。
+`.agent-os` 只在多工具注入模式下生成，是 Claude 和 Codex 工作流文件的唯一项目级源目录。
+
+单选 Codex 或单选 Claude Code 时，不生成 `.agent-os` 和同步脚本；对应工具入口文件会直接承载所需规则。
 
 ## 管理内容
 
 - `rules/AGENTS.shared.md`
-  - 共享规则的唯一真源
+  - 多工具模式下共享规则的唯一真源
 - `templates/CLAUDE.md`
   - 面向 Claude 的精简入口模板
 - `skills/`
@@ -13,7 +15,7 @@
 
 ## 同步方式
 
-修改 `.agent-os` 下任意文件后，执行 `pnpm agent-os:sync`。
+多工具模式下，修改 `.agent-os` 下任意文件后，执行 `pnpm agent-os:sync`。
 
 同步命令会更新：
 

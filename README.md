@@ -6,7 +6,7 @@
 
 - 仅适用于Vue项目中进行注入使用
 - 项目不是从模板新建的
-- 需要快速注入 `AGENTS.md`、`.agent-os`、`.claude`、`.codex`
+- 需要按选择快速注入 Codex、Claude Code 或多工具统一管理配置
 - 接受整套覆盖，不做内容合并
 
 ## 安装
@@ -84,7 +84,7 @@ agentos-cli agent init [target]
 - 确认后执行全量覆盖，不做合并；未选择的受管配置会被删除，并在完成时提示
 - 选择 `ignore` 时，只会把本次选择对应的忽略规则增量追加到目标项目 `.gitignore` 末尾
 - 选择 `track` 时，只会移除 `agentos-cli` 自己追加的忽略块
-- 注入后的 `AGENTS.md` 优先使用 `Compound Engineering`；如果本机没有全局插件，会按内置降级流程继续工作
+- 注入后的工具规则优先使用 `Compound Engineering`；如果本机没有全局插件，会按内置降级流程继续工作
 - 只有选择两个以上工具时才生成同步脚本；同步脚本内部会校验受管文件和项目级 skills 是否生成成功，不额外提供 `doctor/check` 命令
 
 ## 示例

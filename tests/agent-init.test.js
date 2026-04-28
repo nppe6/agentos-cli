@@ -5,6 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const agentInit = require('../lib/actions/agent-init');
+const { selectTools } = agentInit._private;
 const { PACKAGE_SYNC_SCRIPT } = require('../lib/utils/agent-os');
 const {
   GITIGNORE_BLOCK_END,
@@ -52,6 +53,8 @@ test('injects full workflow into a clean project', async () => {
   assert.match(agentsContent, /项目上下文初始化/);
   assert.match(agentsContent, /Spec \/ Task 约定/);
   assert.match(agentsContent, /ui-ux-pro-max/);
+  assert.doesNotMatch(agentsContent, /注入模式/);
+  assert.doesNotMatch(agentsContent, /单选|多选/);
   assert.match(claudeContent, /优先使用 `Compound Engineering`/);
   assert.match(claudeContent, /内置降级流程/);
 });
@@ -270,6 +273,48 @@ test('prompts for selected tools when tools are not provided', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+
+  const claudeContent = fs.readFileSync(path.join(projectDirectory, 'CLAUDE.md'), 'utf8');
+  assert.match(claudeContent, /# 项目 Agent 规则/);
+  assert.match(claudeContent, /内置降级流程/);
+  assert.doesNotMatch(claudeContent, /注入模式/);
+  assert.doesNotMatch(claudeContent, /单选|多选/);
+  assert.doesNotMatch(claudeContent, /@AGENTS\.md/);
+});
+
+test('tool prompt starts with no default selections and concise labels', async () => {
+  let capturedQuestions;
+  const tools = await selectTools(() => async (questions) => {
+    capturedQuestions = questions;
+    return { tools: ['codex'] };
+  });
+
+  assert.deepEqual(tools, ['codex']);
+  assert.equal(capturedQuestions[0].type, 'checkbox');
+  assert.deepEqual(capturedQuestions[0].choices.map((choice) => choice.name), ['Codex', 'Claude Code']);
+  assert.equal(capturedQuestions[0].choices.some((choice) => choice.checked), false);
+});
+
+test('prints generated file summary in blue after completion', async () => {
+  const projectDirectory = createTempProject();
+  const logs = [];
+  const originalLog = console.log;
+
+  console.log = (message) => {
+    logs.push(String(message));
+  };
+
+  try {
+    await agentInit(projectDirectory, { preset: 'vue', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
+  }
+  finally {
+    console.log = originalLog;
+  }
+
+  const output = logs.join('\n');
+  assert.match(output, /\x1b\[34m生成内容：Codex：AGENTS\.md、\.codex\//);
+  assert.match(output, /\x1b\[34m生成内容：Claude Code：CLAUDE\.md、\.claude\//);
+  assert.match(output, /\x1b\[34m生成内容：统一管理：\.agent-os\/、scripts\/sync-agent-os\.ps1/);
 });
 
 function escapeRegExp(value) {
