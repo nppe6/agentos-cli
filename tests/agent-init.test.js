@@ -5,7 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const agentInit = require('../lib/actions/agent-init');
-const { selectTools } = agentInit._private;
+const { renderGeneratedTree, selectTools } = agentInit._private;
 const { PACKAGE_SYNC_SCRIPT } = require('../lib/utils/agent-os');
 const {
   GITIGNORE_BLOCK_END,
@@ -295,7 +295,21 @@ test('tool prompt starts with no default selections and concise labels', async (
   assert.equal(capturedQuestions[0].choices.some((choice) => choice.checked), false);
 });
 
-test('prints generated file summary in blue after completion', async () => {
+test('renders generated file summary as a readable tree', () => {
+  assert.equal(renderGeneratedTree(['codex', 'claude'], true), [
+    '├─ Codex',
+    '│  ├─ AGENTS.md',
+    '│  └─ .codex/',
+    '├─ Claude Code',
+    '│  ├─ CLAUDE.md',
+    '│  └─ .claude/',
+    '└─ 统一管理',
+    '   ├─ .agent-os/',
+    '   └─ scripts/sync-agent-os.ps1'
+  ].join('\n'));
+});
+
+test('prints generated file summary tree in blue after completion', async () => {
   const projectDirectory = createTempProject();
   const logs = [];
   const originalLog = console.log;
@@ -312,9 +326,11 @@ test('prints generated file summary in blue after completion', async () => {
   }
 
   const output = logs.join('\n');
-  assert.match(output, /\x1b\[34m生成内容：Codex：AGENTS\.md、\.codex\//);
-  assert.match(output, /\x1b\[34m生成内容：Claude Code：CLAUDE\.md、\.claude\//);
-  assert.match(output, /\x1b\[34m生成内容：统一管理：\.agent-os\/、scripts\/sync-agent-os\.ps1/);
+  assert.match(output, /\x1b\[34m生成内容：\n├─ Codex/);
+  assert.match(output, /│  ├─ AGENTS\.md/);
+  assert.match(output, /├─ Claude Code/);
+  assert.match(output, /└─ 统一管理/);
+  assert.match(output, /   └─ scripts\/sync-agent-os\.ps1\x1b\[0m/);
 });
 
 function escapeRegExp(value) {

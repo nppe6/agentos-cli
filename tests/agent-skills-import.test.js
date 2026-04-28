@@ -5,6 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const importSkills = require('../lib/actions/agent-skills-import');
+const { renderTree } = importSkills._private;
 
 function createTempProject() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'agentos-cli-skills-'));
@@ -42,6 +43,14 @@ test('imports a skill collection into .agent-os skills in auto mode', async () =
   assert.equal(result.imported.length, 2);
   assert.equal(fs.readFileSync(path.join(targetDirectory, '.agent-os', 'skills', 'alpha', 'SKILL.md'), 'utf8'), '# Alpha');
   assert.equal(fs.existsSync(path.join(targetDirectory, '.codex', 'skills', 'alpha')), false);
+});
+
+test('renders discovered skills as a readable tree', () => {
+  assert.equal(renderTree(['alpha', 'beta', 'gamma']), [
+    '├─ alpha',
+    '├─ beta',
+    '└─ gamma'
+  ].join('\n'));
 });
 
 test('imports a single skill directory into existing single-tool destinations', async () => {
