@@ -19,7 +19,7 @@
 agentos-cli agent skills import <source>
 ```
 
-默认是增量导入，遇到同名 skill 会跳过；需要覆盖时使用：
+未指定 `--mode` 时会先确认导入位置，再选择增量或覆盖；需要直接覆盖时使用：
 
 ```bash
 agentos-cli agent skills import <source> --mode overwrite

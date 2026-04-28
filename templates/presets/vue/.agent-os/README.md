@@ -36,7 +36,7 @@
 agentos-cli agent skills import <source>
 ```
 
-默认增量导入，同名 skill 会跳过；需要覆盖时加 `--mode overwrite`。导入完成后执行 `pnpm agent-os:sync`，把 `.agent-os/skills/` 同步到已启用的 Agent 工具目录。
+未指定 `--mode` 时会先确认导入位置，再选择增量或覆盖；需要直接覆盖时加 `--mode overwrite`。导入完成后执行 `pnpm agent-os:sync`，把 `.agent-os/skills/` 同步到已启用的 Agent 工具目录。
 
 ## Compound Engineering 依赖边界
 

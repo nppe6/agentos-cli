@@ -84,6 +84,53 @@ test('force overwrites existing project skills', async () => {
   assert.equal(fs.readFileSync(path.join(targetDirectory, '.agent-os', 'skills', 'alpha', 'SKILL.md'), 'utf8'), '# New Alpha');
 });
 
+test('interactive import confirms destination and asks for mode', async () => {
+  const sourceDirectory = createTempProject();
+  const targetDirectory = createTempProject();
+  const promptedQuestions = [];
+  writeSkill(sourceDirectory, 'alpha', '# New Alpha');
+  writeSkill(path.join(targetDirectory, '.agent-os', 'skills'), 'alpha', '# Old Alpha');
+
+  const promptFactory = () => async (questions) => {
+    promptedQuestions.push(...questions);
+
+    if (questions[0].name === 'confirmed') {
+      return { confirmed: true };
+    }
+
+    return { mode: 'overwrite' };
+  };
+
+  const result = await runSilently(() => importSkills(sourceDirectory, {
+    interactive: true,
+    promptFactory,
+    target: targetDirectory
+  }));
+
+  assert.equal(result.imported.length, 1);
+  assert.equal(result.overwritten.length, 1);
+  assert.deepEqual(promptedQuestions.map((question) => question.name), ['confirmed', 'mode']);
+  assert.equal(fs.readFileSync(path.join(targetDirectory, '.agent-os', 'skills', 'alpha', 'SKILL.md'), 'utf8'), '# New Alpha');
+});
+
+test('interactive import can be cancelled before writing', async () => {
+  const sourceDirectory = createTempProject();
+  const targetDirectory = createTempProject();
+  writeSkill(sourceDirectory, 'alpha', '# Alpha');
+  fs.mkdirSync(path.join(targetDirectory, '.agent-os', 'skills'), { recursive: true });
+
+  const promptFactory = () => async () => ({ confirmed: false });
+
+  const result = await runSilently(() => importSkills(sourceDirectory, {
+    interactive: true,
+    promptFactory,
+    target: targetDirectory
+  }));
+
+  assert.equal(result.aborted, true);
+  assert.equal(fs.existsSync(path.join(targetDirectory, '.agent-os', 'skills', 'alpha')), false);
+});
+
 test('explicit destination creates the requested skills directory', async () => {
   const sourceDirectory = createTempProject();
   const targetDirectory = createTempProject();

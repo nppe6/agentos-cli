@@ -109,13 +109,15 @@ agentos-cli agent skills import <source> [target]
 
 - `<source>`：已有 skill 目录，或包含多个 skill 子目录的 skills 根目录；每个 skill 目录需要包含 `SKILL.md`
 - `[target]` / `-t, --target <path>`：目标项目目录，默认当前目录
-- `--mode <skip|overwrite>`：导入模式，默认 `skip`，已有同名 skill 时跳过
+- `--mode <skip|overwrite>`：导入模式；未传时会交互选择，`skip` 表示已有同名 skill 时跳过
 - `-f, --force`：等价于 `--mode overwrite`
 - `--to <auto|agent-os|codex|claude>`：导入目标，默认 `auto`
 
 `auto` 模式下，如果目标项目存在 `.agent-os/skills`，会优先导入到这里，适合多工具统一管理；导入后再执行 `pnpm agent-os:sync` 同步到已启用工具目录。单工具项目没有 `.agent-os/` 时，会导入到已存在的 `.codex/skills` 或 `.claude/skills`。
 
 推荐先执行 `agent init` 再执行 `agent skills import`，这样 `auto` 可以自动识别当前项目结构；如果需要在未初始化项目中提前导入 skills，则必须显式指定 `--to agent-os`、`--to codex` 或 `--to claude`。
+
+只传一个路径时，这个路径表示 skills 来源目录，目标项目默认为当前目录；传两个路径时，第一个路径表示来源目录，第二个路径表示目标项目目录。
 
 ```bash
 agentos-cli agent skills import D:\old-project\.claude\skills -t D:\work\easy\test
