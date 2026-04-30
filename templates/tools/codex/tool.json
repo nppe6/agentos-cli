@@ -1,0 +1,9 @@
+{
+  "name": "codex",
+  "entryFile": "AGENTS.md",
+  "skillsDir": ".codex/skills",
+  "optionalDirs": [
+    ".codex/prompts",
+    ".codex/agents"
+  ]
+}

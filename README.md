@@ -57,7 +57,7 @@ agentos-cli agent skills import <source> [target]
 
 - `[target]`：目标目录，默认当前目录
 - `-t, --target <path>`：显式指定目标目录
-- `-p, --preset <preset>`：选择预设，当前仅支持 `vue`
+- `--stack <stack>`：选择技术栈能力包，默认 `core`，可选 `vue`
 - `--tools <tools>`：指定要注入的工具，使用逗号分隔，支持 `codex`、`claude`
 - `--git-mode <track|ignore>`：指定注入后的文件是提交到 Git 还是追加到 `.gitignore`
 - `-f, --force`：发现冲突时直接覆盖
