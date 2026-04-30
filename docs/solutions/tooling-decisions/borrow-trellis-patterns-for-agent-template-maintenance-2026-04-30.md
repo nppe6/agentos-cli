@@ -58,7 +58,7 @@ Borrowing the update and memory patterns gives `agentos-cli` a path to remain sm
 
 ## When to Apply
 
-- When changing `lib/utils/agent-os.js`, `lib/actions/agent-init.js`, or `scripts/sync-agent-os.ps1`.
+- When changing `lib/utils/agent-os.js`, `lib/actions/agent-init.js`, or future sync/update commands.
 - When adding a new supported agent tool beyond Codex and Claude Code.
 - When editing generated template paths inside skills, especially `mastergo-to-code`.
 - When splitting or simplifying shared rules under `templates/core` or stack-specific rules under `templates/stacks/vue`.

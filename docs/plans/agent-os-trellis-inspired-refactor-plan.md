@@ -394,7 +394,7 @@ Files likely affected:
 
 Decision:
 
-Make `agentos-cli sync` the canonical way to regenerate platform projections. Keep any generated PowerShell script as a wrapper only, or remove it after migration.
+Make `agentos-cli sync` the canonical way to regenerate platform projections. Do not keep a generated PowerShell sync script; old `scripts/sync-agent-os.ps1` should be treated as legacy managed content and removed during major-version initialization.
 
 Test scenarios:
 

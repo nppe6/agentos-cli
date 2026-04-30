@@ -6,7 +6,6 @@ const assert = require('node:assert/strict');
 
 const agentInit = require('../lib/actions/agent-init');
 const { renderGeneratedTree, renderTree, selectTools } = agentInit._private;
-const { PACKAGE_SYNC_SCRIPT } = require('../lib/utils/agent-os');
 const {
   GITIGNORE_BLOCK_END,
   GITIGNORE_BLOCK_START
@@ -37,14 +36,15 @@ test('injects full workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'scripts', 'search.py')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'data')), true);
 
   const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
-  assert.equal(packageJson.scripts['agent-os:sync'], PACKAGE_SYNC_SCRIPT);
+  assert.equal(packageJson.scripts['agent-os:sync'], undefined);
+  assert.equal(packageJson.scripts.dev, 'vite');
   assert.equal(fs.existsSync(path.join(projectDirectory, '.gitignore')), false);
 
   const agentsContent = fs.readFileSync(path.join(projectDirectory, 'AGENTS.md'), 'utf8');
@@ -126,7 +126,7 @@ test('appends workflow ignore block at the end of .gitignore', async () => {
   assert.match(gitignoreContent, /^dist\/\ncoverage\/\n\n/m);
   assert.match(gitignoreContent, new RegExp(escapeRegExp(GITIGNORE_BLOCK_START)));
   assert.match(gitignoreContent, /AGENTS\.md/);
-  assert.match(gitignoreContent, /scripts\/sync-agent-os\.ps1/);
+  assert.doesNotMatch(gitignoreContent, /scripts\/sync-agent-os\.ps1/);
   assert.match(gitignoreContent, new RegExp(escapeRegExp(GITIGNORE_BLOCK_END)));
 });
 
@@ -156,6 +156,30 @@ test('track mode only removes the managed block from .gitignore', async () => {
   assert.equal(result.gitMode, 'track');
   const gitignoreContent = fs.readFileSync(path.join(projectDirectory, '.gitignore'), 'utf8');
   assert.equal(gitignoreContent, 'dist/\ncoverage/\n');
+});
+
+test('removes legacy sync script and package script during init', async () => {
+  const projectDirectory = createTempProject();
+  const scriptsDirectory = path.join(projectDirectory, 'scripts');
+  fs.mkdirSync(scriptsDirectory, { recursive: true });
+  fs.writeFileSync(path.join(scriptsDirectory, 'sync-agent-os.ps1'), 'legacy', 'utf8');
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'demo-project',
+    version: '1.0.0',
+    scripts: {
+      dev: 'vite',
+      'agent-os:sync': 'powershell -ExecutionPolicy Bypass -File .\\scripts\\sync-agent-os.ps1'
+    }
+  });
+
+  const result = await agentInit(projectDirectory, { stack: 'vue', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
+
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
+  assert.equal(fs.existsSync(scriptsDirectory), false);
+  assert.equal(result.packageUpdated, true);
+
+  const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
+  assert.deepEqual(packageJson.scripts, { dev: 'vite' });
 });
 
 test('prompts for git mode when it is not provided', async () => {
@@ -334,8 +358,7 @@ test('renders generated file summary as a readable tree', () => {
     '│  ├─ CLAUDE.md',
     '│  └─ .claude/',
     '└─ 统一管理',
-    '   ├─ .agent-os/',
-    '   └─ scripts/sync-agent-os.ps1'
+    '   └─ .agent-os/'
   ].join('\n'));
 });
 
@@ -360,7 +383,7 @@ test('prints generated file summary tree in blue after completion', async () => 
   assert.match(output, /│  ├─ AGENTS\.md/);
   assert.match(output, /├─ Claude Code/);
   assert.match(output, /└─ 统一管理/);
-  assert.match(output, /   └─ scripts\/sync-agent-os\.ps1\x1b\[0m/);
+  assert.match(output, /   └─ \.agent-os\/\x1b\[0m/);
 });
 
 function escapeRegExp(value) {

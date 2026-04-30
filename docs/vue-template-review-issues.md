@@ -14,7 +14,7 @@
   - 影响：干净 Vue 项目会缺 `tsx`、`dotenv`、`minio` 或缺 `.env.local` OSS 配置而失败。
   - 建议：明确依赖安装方式；或将资源处理改成不强依赖 OSS，先本地落盘，大图上传作为可选路径。
 
-- [ ] 同步脚本会删除工具 skills 目录中的额外 skill，但文档说明不足
+- [x] 同步脚本会删除工具 skills 目录中的额外 skill，但文档说明不足
   - 证据：`scripts/sync-agent-os.ps1` 的 `Remove-StaleEntries` 会镜像清理 `.claude/skills` 和 `.codex/skills` 中源目录不存在的条目；`.agent-os/README.md` 表述为不会主动清理 `.claude/`、`.codex/` 下额外文件，容易误导。
   - 影响：用户手动放在 `.codex/skills` 或 `.claude/skills` 的团队 skill 可能被 `pnpm agent-os:sync` 删除。
   - 建议：文档明确“skills 目录是镜像目录”；要求自定义 skill 先导入 `.agent-os/skills`，再同步。
@@ -56,7 +56,7 @@
 - [ ] 同步命令文档默认只写 `pnpm agent-os:sync`
   - 证据：`.agent-os/README.md` 多处要求执行 `pnpm agent-os:sync`；实际 package script 不依赖 pnpm。
   - 影响：npm/yarn 项目或未安装 pnpm 的机器上，用户可能不知道替代命令。
-  - 建议：补充 `npm run agent-os:sync` / `yarn agent-os:sync`。
+  - 处理：大版本重构后不再生成 `sync-agent-os.ps1`，也不再写入 `scripts.agent-os:sync`；后续同步应由 CLI 命令实现。
 
 - [ ] `ui-ux-pro-max` 能力数量描述漂移
   - 证据：`SKILL.md` 写 `10 stacks`，平台模板和实际 `data/stacks` 显示 16 个 stack。
@@ -65,5 +65,4 @@
 
 ## 已确认无问题
 
-- 发布包范围初步可覆盖模板文件：审查中通过 `npm pack --dry-run` 确认 `.agent-os`、`scripts/sync-agent-os.ps1` 和 reference 文件会进入 tarball，暂未发现隐藏模板目录被漏发的证据。
-
+- 发布包范围初步可覆盖模板文件：审查中通过 `npm pack --dry-run` 确认 `.agent-os` 和 reference 文件会进入 tarball，暂未发现隐藏模板目录被漏发的证据。
