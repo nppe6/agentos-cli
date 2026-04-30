@@ -5,6 +5,7 @@ status: active
 origin:
   - docs/solutions/tooling-decisions/borrow-trellis-patterns-for-agent-template-maintenance-2026-04-30.md
   - docs/vue-template-review-issues.md
+  - docs/trellis-deep-analysis-and-current-gaps.md
 ---
 
 # Agent OS Trellis-Inspired Refactor Plan
@@ -22,6 +23,28 @@ The refactor should improve:
 - Synchronization model: generate Codex and Claude projections from `.agent-os`, not through a user-maintained explanatory sync script.
 - Upgrade safety: record template provenance and hashes so updates do not blindly overwrite user edits.
 - Extensibility: Vue becomes the first optional stack pack, not the only preset.
+
+## Current Reality Check
+
+Follow-up analysis in `docs/trellis-deep-analysis-and-current-gaps.md` found that the repository already has the right high-level directory shape (`core / stacks / tools`), but implementation is still mostly a template copier.
+
+The most important gaps before the next implementation phase:
+
+- `.agent-os` is only installed for multi-tool setups, so single-tool installs do not actually have the declared source of truth.
+- `tool-layouts.js` is metadata-only and cannot yet own projection, managed paths, update collection, or platform-specific behavior.
+- there is no real manifest or template hash tracking, so future updates cannot safely tell template changes from user edits.
+- conflict handling deletes whole managed directories, which is risky once users add skills, prompts, hooks, commands, or settings.
+- `doctor`, `sync`, and `update --dry-run` are still plan items, not implemented lifecycle commands.
+
+Therefore, the next phase should prioritize lifecycle safety over more template expansion.
+
+First lifecycle foundation changes have now landed in code:
+
+- `agent init` always writes `.agent-os` as the source of truth, even when only one tool is selected.
+- init writes `.agent-os/manifest.json` and `.agent-os/template-hashes.json`.
+- tool layouts now expose managed paths for future projection/update ownership.
+- `agent doctor` provides a read-only installation health check.
+- `agent sync --dry-run` previews projection regeneration, and `agent sync` regenerates selected tool projections from `.agent-os`.
 
 ## Product Direction
 

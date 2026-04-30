@@ -68,7 +68,9 @@ test('injects core-only workflow when the core stack is selected', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'project-context', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'implementation', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max')), false);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os', 'manifest.json')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os', 'template-hashes.json')), true);
 });
 
 test('stack option can install the vue stack through the layered template path', async () => {
@@ -79,7 +81,7 @@ test('stack option can install the vue stack through the layered template path',
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'vue-best-practices', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), true);
 });
 
 test('aborts when overwrite is rejected', async () => {
@@ -229,7 +231,7 @@ test('injects only codex files when codex is the only selected tool', async () =
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude')), false);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts')), false);
 
@@ -247,7 +249,7 @@ test('ignore mode only writes selected tool entries', async () => {
   assert.match(gitignoreContent, /\.codex\//);
   assert.doesNotMatch(gitignoreContent, /CLAUDE\.md/);
   assert.doesNotMatch(gitignoreContent, /\.claude\//);
-  assert.doesNotMatch(gitignoreContent, /\.agent-os\//);
+  assert.match(gitignoreContent, /\.agent-os\//);
   assert.doesNotMatch(gitignoreContent, /scripts\/sync-agent-os\.ps1/);
 });
 
@@ -294,7 +296,7 @@ test('reinitializing from both tools to codex removes unselected managed files',
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude')), false);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts')), false);
 
@@ -302,7 +304,7 @@ test('reinitializing from both tools to codex removes unselected managed files',
   assert.equal(packageJson.scripts, undefined);
   assert.match(logs.join('\n'), /未选择的受管内容已删除/);
   assert.match(logs.join('\n'), /CLAUDE\.md/);
-  assert.match(logs.join('\n'), /\.agent-os\//);
+  assert.doesNotMatch(logs.join('\n'), /未选择的受管内容已删除：[\s\S]*\.agent-os\//);
 });
 
 test('prompts for selected tools when tools are not provided', async () => {
@@ -319,14 +321,13 @@ test('prompts for selected tools when tools are not provided', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex')), false);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), true);
 
   const claudeContent = fs.readFileSync(path.join(projectDirectory, 'CLAUDE.md'), 'utf8');
-  assert.match(claudeContent, /# 项目 Agent 规则/);
-  assert.match(claudeContent, /内置降级流程/);
+  assert.match(claudeContent, /@AGENTS\.md/);
+  assert.match(claudeContent, /请遵循 `AGENTS\.md`/);
   assert.doesNotMatch(claudeContent, /注入模式/);
   assert.doesNotMatch(claudeContent, /单选|多选/);
-  assert.doesNotMatch(claudeContent, /@AGENTS\.md/);
 });
 
 test('tool prompt starts with no default selections and concise labels', async () => {
