@@ -1,9 +1,9 @@
 ---
-name: verification
+name: agentos-verification
 description: Choose and run validation that matches the change risk and affected surface.
 ---
 
-# Verification
+# AgentOS Verification
 
 Use this skill before reporting completion.
 

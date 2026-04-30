@@ -1,9 +1,9 @@
 ---
-name: debugging
+name: agentos-debugging
 description: Investigate failures systematically before changing code.
 ---
 
-# Debugging
+# AgentOS Debugging
 
 Use this skill for errors, regressions, failing tests, or unclear broken behavior.
 

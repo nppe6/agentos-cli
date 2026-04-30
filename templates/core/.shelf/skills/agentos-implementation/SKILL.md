@@ -1,9 +1,9 @@
 ---
-name: implementation
+name: agentos-implementation
 description: Make scoped code changes while preserving user work and existing project patterns.
 ---
 
-# Implementation
+# AgentOS Implementation
 
 Use this skill when editing project files.
 

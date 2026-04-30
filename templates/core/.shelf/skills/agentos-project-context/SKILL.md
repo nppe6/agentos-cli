@@ -1,9 +1,9 @@
 ---
-name: project-context
+name: agentos-project-context
 description: Understand project structure, conventions, and relevant files before making non-trivial changes.
 ---
 
-# Project Context
+# AgentOS Project Context
 
 Use this skill when a task requires understanding the existing project before editing.
 

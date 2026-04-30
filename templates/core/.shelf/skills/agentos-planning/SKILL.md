@@ -1,9 +1,9 @@
 ---
-name: planning
+name: agentos-planning
 description: Turn a request into a scoped implementation plan with clear boundaries and validation.
 ---
 
-# Planning
+# AgentOS Planning
 
 Use this skill for non-trivial changes, ambiguous requests, or work that affects multiple files.
 

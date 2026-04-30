@@ -1,9 +1,9 @@
 ---
-name: documentation
+name: agentos-documentation
 description: Persist reusable project knowledge, decisions, and lessons.
 ---
 
-# Documentation
+# AgentOS Documentation
 
 Use this skill when a finding should guide future agents or teammates.
 

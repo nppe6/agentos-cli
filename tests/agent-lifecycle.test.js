@@ -34,16 +34,16 @@ test('init writes manifest and template hashes for a single-tool install', async
     tools: ['codex']
   }));
 
-  const manifest = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.agent-os', 'manifest.json'), 'utf8'));
-  const hashes = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.agent-os', 'template-hashes.json'), 'utf8'));
+  const manifest = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'manifest.json'), 'utf8'));
+  const hashes = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'template-hashes.json'), 'utf8'));
 
   assert.equal(manifest.schemaVersion, 1);
   assert.deepEqual(manifest.tools, ['codex']);
   assert.match(manifest.generatedFiles.join('\n'), /AGENTS\.md/);
-  assert.match(manifest.generatedFiles.join('\n'), /\.codex\/skills\/project-context\/SKILL\.md/);
+  assert.match(manifest.generatedFiles.join('\n'), /\.codex\/skills\/agentos-project-context\/SKILL\.md/);
   assert.equal(hashes.schemaVersion, 1);
   assert.equal(typeof hashes.files['AGENTS.md'].hash, 'string');
-  assert.equal(typeof hashes.files['.agent-os/manifest.json'].hash, 'string');
+  assert.equal(typeof hashes.files['.shelf/manifest.json'].hash, 'string');
 });
 
 test('doctor reports a clean initialized project as ok', async () => {
@@ -52,7 +52,7 @@ test('doctor reports a clean initialized project as ok', async () => {
   await runSilently(() => agentInit(projectDirectory, {
     force: true,
     gitMode: 'track',
-    stack: 'vue',
+    stack: 'core',
     tools: ['codex', 'claude']
   }));
 
@@ -108,7 +108,7 @@ test('sync dry-run classifies clean files as update when source changes', async 
     tools: ['codex']
   }));
 
-  fs.appendFileSync(path.join(projectDirectory, '.agent-os', 'rules', 'AGENTS.shared.md'), '\nNew source rule.\n', 'utf8');
+  fs.appendFileSync(path.join(projectDirectory, '.shelf', 'rules', 'AGENTS.shared.md'), '\nNew source rule.\n', 'utf8');
 
   const result = await runSilently(() => agentSync(projectDirectory, { dryRun: true }));
 
@@ -145,7 +145,7 @@ test('sync dry-run classifies projection conflicts when source and user file bot
     tools: ['codex']
   }));
 
-  fs.appendFileSync(path.join(projectDirectory, '.agent-os', 'rules', 'AGENTS.shared.md'), '\nNew source rule.\n', 'utf8');
+  fs.appendFileSync(path.join(projectDirectory, '.shelf', 'rules', 'AGENTS.shared.md'), '\nNew source rule.\n', 'utf8');
   fs.appendFileSync(path.join(projectDirectory, 'AGENTS.md'), '\nUser local note.\n', 'utf8');
 
   const result = await runSilently(() => agentSync(projectDirectory, { dryRun: true }));
@@ -173,7 +173,7 @@ test('sync skips user-modified projection files during writes', async () => {
   assert.equal(fs.readFileSync(agentsPath, 'utf8'), before);
 });
 
-test('sync regenerates missing projection files from .agent-os', async () => {
+test('sync regenerates missing projection files from .shelf', async () => {
   const projectDirectory = createTempProject();
 
   await runSilently(() => agentInit(projectDirectory, {
