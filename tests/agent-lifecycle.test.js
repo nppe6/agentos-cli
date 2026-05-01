@@ -8,11 +8,17 @@ const packageJson = require('../package.json');
 const agentDoctor = require('../lib/actions/agent-doctor');
 const agentInit = require('../lib/actions/agent-init');
 const { createJoinerTask } = require('../lib/actions/agent-joiner');
+const { scaffoldPackageSpecs } = require('../lib/actions/agent-spec');
 const agentSync = require('../lib/actions/agent-sync');
 const agentUpdate = require('../lib/actions/agent-update');
 
 function createTempProject() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'agentos-cli-lifecycle-'));
+}
+
+function writeJson(filePath, value) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 async function runSilently(action) {
@@ -103,6 +109,54 @@ test('doctor warns when Python runtime is missing', async () => {
 
   assert.equal(result.ok, true);
   assert.equal(result.warnings.some((warning) => warning.includes('Python runtime not found')), true);
+});
+
+test('doctor warns when detected workspace packages lack package specs', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'web', 'package.json'), {
+    name: '@demo/web'
+  });
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  const result = await runSilently(() => agentDoctor(projectDirectory, { findPythonCommand: () => 'python3' }));
+
+  assert.equal(result.ok, true);
+  assert.equal(result.missingPackageSpecs.length, 1);
+  assert.equal(result.missingPackageSpecs[0].specPath, '.shelf/spec/packages/demo-web');
+  assert.equal(result.warnings.some((warning) => warning.includes('Run agent spec scaffold')), true);
+});
+
+test('doctor accepts workspace packages after package specs are scaffolded', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'web', 'package.json'), {
+    name: '@demo/web'
+  });
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+  await runSilently(() => scaffoldPackageSpecs(projectDirectory));
+
+  const result = await runSilently(() => agentDoctor(projectDirectory, { findPythonCommand: () => 'python3' }));
+
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.missingPackageSpecs, []);
+  assert.equal(result.warnings.some((warning) => warning.includes('Run agent spec scaffold')), false);
 });
 
 test('sync dry-run reports missing projection files without writing them', async () => {

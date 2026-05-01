@@ -36,6 +36,7 @@ agentos-cli agent task [args...]
 agentos-cli agent doctor [target]
 agentos-cli agent sync [target]
 agentos-cli agent update [target]
+agentos-cli agent spec scaffold [target]
 agentos-cli agent skills import <source> [target]
 ```
 
@@ -136,7 +137,7 @@ python .shelf/scripts/task.py list
 agentos-cli agent doctor -t D:\work\easy\test
 ```
 
-检查内容包括 `.shelf/manifest.json`、`.shelf/template-hashes.json`、workflow、共享规则、skills、agents、核心 runtime scripts、Python 是否可用，以及 manifest 中启用工具的投影文件。
+检查内容包括 `.shelf/manifest.json`、`.shelf/template-hashes.json`、workflow、共享规则、skills、agents、核心 runtime scripts、Python 是否可用、manifest 中启用工具的投影文件，以及检测到的 workspace package 是否已有 `.shelf/spec/packages/<package-id>/README.md`。
 
 ## `agent sync`
 
@@ -168,6 +169,24 @@ agentos-cli agent update -t D:\work\easy\test --force
 - `.shelf/spec/`、`.shelf/tasks/`、`.shelf/workspace/`、`.shelf/config.yaml` 等用户数据路径会被保护，不会作为 obsolete 文件删除。
 - 可在 `.shelf/update.skip` 写入需要冻结的投影路径。支持精确文件路径和以 `/` 结尾的目录前缀，例如 `AGENTS.md`、`.claude/`。
 - 每次实际更新会写入 `.shelf/update-manifest.json`，记录版本迁移、备份、删除、跳过写入和跳过删除的路径。
+
+## `agent spec scaffold`
+
+为 monorepo workspace package 生成轻量 package spec 骨架。
+
+```bash
+agentos-cli agent spec scaffold -t D:\work\easy\test --dry-run
+agentos-cli agent spec scaffold -t D:\work\easy\test
+agentos-cli agent spec scaffold -t D:\work\easy\test --package web=packages/web,api=packages/api
+```
+
+默认读取 `package.json` workspaces 和 `pnpm-workspace.yaml`，并生成：
+
+- `.shelf/spec/packages/<package-id>/README.md`
+- `.shelf/spec/packages/<package-id>/architecture.md`
+- `.shelf/spec/packages/<package-id>/quality.md`
+
+默认不覆盖已有 spec 文件。确认需要重写时可使用 `--force`。
 
 ## `agent skills import`
 

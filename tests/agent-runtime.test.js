@@ -158,3 +158,31 @@ test('agent task command forwards passthrough args', async () => {
   assert.equal(calls[0].target, '.');
   assert.deepEqual(calls[0].args, ['list', '--mine', '--status', 'in_progress']);
 });
+
+test('agent spec scaffold command forwards target and options', async () => {
+  const program = new FakeCommand();
+  const calls = [];
+
+  registerAgentCommands(program, {
+    scaffoldPackageSpecs: async (target, options) => {
+      calls.push({ target, options });
+    }
+  });
+
+  const agentCommand = program.find('agent');
+  const specCommand = agentCommand.find('spec');
+  const scaffoldCommand = specCommand.find('scaffold [target]');
+
+  await scaffoldCommand.actionHandler('project-a', {
+    dryRun: true,
+    force: true,
+    package: 'web=apps/web',
+    target: 'project-b'
+  });
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].target, 'project-b');
+  assert.equal(calls[0].options.dryRun, true);
+  assert.equal(calls[0].options.force, true);
+  assert.equal(calls[0].options.package, 'web=apps/web');
+});

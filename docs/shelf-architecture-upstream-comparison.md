@@ -18,7 +18,7 @@ The current project has successfully moved from a small Agent OS scaffold toward
 
 This project should remain a lightweight AgentOS Shelf CLI rather than becoming a full Trellis clone. The upstream reference is valuable because its core foundation matches the intended direction: file-backed context, task-driven work, lightweight rule projection, reusable skills, and project memory. Future work should selectively absorb the parts that strengthen those foundations without inheriting every platform integration, migration layer, or hook system.
 
-The next priority is therefore not "close every upstream gap." It is to strengthen the local foundation: runtime file protection, readable CLI output, pull-based Codex context loading, useful spec templates, and a bootstrap task that turns generic templates into project reality.
+The next priority is therefore not "close every upstream gap." It is to keep strengthening the local foundation: runtime context loading, conservative updates, useful spec templates, and explicit commands that turn generic templates into project reality without making init heavy.
 
 ## Current Project Architecture
 
@@ -34,15 +34,17 @@ Current commands:
 - `agent init`: writes `.shelf` plus selected tool projections.
 - `agent developer init`: delegates developer identity setup to `.shelf/scripts/init_developer.py`.
 - `agent task`: delegates task lifecycle operations to `.shelf/scripts/task.py`.
-- `agent doctor`: checks required Shelf files and selected tool directories.
+- `agent doctor`: checks required Shelf files, selected tool directories, and warns when detected workspace packages do not yet have package specs.
 - `agent sync`: regenerates projections from `.shelf`.
+- `agent update`: conservatively updates projections with backups and protected deletes.
+- `agent spec scaffold`: generates package-specific spec folders for workspace packages.
 - `agent skills import`: imports external skill directories into Shelf or tool-specific destinations.
 
 Assessment:
 
 - Good fit for a small, npm-distributed CLI.
 - Command surface is intentionally smaller than upstream.
-- The CLI now has light wrappers for developer setup and task operations, but still has no native update command, migration command, platform hook installation command, or worktree orchestration command.
+- The CLI now has light wrappers for developer setup, task operations, update safety, and package spec scaffolding, but still has no platform hook installation command or worktree orchestration command.
 - This is an intentional product direction for now: the CLI should stay approachable while the Shelf foundation stabilizes.
 
 ## Directional Choice: Same Foundation, Different Trajectory
@@ -50,7 +52,7 @@ Assessment:
 AgentOS Shelf should copy the upstream project's durable ideas, not its full weight:
 
 - **Keep:** `.shelf` as source of truth, thin root rules, task folders, specs, skills, agents, workspace memory, safe projection sync.
-- **Add carefully:** runtime safety files, context-loading preludes for platforms without hooks, generic spec scaffolding, first-run bootstrap guidance.
+- **Add carefully:** richer context-loading hooks, one platform at a time, concrete migrations only when the Shelf schema needs them, and worktree orchestration after task lifecycle commands are stable.
 - **Defer:** 14-platform configurators, full hook matrix, update/migration engine, framework-specific packs, and team collaboration policy authoring.
 
 This means an upstream feature being absent is not automatically a defect. It is a candidate only if it improves the lightweight AgentOS/Shelf workflow.
@@ -187,7 +189,7 @@ Key upstream ideas:
 | Spec injection | generic specs exist; Codex implement/check agents load context explicitly | hooks/preludes inject curated specs | Partially covered |
 | Automatic session context injection | pull-based Codex prelude plus lightweight Claude session-start hook | shared hooks/plugins/settings | Selective |
 | Platform capability registry | Codex/Claude registry with capability flags | 14-platform `AI_TOOLS` registry | Partial |
-| Rich spec bootstrap | backend/frontend/guides templates without framework-specific packs | backend/frontend/guides templates and monorepo detection | Selective |
+| Rich spec bootstrap | backend/frontend/guides templates plus explicit package spec scaffolding without framework-specific packs | backend/frontend/guides templates and monorepo detection | Selective |
 | Bootstrap task | static `00-bootstrap-guidelines` template | `00-bootstrap-guidelines` | Selective |
 | Joiner onboarding | explicit `agent developer join <name>` task generator | `00-join-<developer>` | Selective |
 | Native update/migration | conservative `agent update` with backups, protected paths, safe deletes, `update.skip`, and lightweight versioned update manifest | full `update` with migrations | Selective |
@@ -315,11 +317,11 @@ Recommendation:
 
 ### 3. Monorepo Spec Scaffolding
 
-The CLI detects simple `package.json` and `pnpm-workspace.yaml` workspace packages and reports them during init, but does not yet generate per-package spec trees.
+The CLI detects simple `package.json` and `pnpm-workspace.yaml` workspace packages and can now generate per-package spec trees through `agent spec scaffold`.
 
 Recommendation:
 
-- Add an explicit monorepo spec scaffolding command before adding interactive init prompts.
+- Keep package scaffolding explicit rather than automatic during init.
 - Keep framework-specific Vue packs deferred.
 
 ## Good Upstream Ideas To Extend Into This Project
@@ -327,10 +329,9 @@ Recommendation:
 Recommended order after the current foundation:
 
 1. Decide whether Claude hook behavior should stay reminder-only or support curated context injection.
-2. Add explicit monorepo per-package spec scaffolding.
-3. Add one new platform only after the registry shape holds up for Codex/Claude.
-4. Add worktree orchestration only after task lifecycle commands are stable.
-5. Promote the lightweight migration manifest into concrete migrations only when schema drift requires it.
+2. Add one new platform only after the registry shape holds up for Codex/Claude.
+3. Add worktree orchestration only after task lifecycle commands are stable.
+4. Promote the lightweight migration manifest into concrete migrations only when schema drift requires it.
 
 ## Implementation Guidance
 
@@ -338,8 +339,8 @@ Do not try to port the whole upstream CLI at once. The current repository is Com
 
 Best next slice:
 
-- Add explicit monorepo spec scaffolding.
-- Then evaluate richer Claude hook context injection.
+- Evaluate richer Claude hook context injection.
+- Then add one additional platform only if Codex/Claude behavior remains stable.
 - Then add concrete migrations only when the Shelf schema changes, using the existing update manifest as the base.
 
 This sequence preserves the current project's simplicity while steadily importing the upstream design where it creates real user-facing leverage.

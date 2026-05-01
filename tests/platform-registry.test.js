@@ -5,6 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const agentInit = require('../lib/actions/agent-init');
+const { scaffoldPackageSpecs } = require('../lib/actions/agent-spec');
 const { detectMonorepo } = require('../lib/utils/monorepo');
 const { getPlatform } = require('../lib/utils/platform-registry');
 
@@ -75,4 +76,98 @@ test('init reports detected workspace packages', async () => {
 
   assert.equal(result.detectedPackages.length, 1);
   assert.equal(result.detectedPackages[0].path, 'packages/web');
+});
+
+test('spec scaffold creates package spec folders from workspaces', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'web', 'package.json'), {
+    name: '@demo/web'
+  });
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  const result = await runSilently(() => scaffoldPackageSpecs(projectDirectory));
+
+  assert.equal(result.packages[0].id, 'demo-web');
+  assert.equal(result.writtenFiles.includes('.shelf/spec/packages/demo-web/README.md'), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'packages', 'demo-web', 'architecture.md')), true);
+  assert.match(
+    fs.readFileSync(path.join(projectDirectory, '.shelf', 'spec', 'packages', 'demo-web', 'README.md'), 'utf8'),
+    /Package path: `packages\/web`/
+  );
+});
+
+test('spec scaffold dry-run does not write package spec files', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'api', 'package.json'), {
+    name: '@demo/api'
+  });
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  const result = await runSilently(() => scaffoldPackageSpecs(projectDirectory, { dryRun: true }));
+
+  assert.equal(result.plannedFiles.includes('.shelf/spec/packages/demo-api/quality.md'), true);
+  assert.equal(result.writtenFiles.length, 0);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'packages', 'demo-api')), false);
+});
+
+test('spec scaffold preserves existing package spec files unless forced', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'web', 'package.json'), {
+    name: '@demo/web'
+  });
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+  const readmePath = path.join(projectDirectory, '.shelf', 'spec', 'packages', 'demo-web', 'README.md');
+  await runSilently(() => scaffoldPackageSpecs(projectDirectory));
+  fs.writeFileSync(readmePath, '# Custom package spec\n', 'utf8');
+
+  const result = await runSilently(() => scaffoldPackageSpecs(projectDirectory));
+
+  assert.equal(fs.readFileSync(readmePath, 'utf8'), '# Custom package spec\n');
+  assert.equal(result.skippedFiles.includes('.shelf/spec/packages/demo-web/README.md'), true);
+});
+
+test('spec scaffold supports manual package declarations', async () => {
+  const projectDirectory = createTempProject();
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  const result = await runSilently(() => scaffoldPackageSpecs(projectDirectory, {
+    package: 'web=apps/web,api=services/api'
+  }));
+
+  assert.deepEqual(result.packages.map((pkg) => pkg.id), ['web', 'api']);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'packages', 'web', 'README.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'packages', 'api', 'quality.md')), true);
 });
