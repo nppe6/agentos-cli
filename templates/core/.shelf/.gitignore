@@ -9,4 +9,5 @@ workspace/*/index.md
 
 # Temporary backups and generated scratch files
 .backup-*/
+backups/
 *.tmp

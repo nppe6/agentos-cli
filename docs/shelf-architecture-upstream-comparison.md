@@ -119,11 +119,13 @@ Current behavior:
 - `sync` classifies projection files as create, update, unchanged, user-modified, or conflict.
 - User-modified projection files are skipped during sync.
 - For managed root blocks such as `AGENTS.md`, hash comparison is scoped to the Shelf block so user-authored text outside the block is preserved.
+- `agent update` writes `.shelf/update-manifest.json` with from/to CLI versions, lightweight migration records, backups, deletes, skipped writes, and skipped deletes.
+- `.shelf/update.skip` can freeze exact generated files or generated directories during update.
 
 Assessment:
 
 - This is enough for safe projection regeneration and conservative updates.
-- It is simpler than upstream and does not yet cover version comparison, migration manifests, protected path manifests, safe deletes, or `update.skip`.
+- It is intentionally simpler than upstream's migration engine, but now covers the lightweight versioned update record and operator-controlled skip file needed for safe iteration.
 
 ### Rules Model
 
@@ -188,7 +190,7 @@ Key upstream ideas:
 | Rich spec bootstrap | backend/frontend/guides templates without framework-specific packs | backend/frontend/guides templates and monorepo detection | Selective |
 | Bootstrap task | static `00-bootstrap-guidelines` template | `00-bootstrap-guidelines` | Selective |
 | Joiner onboarding | explicit `agent developer join <name>` task generator | `00-join-<developer>` | Selective |
-| Native update/migration | conservative `agent update` with backups, no migrations | full `update` with migrations | Partial |
+| Native update/migration | conservative `agent update` with backups, protected paths, safe deletes, `update.skip`, and lightweight versioned update manifest | full `update` with migrations | Selective |
 | Internal `.shelf` ignore rules | `.shelf/.gitignore` template | `.trellis/.gitignore` | Covered |
 | Python requirement check | `doctor` warns when Python is missing | Python >= 3.9 check | Partial |
 | Managed block replacement | block-level `AGENTS.md` handling | block-level AGENTS/workflow handling | Partial |
@@ -304,12 +306,12 @@ Recommendation:
 
 ### 2. Update Safety
 
-The project now has `agent update` with projection backups, but still lacks upstream's version-aware migrations, protected path handling, safe deletes, and `update.skip`.
+The project now has `agent update` with projection backups, protected paths, safe deletes, `.shelf/update.skip`, and `.shelf/update-manifest.json` version/migration records.
 
 Recommendation:
 
-- Build on the existing manifest/hash model instead of porting the full upstream update system wholesale.
-- Treat migrations and protected-path manifests as separate milestones.
+- Keep this update layer lightweight. Add real file migrations only when a concrete Shelf schema change requires one.
+- Continue avoiding a wholesale upstream migration engine until there are multiple real migrations to manage.
 
 ### 3. Monorepo Spec Scaffolding
 
@@ -325,10 +327,10 @@ Recommendation:
 Recommended order after the current foundation:
 
 1. Decide whether Claude hook behavior should stay reminder-only or support curated context injection.
-2. Extend `agent update` with protected paths, safe deletes, and migration manifests.
-3. Add explicit monorepo per-package spec scaffolding.
-4. Add one new platform only after the registry shape holds up for Codex/Claude.
-5. Add worktree orchestration only after task lifecycle commands are stable.
+2. Add explicit monorepo per-package spec scaffolding.
+3. Add one new platform only after the registry shape holds up for Codex/Claude.
+4. Add worktree orchestration only after task lifecycle commands are stable.
+5. Promote the lightweight migration manifest into concrete migrations only when schema drift requires it.
 
 ## Implementation Guidance
 
@@ -336,8 +338,8 @@ Do not try to port the whole upstream CLI at once. The current repository is Com
 
 Best next slice:
 
-- Add protected-path and safe-delete support to `agent update`.
-- Then add explicit monorepo spec scaffolding.
+- Add explicit monorepo spec scaffolding.
 - Then evaluate richer Claude hook context injection.
+- Then add concrete migrations only when the Shelf schema changes, using the existing update manifest as the base.
 
 This sequence preserves the current project's simplicity while steadily importing the upstream design where it creates real user-facing leverage.

@@ -151,7 +151,7 @@ agentos-cli agent sync -t D:\work\easy\test --tools codex
 
 ## `agent update`
 
-保守更新已生成的工具投影，并在写入前备份已有投影文件。
+保守更新已生成的工具投影，并在写入或删除前备份已有投影文件。
 
 ```bash
 agentos-cli agent update -t D:\work\easy\test --dry-run
@@ -159,7 +159,15 @@ agentos-cli agent update -t D:\work\easy\test
 agentos-cli agent update -t D:\work\easy\test --force
 ```
 
-默认遇到用户修改或冲突的投影文件会阻断。确认后可使用 `--force`，备份会写入 `.shelf/backups/`。
+默认遇到用户修改或冲突的投影文件会阻断。确认后可使用 `--force`。
+
+更新行为：
+
+- 备份会写入 `.shelf/backups/`。
+- 本次不再生成的旧投影文件会被安全删除。
+- `.shelf/spec/`、`.shelf/tasks/`、`.shelf/workspace/`、`.shelf/config.yaml` 等用户数据路径会被保护，不会作为 obsolete 文件删除。
+- 可在 `.shelf/update.skip` 写入需要冻结的投影路径。支持精确文件路径和以 `/` 结尾的目录前缀，例如 `AGENTS.md`、`.claude/`。
+- 每次实际更新会写入 `.shelf/update-manifest.json`，记录版本迁移、备份、删除、跳过写入和跳过删除的路径。
 
 ## `agent skills import`
 

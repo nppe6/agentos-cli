@@ -3,6 +3,7 @@ const os = require('os');
 const path = require('path');
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const packageJson = require('../package.json');
 
 const agentDoctor = require('../lib/actions/agent-doctor');
 const agentInit = require('../lib/actions/agent-init');
@@ -354,6 +355,140 @@ test('update creates backups before applying projection changes', async () => {
   assert.equal(result.updated, true);
   assert.equal(result.backups.some((backup) => backup.endsWith('.codex/agents/research.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'backups')), true);
+});
+
+test('update deletes obsolete generated projection files after backing them up', async () => {
+  const projectDirectory = createTempProject();
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex', 'claude']
+  }));
+
+  const result = await runSilently(() => agentUpdate(projectDirectory, { tools: ['codex'] }));
+
+  assert.equal(result.deleted.includes('CLAUDE.md'), true);
+  assert.equal(result.deleted.some((filePath) => filePath === '.claude/settings.json'), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
+  assert.equal(result.backups.some((backup) => backup.endsWith('CLAUDE.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'update-manifest.json')), true);
+});
+
+test('update does not delete protected Shelf user data from stale manifests', async () => {
+  const projectDirectory = createTempProject();
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  const manifestPath = path.join(projectDirectory, '.shelf', 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.generatedFiles.push('.shelf/tasks/custom-task/prd.md');
+  fs.mkdirSync(path.join(projectDirectory, '.shelf', 'tasks', 'custom-task'), { recursive: true });
+  fs.writeFileSync(path.join(projectDirectory, '.shelf', 'tasks', 'custom-task', 'prd.md'), '# Keep me\n', 'utf8');
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+
+  const result = await runSilently(() => agentUpdate(projectDirectory));
+
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'tasks', 'custom-task', 'prd.md')), true);
+  assert.equal(result.skippedDeletes.some((item) => item.path === '.shelf/tasks/custom-task/prd.md'), true);
+});
+
+test('update dry-run reports obsolete generated files without deleting them', async () => {
+  const projectDirectory = createTempProject();
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex', 'claude']
+  }));
+
+  const result = await runSilently(() => agentUpdate(projectDirectory, { dryRun: true, tools: ['codex'] }));
+
+  assert.equal(result.updated, false);
+  assert.equal(result.obsolete.some((item) => item.path === 'CLAUDE.md' && item.status === 'delete'), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
+});
+
+test('update.skip prevents selected projection files from being rewritten', async () => {
+  const projectDirectory = createTempProject();
+  const agentsPath = path.join(projectDirectory, 'AGENTS.md');
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  fs.writeFileSync(path.join(projectDirectory, '.shelf', 'update.skip'), 'AGENTS.md\n', 'utf8');
+  const before = fs.readFileSync(agentsPath, 'utf8');
+  const sharedRulesPath = path.join(projectDirectory, '.shelf', 'rules', 'AGENTS.shared.md');
+  fs.writeFileSync(
+    sharedRulesPath,
+    fs.readFileSync(sharedRulesPath, 'utf8').replace('<!-- SHELF:END -->', 'Skipped source rule.\n\n<!-- SHELF:END -->'),
+    'utf8'
+  );
+
+  const result = await runSilently(() => agentUpdate(projectDirectory));
+  const updateManifest = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'update-manifest.json'), 'utf8'));
+
+  assert.equal(fs.readFileSync(agentsPath, 'utf8'), before);
+  assert.equal(result.skipped.some((item) => item.path === 'AGENTS.md' && item.reason === 'update.skip: AGENTS.md'), true);
+  assert.equal(updateManifest.skipped.some((item) => item.path === 'AGENTS.md'), true);
+});
+
+test('update.skip prevents obsolete generated files from being deleted', async () => {
+  const projectDirectory = createTempProject();
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex', 'claude']
+  }));
+
+  fs.writeFileSync(path.join(projectDirectory, '.shelf', 'update.skip'), 'CLAUDE.md\n.claude/\n', 'utf8');
+
+  const result = await runSilently(() => agentUpdate(projectDirectory, { tools: ['codex'] }));
+  const updateManifest = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'update-manifest.json'), 'utf8'));
+
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'settings.json')), true);
+  assert.equal(result.deleted.includes('CLAUDE.md'), false);
+  assert.equal(result.skippedDeletes.some((item) => item.path === 'CLAUDE.md' && item.reason === 'update.skip: CLAUDE.md'), true);
+  assert.equal(result.skippedDeletes.some((item) => item.path === '.claude/settings.json' && item.reason === 'update.skip: .claude/'), true);
+  assert.equal(updateManifest.skippedDeletes.some((item) => item.path === 'CLAUDE.md'), true);
+});
+
+test('update manifest records version migrations', async () => {
+  const projectDirectory = createTempProject();
+
+  await runSilently(() => agentInit(projectDirectory, {
+    force: true,
+    gitMode: 'track',
+    stack: 'core',
+    tools: ['codex']
+  }));
+
+  const manifestPath = path.join(projectDirectory, '.shelf', 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.cliVersion = '0.0.1';
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+
+  const result = await runSilently(() => agentUpdate(projectDirectory));
+  const updateManifest = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'update-manifest.json'), 'utf8'));
+
+  assert.equal(result.migrations.some((migration) => migration.id === `cli-0.0.1-to-${packageJson.version}`), true);
+  assert.equal(updateManifest.fromVersion, '0.0.1');
+  assert.equal(updateManifest.toVersion, packageJson.version);
+  assert.equal(updateManifest.migrations.some((migration) => migration.status === 'applied'), true);
 });
 
 test('joiner task creates onboarding task files', async () => {
