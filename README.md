@@ -152,7 +152,7 @@ AgentOS Shelf 使用“统一源 + 工具投影”的模型。
 
 `.shelf/` 是共享源。CLI 会根据 manifest 和工具配置生成：
 
-- Codex：`AGENTS.md`、`.codex/skills/`、`.codex/agents/`、`.agents/skills/`
+- Codex：`AGENTS.md`、`.codex/agents/`、`.agents/skills/`
 - Claude Code：`CLAUDE.md`、`.claude/skills/`、`.claude/agents/`、`.claude/settings.json`、`.claude/hooks/`
 
 根目录文件保持很薄，只负责指向 `.shelf/`。真正的 workflow、规范、任务和项目记忆都留在 Shelf 目录中。
@@ -336,7 +336,7 @@ agentos-cli shelf spec scaffold --package web=packages/web,api=packages/api
 
 ```bash
 agentos-cli shelf skills import D:\old-project\.claude\skills
-agentos-cli shelf skills import D:\skills\agentos-brainstorm --mode overwrite
+agentos-cli shelf skills import D:\skills\shelf-brainstorm --mode overwrite
 agentos-cli shelf skills import D:\shared-skills --to codex
 ```
 
@@ -348,7 +348,7 @@ agentos-cli shelf skills import D:\shared-skills --to codex
 - `--to <auto|shelf|agent-os|codex|claude>`：导入目标，默认 `auto`
 - `-f, --force`：等价于 `--mode overwrite`
 
-`auto` 模式会优先导入 `.shelf/skills`。单工具旧项目没有 `.shelf/` 时，会导入已存在的 `.codex/skills` 或 `.claude/skills`。
+`auto` 模式会优先导入 `.shelf/skills`。单工具旧项目没有 `.shelf/` 时，Codex 会导入 `.agents/skills`，Claude Code 会导入 `.claude/skills`。
 
 ## Git 模式
 

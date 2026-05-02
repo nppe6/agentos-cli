@@ -21,7 +21,7 @@
 | 统一项目记忆源 | 已实现 `.shelf/` 作为统一源目录 |
 | 工具投影 | 已支持从 `.shelf/` 投影到 Codex、Claude Code |
 | 薄入口规则 | 已实现根目录 `AGENTS.md` / `CLAUDE.md` 作为薄入口 |
-| Agent 工作流技能 | 已迁移并改造为 `agentos-*` skills |
+| Agent 工作流技能 | 已迁移并改造为 `shelf-*` skills |
 | Research / Implement / Check agents | 已支持 `.shelf/agents` 投影到 `.codex/agents` / `.claude/agents` |
 | 初始化面板 | 已支持 `agentos-cli shelf init` 交互选择 Codex / Claude 和 Git 模式 |
 | 安全同步 | 已支持 `shelf sync`，避免覆盖用户修改 |

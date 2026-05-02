@@ -1,4 +1,4 @@
-# Shelf Architecture Upstream Comparison
+﻿# Shelf Architecture Upstream Comparison
 
 Date: 2026-05-01
 
@@ -11,7 +11,7 @@ Scope: architecture, templates, projection behavior, runtime workflow support, u
 The current project has successfully moved from a small Agent OS scaffold toward a Shelf-style workflow source model:
 
 - `.shelf/` is now the shared source of truth.
-- Workflow skills were migrated from the upstream workflow set and renamed to `agentos-*`.
+- Workflow skills were migrated from the upstream workflow set and renamed to `shelf-*`.
 - Shared agents now exist under `.shelf/agents` and project into `.codex/agents` / `.claude/agents`.
 - `AGENTS.md` is intentionally thin, while `CLAUDE.md` references `AGENTS.md` instead of duplicating all rules.
 - `init`, `sync`, `doctor`, `update`, `spec scaffold`, `workspace`, and `skills import` support the current Codex/Claude projection model.
@@ -93,8 +93,8 @@ Current behavior:
 
 - Codex receives:
   - `AGENTS.md`
-  - `.codex/skills/*`
   - `.codex/agents/*`
+  - `.agents/skills/*`
 - Claude receives:
   - `CLAUDE.md`
   - `.claude/skills/*`
@@ -181,7 +181,7 @@ Key upstream ideas:
 | Capability | Current Project | Upstream Reference | Status |
 |---|---|---|---|
 | Shared workflow source directory | `.shelf/` | `.trellis/` | Covered |
-| Core workflow skills | `agentos-before-dev`, `agentos-brainstorm`, `agentos-break-loop`, `agentos-check`, `agentos-continue`, `agentos-finish-work`, `agentos-meta`, `agentos-update-spec` | `trellis-*` skills | Covered |
+| Core workflow skills | `shelf-before-dev`, `shelf-brainstorm`, `shelf-break-loop`, `shelf-check`, `shelf-continue`, `shelf-finish-work`, `shelf-meta`, `shelf-update-spec` | `trellis-*` skills | Covered |
 | Shared implement/check/research agents | `.shelf/agents` projects to Codex/Claude | Platform-specific agents | Partially covered |
 | Thin root AGENTS rules | `AGENTS.shared.md` with block-level sync | managed `AGENTS.md` block | Covered |
 | Claude references AGENTS | `CLAUDE.md` shim | upstream also treats AGENTS as shared rules source | Covered |
@@ -207,7 +207,7 @@ Key upstream ideas:
 Current state:
 
 - `.shelf/spec/` exists.
-- `agentos-before-dev`, `agentos-check`, and workflow docs instruct agents to read relevant specs.
+- `shelf-before-dev`, `shelf-check`, and workflow docs instruct agents to read relevant specs.
 - `implement.jsonl` and `check.jsonl` are part of the task model.
 - Generic backend/frontend/guides spec templates are included.
 - Codex implement/check agents include a pull-based Shelf context prelude.
@@ -234,7 +234,7 @@ Current state:
 
 Gap:
 
-- `agent init` does not automatically generate developer-specific onboarding tasks.
+- `shelf init` initializes the developer identity from `--user` or git config, but does not automatically generate developer-specific onboarding tasks.
 - The Node wrapper intentionally does not reimplement task logic.
 
 Recommended next step:
@@ -275,7 +275,7 @@ Gap:
 
 - No automatic session-start or finish-work hook writes journal entries.
 - Journal capture is explicit through `shelf workspace add-session`.
-- Developer initialization is available as an explicit command, not as an automatic `agent init` step.
+- Developer initialization is available during `shelf init` through `--user` or git config, and remains available explicitly through `shelf developer init`.
 
 Recommended next step:
 

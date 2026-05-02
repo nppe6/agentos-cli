@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const test = require('node:test');
@@ -49,12 +49,12 @@ test('init writes manifest and template hashes for a single-tool install', async
   assert.equal(manifest.schemaVersion, 1);
   assert.deepEqual(manifest.tools, ['codex']);
   assert.match(manifest.generatedFiles.join('\n'), /AGENTS\.md/);
-  assert.match(manifest.generatedFiles.join('\n'), /\.codex\/skills\/agentos-brainstorm\/SKILL\.md/);
-  assert.match(manifest.generatedFiles.join('\n'), /\.agents\/skills\/agentos-brainstorm\/SKILL\.md/);
+  assert.doesNotMatch(manifest.generatedFiles.join('\n'), /\.codex\/skills\/shelf-brainstorm\/SKILL\.md/);
+  assert.match(manifest.generatedFiles.join('\n'), /\.agents\/skills\/shelf-brainstorm\/SKILL\.md/);
   assert.match(manifest.generatedFiles.join('\n'), /\.codex\/agents\/implement\.md/);
   assert.equal(hashes.schemaVersion, 1);
   assert.equal(typeof hashes.files['AGENTS.md'].hash, 'string');
-  assert.equal(typeof hashes.files['.agents/skills/agentos-brainstorm/SKILL.md'].hash, 'string');
+  assert.equal(typeof hashes.files['.agents/skills/shelf-brainstorm/SKILL.md'].hash, 'string');
   assert.equal(typeof hashes.files['.codex/agents/implement.md'].hash, 'string');
   assert.equal(typeof hashes.files['.shelf/manifest.json'].hash, 'string');
 });

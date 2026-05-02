@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const test = require('node:test');
@@ -36,7 +36,7 @@ test('imports a skill collection into .shelf skills in auto mode', async () => {
   writeSkill(sourceDirectory, 'alpha', '# Alpha');
   writeSkill(sourceDirectory, 'beta', '# Beta');
   fs.mkdirSync(path.join(targetDirectory, '.shelf', 'skills'), { recursive: true });
-  fs.mkdirSync(path.join(targetDirectory, '.codex', 'skills'), { recursive: true });
+  fs.mkdirSync(path.join(targetDirectory, '.agents', 'skills'), { recursive: true });
 
   const result = await runSilently(() => importSkills(sourceDirectory, { target: targetDirectory }));
 
@@ -67,13 +67,13 @@ test('imports a single skill directory into existing single-tool destinations', 
   const sourceDirectory = createTempProject();
   const targetDirectory = createTempProject();
   const skillDirectory = writeSkill(sourceDirectory, 'gamma', '# Gamma');
-  fs.mkdirSync(path.join(targetDirectory, '.codex', 'skills'), { recursive: true });
+  fs.mkdirSync(path.join(targetDirectory, '.agents', 'skills'), { recursive: true });
   fs.mkdirSync(path.join(targetDirectory, '.claude', 'skills'), { recursive: true });
 
   const result = await runSilently(() => importSkills(skillDirectory, { target: targetDirectory }));
 
   assert.equal(result.imported.length, 2);
-  assert.equal(fs.readFileSync(path.join(targetDirectory, '.codex', 'skills', 'gamma', 'SKILL.md'), 'utf8'), '# Gamma');
+  assert.equal(fs.readFileSync(path.join(targetDirectory, '.agents', 'skills', 'gamma', 'SKILL.md'), 'utf8'), '# Gamma');
   assert.equal(fs.readFileSync(path.join(targetDirectory, '.claude', 'skills', 'gamma', 'SKILL.md'), 'utf8'), '# Gamma');
 });
 
@@ -158,7 +158,7 @@ test('explicit destination creates the requested skills directory', async () => 
   const result = await runSilently(() => importSkills(sourceDirectory, { target: targetDirectory, to: 'codex' }));
 
   assert.equal(result.imported.length, 1);
-  assert.equal(fs.readFileSync(path.join(targetDirectory, '.codex', 'skills', 'delta', 'SKILL.md'), 'utf8'), '# Delta');
+  assert.equal(fs.readFileSync(path.join(targetDirectory, '.agents', 'skills', 'delta', 'SKILL.md'), 'utf8'), '# Delta');
 });
 
 test('explicit shelf destination creates the shared skills directory', async () => {

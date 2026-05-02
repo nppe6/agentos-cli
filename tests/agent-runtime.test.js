@@ -305,11 +305,11 @@ test('shelf workspace commands forward target and options', async () => {
   assert.equal(calls[1].options.noCommit, true);
 });
 
-test('agent command remains a compatibility alias', async () => {
+test('only shelf command is registered as the workflow entrypoint', async () => {
   const program = new FakeCommand();
 
   registerAgentCommands(program, {});
 
   assert.ok(program.find('shelf'));
-  assert.ok(program.find('agent'));
+  assert.equal(program.find('agent'), undefined);
 });

@@ -47,9 +47,9 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'scripts', 'task.py')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-brainstorm', 'SKILL.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'agents', 'check.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'continue.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'finish-work.md')), true);
@@ -57,7 +57,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'hooks', 'shelf-session-start.py')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'agents', 'implement.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'planning')), false);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'agentos-planning')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-planning')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'scripts', 'sync-agent-os.ps1')), false);
 
@@ -71,7 +71,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(agentsContent, /<!-- SHELF:START -->/);
   assert.match(agentsContent, /\.shelf\/workflow\.md/);
   assert.match(agentsContent, /\.shelf\/agents/);
-  assert.doesNotMatch(agentsContent, /agentos-project-context/);
+  assert.doesNotMatch(agentsContent, /shelf-project-context/);
   assert.match(claudeContent, /Follow `AGENTS\.md`/);
 
   const bootstrapPrd = fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'prd.md'), 'utf8');
@@ -93,8 +93,8 @@ test('injects core-only workflow when the core stack is selected', async () => {
   await agentInit(projectDirectory, { stack: 'core', force: true, gitMode: 'track', tools: ['codex'] });
 
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'agentos-before-dev', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'agentos-check', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-before-dev', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-check', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'agents', 'research.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'manifest.json')), true);
@@ -299,8 +299,8 @@ test('injects only codex files when codex is the only selected tool', async () =
 
   assert.deepEqual(result.tools, ['codex']);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-brainstorm', 'SKILL.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'agents', 'check.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude')), false);
