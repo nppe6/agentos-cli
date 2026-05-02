@@ -1,6 +1,6 @@
-# How To: Add Slash Command
+﻿# How To: Add Slash Command
 
-Add a new `/agentos:my-command` command.
+Add a new `/shelf:my-command` command.
 
 **Platform**: All (Claude Code + Cursor)
 
@@ -10,15 +10,15 @@ Add a new `/agentos:my-command` command.
 
 | File | Action | Required |
 |------|--------|----------|
-| `.claude/commands/agentos/my-command.md` | Create | Yes |
+| `.claude/commands/shelf/my-command.md` | Create | Yes |
 | `.cursor/commands/my-command.md` | Create | Optional |
-| `agentos-local/SKILL.md` | Update | Yes |
+| `shelf-local/SKILL.md` | Update | Yes |
 
 ---
 
 ## Step 1: Create Command File
 
-Create `.claude/commands/agentos/my-command.md`:
+Create `.claude/commands/shelf/my-command.md`:
 
 ```markdown
 ---
@@ -63,17 +63,17 @@ If supporting Cursor, copy to `.cursor/commands/my-command.md`.
 
 ---
 
-## Step 3: Document in agentos-local
+## Step 3: Document in shelf-local
 
-Update `.claude/skills/agentos-local/SKILL.md`:
+Update `.claude/skills/shelf-local/SKILL.md`:
 
 ```markdown
 ## Commands
 
 ### Added Commands
 
-#### /agentos:my-command
-- **File**: `.claude/commands/agentos/my-command.md`
+#### /shelf:my-command
+- **File**: `.claude/commands/shelf/my-command.md`
 - **Platform**: [ALL]
 - **Purpose**: What it does
 - **Added**: 2026-01-31
@@ -128,7 +128,7 @@ User should specify which file to review.
 
 ## Testing
 
-1. Run the command: `/agentos:my-command`
+1. Run the command: `/shelf:my-command`
 2. Verify behavior matches description
 3. Test edge cases
 
@@ -138,5 +138,5 @@ User should specify which file to review.
 
 - [ ] Command file created with proper frontmatter
 - [ ] Mirrored to Cursor (if needed)
-- [ ] Documented in agentos-local
+- [ ] Documented in shelf-local
 - [ ] Tested the command

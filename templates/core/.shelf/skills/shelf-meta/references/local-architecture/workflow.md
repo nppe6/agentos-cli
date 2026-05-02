@@ -1,4 +1,4 @@
-# Local Workflow System
+﻿# Local Workflow System
 
 `.shelf/workflow.md` is the AgentOS Shelf workflow source of truth inside the user project. An AI does not need AgentOS Shelf source code to understand how the current project should move tasks forward; this file is enough.
 
@@ -24,7 +24,7 @@ Each phase contains numbered steps, such as `1.3 Configure context`. These numbe
 
 `workflow.md` separates routing by platform capability:
 
-- Platforms with sub-agent support: dispatch `agentos-implement` by default for implementation and `shelf-check` for checking.
+- Platforms with sub-agent support: dispatch `shelf-implement` by default for implementation and `shelf-check` for checking.
 - Platforms without sub-agent support: the main session reads skills such as `shelf-before-dev`, then executes directly.
 
 When changing local AI behavior, update the routing descriptions in `workflow.md` first, then check whether the corresponding platform skill, command, or agent files need to stay in sync.

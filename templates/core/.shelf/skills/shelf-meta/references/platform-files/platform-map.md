@@ -1,6 +1,6 @@
-# Platform File Map
+﻿# Platform File Map
 
-This page lists common AgentOS Shelf file locations in a user project by platform. Whether a platform directory exists in an actual project depends on which `agentos init --<platform>` commands the user ran.
+This page lists common AgentOS Shelf file locations in a user project by platform. Whether a platform directory exists in an actual project depends on which `agentos-cli shelf init --<platform>` commands the user ran.
 
 ## Matrix
 
@@ -9,7 +9,7 @@ This page lists common AgentOS Shelf file locations in a user project by platfor
 | Claude Code | `--claude` | `.claude/` | `.claude/skills/` | `.claude/agents/` | `.claude/hooks/` + `.claude/settings.json` |
 | Cursor | `--cursor` | `.cursor/` | `.cursor/skills/` | `.cursor/agents/` | `.cursor/hooks.json` + `.cursor/hooks/` |
 | OpenCode | `--opencode` | `.opencode/` | `.opencode/skills/` | `.opencode/agents/` | `.opencode/plugins/` |
-| Codex | `--codex` | `.codex/` | `.agents/skills/` | `.codex/agents/` | `.codex/hooks/` + `.codex/hooks.json` |
+| Codex | `--codex` | `.codex/` | `.agents/skills/` | `.codex/agents/`, `.codex/prompts/` | pull-based agent preludes |
 | Kilo | `--kilo` | `.kilocode/` | `.kilocode/skills/` | Usually none | `.kilocode/workflows/` |
 | Kiro | `--kiro` | `.kiro/` | `.kiro/skills/` | `.kiro/agents/` | `.kiro/hooks/` |
 | Gemini CLI | `--gemini` | `.gemini/` | `.gemini/skills/` | `.gemini/agents/` | `.gemini/settings.json` + `.gemini/hooks/` |
@@ -25,7 +25,7 @@ This page lists common AgentOS Shelf file locations in a user project by platfor
 
 ### AgentOS Shelf Sub-Agent Support
 
-These platforms usually have `agentos-research`, `agentos-implement`, and `shelf-check` files:
+These platforms usually have `shelf-research`, `shelf-implement`, and `shelf-check` files:
 
 - Claude Code
 - Cursor

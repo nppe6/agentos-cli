@@ -20,7 +20,7 @@ AgentOS Shelf workflow skills usually share one semantic set: brainstorm, before
 | Claude Code | `.claude/skills/`, `.claude/commands/` |
 | Cursor | `.cursor/skills/`, `.cursor/commands/` |
 | OpenCode | `.opencode/skills/`, `.opencode/commands/` |
-| Codex | `.agents/skills/` |
+| Codex | `.agents/skills/`, `.codex/prompts/` |
 | Kilo | `.kilocode/skills/`, `.kilocode/workflows/` |
 | Kiro | `.kiro/skills/` |
 | Gemini CLI | `.gemini/skills/`, `.gemini/commands/` |

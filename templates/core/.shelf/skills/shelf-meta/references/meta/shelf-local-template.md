@@ -1,13 +1,13 @@
-# AgentOS Shelf Local Skill Template
+﻿# AgentOS Shelf Local Skill Template
 
-Copy this template to create a project-specific `agentos-local` skill.
+Copy this template to create a project-specific `shelf-local` skill.
 
 ---
 
 ## How to Use
 
-1. Create directory: `mkdir -p .claude/skills/agentos-local`
-2. Copy the template below to `.claude/skills/agentos-local/SKILL.md`
+1. Create directory: `mkdir -p .claude/skills/shelf-local`
+2. Copy the template below to `.claude/skills/shelf-local/SKILL.md`
 3. Replace `[PROJECT_NAME]` with your project name
 4. Update version info
 
@@ -17,7 +17,7 @@ Copy this template to create a project-specific `agentos-local` skill.
 
 ```markdown
 ---
-name: agentos-local
+name: shelf-local
 description: |
   Project-specific AgentOS Shelf customizations for [PROJECT_NAME].
   This skill documents all modifications made to the vanilla AgentOS Shelf system.
@@ -58,8 +58,8 @@ Quick reference of what's been modified:
 ### Added Commands
 
 <!-- Template for new command:
-#### /agentos:command-name [ALL]
-- **File**: `.claude/commands/agentos/command-name.md`
+#### /shelf:command-name [ALL]
+- **File**: `.claude/commands/shelf/command-name.md`
 - **Platform**: [ALL] or [CC] (Claude Code only)
 - **Purpose**: [what it does]
 - **Added**: YYYY-MM-DD
@@ -71,8 +71,8 @@ Quick reference of what's been modified:
 ### Modified Commands
 
 <!-- Template for modified command:
-#### /agentos:command-name
-- **File**: `.claude/commands/agentos/command-name.md`
+#### /shelf:command-name
+- **File**: `.claude/commands/shelf/command-name.md`
 - **Change**: [what was changed]
 - **Date**: YYYY-MM-DD
 - **Reason**: [why it was changed]
@@ -212,7 +212,7 @@ Quick reference of what's been modified:
 Record all changes chronologically.
 
 ### YYYY-MM-DD - Initial Setup
-- Initialized agentos-local skill
+- Initialized shelf-local skill
 - Base AgentOS Shelf version: X.X.X
 
 <!-- Template for changelog entry:
@@ -263,16 +263,16 @@ To auto-create the skill, run:
 
 ```bash
 #!/bin/bash
-# create-agentos-local.sh
+# create-shelf-local.sh
 
 PROJECT_NAME="${1:-$(basename $(pwd))}"
-SKILL_DIR=".claude/skills/agentos-local"
+SKILL_DIR=".claude/skills/shelf-local"
 
 mkdir -p "$SKILL_DIR"
 
 cat > "$SKILL_DIR/SKILL.md" << 'EOF'
 ---
-name: agentos-local
+name: shelf-local
 description: |
   Project-specific AgentOS Shelf customizations for PROJECT_NAME_PLACEHOLDER.
   This skill documents all modifications made to the vanilla AgentOS Shelf system.
@@ -296,7 +296,7 @@ description: |
 ## Changelog
 
 ### $(date +%Y-%m-%d) - Initial Setup
-- Initialized agentos-local skill
+- Initialized shelf-local skill
 EOF
 
 sed -i '' "s/PROJECT_NAME_PLACEHOLDER/$PROJECT_NAME/g" "$SKILL_DIR/SKILL.md"

@@ -1,6 +1,6 @@
-# Change Local Agents
+﻿# Change Local Agents
 
-When the user wants to change `agentos-research`, `agentos-implement`, or `shelf-check` behavior, edit platform agent files in the user project.
+When the user wants to change `shelf-research`, `shelf-implement`, or `shelf-check` behavior, edit platform agent files in the user project.
 
 ## Read These Files First
 
@@ -14,16 +14,16 @@ When the user wants to change `agentos-research`, `agentos-implement`, or `shelf
 
 | Platform | Path |
 | --- | --- |
-| Claude Code | `.claude/agents/agentos-*.md` |
-| Cursor | `.cursor/agents/agentos-*.md` |
-| OpenCode | `.opencode/agents/agentos-*.md` |
-| Codex | `.codex/agents/agentos-*.toml` |
-| Kiro | `.kiro/agents/agentos-*.json` |
-| Gemini CLI | `.gemini/agents/agentos-*.md` |
-| Qoder | `.qoder/agents/agentos-*.md` |
-| CodeBuddy | `.codebuddy/agents/agentos-*.md` |
-| Factory Droid | `.factory/droids/agentos-*.md` |
-| Pi Agent | `.pi/agents/agentos-*.md` |
+| Claude Code | `.claude/agents/shelf-*.md` |
+| Cursor | `.cursor/agents/shelf-*.md` |
+| OpenCode | `.opencode/agents/shelf-*.md` |
+| Codex | `.codex/agents/shelf-*.md` |
+| Kiro | `.kiro/agents/shelf-*.json` |
+| Gemini CLI | `.gemini/agents/shelf-*.md` |
+| Qoder | `.qoder/agents/shelf-*.md` |
+| CodeBuddy | `.codebuddy/agents/shelf-*.md` |
+| Factory Droid | `.factory/droids/shelf-*.md` |
+| Pi Agent | `.pi/agents/shelf-*.md` |
 
 Use the actual paths in the user project as authoritative.
 
@@ -31,8 +31,8 @@ Use the actual paths in the user project as authoritative.
 
 | Need | Which agent to edit |
 | --- | --- |
-| Research must write files, not only reply in chat | `agentos-research` |
-| Certain local specs must be read before implementation | `agentos-implement` + `implement.jsonl` configuration rules |
+| Research must write files, not only reply in chat | `shelf-research` |
+| Certain local specs must be read before implementation | `shelf-implement` + `implement.jsonl` configuration rules |
 | Specific commands must run during checking | `shelf-check` |
 | Agent must not modify certain directories | The corresponding agent's write boundary instructions |
 | Agent output format must be fixed | The corresponding agent's final/reporting instructions |

@@ -1,4 +1,4 @@
-# Platform Files Overview
+﻿# Platform Files Overview
 
 AgentOS Shelf connects the same local architecture to different AI tools. `.shelf/` stores the shared runtime; platform directories store adapter files that define how each AI tool enters AgentOS Shelf.
 
@@ -15,7 +15,7 @@ Platform files do not store business state. They let the corresponding AI tool r
 | --- | --- | --- |
 | settings/config | `.claude/settings.json`, `.codex/hooks.json`, `.qoder/settings.json` | Register hooks, plugins, extensions, or platform behavior. |
 | hooks/plugins/extensions | `.claude/hooks/`, `.opencode/plugins/`, `.pi/extensions/` | Inject context at session start, user input, agent startup, shell execution, and similar events. |
-| agents | `.claude/agents/`, `.codex/agents/`, `.kiro/agents/` | Define `agentos-research`, `agentos-implement`, and `shelf-check`. |
+| agents | `.claude/agents/`, `.codex/agents/`, `.kiro/agents/` | Define `shelf-research`, `shelf-implement`, and `shelf-check`. |
 | skills | `.claude/skills/`, `.agents/skills/`, `.qoder/skills/` | Capability descriptions that auto-trigger or can be read on demand. |
 | commands/prompts/workflows | `.cursor/commands/`, `.github/prompts/`, `.windsurf/workflows/` | Entry points explicitly invoked by the user. |
 

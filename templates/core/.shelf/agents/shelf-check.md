@@ -1,5 +1,5 @@
 ---
-name: check
+name: shelf-check
 description: |
   Code quality check expert. Reviews code changes against specs and self-fixes issues.
 tools: read, bash, edit, write, grep, find, ls, web_search

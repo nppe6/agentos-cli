@@ -1,5 +1,5 @@
 ---
-name: implement
+name: shelf-implement
 description: |
   Code implementation expert. Understands specs and requirements, then implements features. No git commit allowed.
 tools: read, bash, edit, write, grep, find, ls, web_search

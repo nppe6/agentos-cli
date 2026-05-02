@@ -1,6 +1,6 @@
-# Local Files Generated After Init
+﻿# Local Files Generated After Init
 
-`agentos init` writes the AgentOS Shelf runtime into the user project. Later, `agentos update` tries to update AgentOS Shelf-managed template files, but it uses `.shelf/.template-hashes.json` to determine which files have already been modified by the user.
+`agentos-cli shelf init` writes the AgentOS Shelf runtime into the user project. Later, `agentos-cli shelf update` tries to update AgentOS Shelf-managed template files, but it uses `.shelf/.template-hashes.json` to determine which files have already been modified by the user.
 
 This page only describes files that are visible and editable inside the user project.
 
@@ -8,16 +8,16 @@ This page only describes files that are visible and editable inside the user pro
 
 ```text
 .shelf/
-├── workflow.md
-├── config.yaml
-├── .developer
-├── .version
-├── .template-hashes.json
-├── .runtime/
-├── scripts/
-├── spec/
-├── tasks/
-└── workspace/
+鈹溾攢鈹€ workflow.md
+鈹溾攢鈹€ config.yaml
+鈹溾攢鈹€ .developer
+鈹溾攢鈹€ .version
+鈹溾攢鈹€ .template-hashes.json
+鈹溾攢鈹€ .runtime/
+鈹溾攢鈹€ scripts/
+鈹溾攢鈹€ spec/
+鈹溾攢鈹€ tasks/
+鈹斺攢鈹€ workspace/
 ```
 
 | Path | Usually editable? | Notes |
@@ -41,7 +41,7 @@ Different platforms generate different directories. Common categories:
 | --- | --- | --- |
 | hooks | `.claude/hooks/`, `.codex/hooks/`, `.cursor/hooks/` | Inject session context, workflow-state, and sub-agent context. |
 | settings | `.claude/settings.json`, `.codex/hooks.json`, `.qoder/settings.json` | Tell the platform when to run hooks or plugins. |
-| agents | `.claude/agents/`, `.codex/agents/`, `.kiro/agents/` | Define agents such as `agentos-research`, `agentos-implement`, and `shelf-check`. |
+| agents | `.claude/agents/`, `.codex/agents/`, `.kiro/agents/` | Define agents such as `shelf-research`, `shelf-implement`, and `shelf-check`. |
 | skills | `.claude/skills/`, `.agents/skills/`, `.qoder/skills/` | Skills that auto-trigger or can be read by AI. |
 | commands/prompts/workflows | `.cursor/commands/`, `.github/prompts/`, `.windsurf/workflows/` | Explicit user-invoked command or workflow entry points. |
 
@@ -49,7 +49,7 @@ When modifying a platform directory, also confirm whether `.shelf/workflow.md` s
 
 ## Meaning Of Template Hashes
 
-`.shelf/.template-hashes.json` records the content hash from the last time AgentOS Shelf wrote a template file. `agentos update` uses it to distinguish three cases:
+`.shelf/.template-hashes.json` records the content hash from the last time AgentOS Shelf wrote a template file. `agentos-cli shelf update` uses it to distinguish three cases:
 
 | Case | Update behavior |
 | --- | --- |
@@ -72,7 +72,7 @@ Editable by default:
 Do not edit by default:
 
 - Global npm install directory
-- `node_modules/@mindfoldhq/agentos`
+- `node_modules/agentos-cli`
 - AgentOS Shelf GitHub repository source code
 - Concrete state files under `.shelf/.runtime/**`
 - Hash contents inside `.shelf/.template-hashes.json`

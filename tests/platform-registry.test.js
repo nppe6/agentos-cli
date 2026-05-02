@@ -35,6 +35,7 @@ test('platform registry describes Codex and Claude capabilities', () => {
   const claude = getPlatform('claude');
 
   assert.equal(codex.capabilities.openAgentSkills, true);
+  assert.equal(codex.capabilities.promptCommands, true);
   assert.equal(codex.capabilities.pullContextPrelude, true);
   assert.equal(codex.capabilities.toolScopedSkills, false);
   assert.equal(claude.capabilities.hooks, true);

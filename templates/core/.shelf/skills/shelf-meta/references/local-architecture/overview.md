@@ -1,6 +1,6 @@
-# Local AgentOS Shelf Architecture Overview
+﻿# Local AgentOS Shelf Architecture Overview
 
-`shelf-meta` is for user projects that have already run `agentos init`. The user's machine usually has only the npm-installed `agentos` command plus the AgentOS Shelf files generated inside the project; it may not have the AgentOS Shelf CLI source code.
+`shelf-meta` is for user projects that have already run `agentos-cli shelf init`. The user's machine usually has only the npm-installed `agentos-cli` command plus the AgentOS Shelf files generated inside the project; it may not have the AgentOS Shelf CLI source code.
 
 Therefore, when an AI uses this skill, the default customization target is local files inside the user project:
 

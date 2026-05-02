@@ -1,4 +1,4 @@
-# Change Local Skills, Commands, Prompts, And Workflows
+﻿# Change Local Skills, Commands, Prompts, And Workflows
 
 When the user wants to change AI entry points, auto-trigger rules, or explicit command behavior, edit skills, commands, prompts, or workflows in local platform directories.
 
@@ -24,8 +24,8 @@ A skill is usually:
 
 ```text
 <skill-name>/
-├── SKILL.md
-└── references/
+鈹溾攢鈹€ SKILL.md
+鈹斺攢鈹€ references/
 ```
 
 `SKILL.md` should be short and responsible for triggering/routing. Put long content in `references/` so AI can read it on demand.
@@ -56,7 +56,7 @@ If a command only repeats workflow rules, prefer making it reference/read `.shel
 | Claude Code | `.claude/skills/`, `.claude/commands/` |
 | Cursor | `.cursor/skills/`, `.cursor/commands/` |
 | OpenCode | `.opencode/skills/`, `.opencode/commands/` |
-| Codex | `.agents/skills/` |
+| Codex | `.agents/skills/`, `.codex/prompts/` |
 | GitHub Copilot | `.github/skills/`, `.github/prompts/` |
 | Kilo / Antigravity / Windsurf | workflows + skills |
 
@@ -65,8 +65,8 @@ If a command only repeats workflow rules, prefer making it reference/read `.shel
 If the user wants to document team-private customizations, create a project-local skill, for example:
 
 ```text
-.claude/skills/project-agentos-local/
-└── SKILL.md
+.claude/skills/project-shelf-local/
+鈹斺攢鈹€ SKILL.md
 ```
 
 For multi-platform projects, add equivalent versions in each platform skill directory, or use `.agents/skills/` on platforms that support the shared layer.

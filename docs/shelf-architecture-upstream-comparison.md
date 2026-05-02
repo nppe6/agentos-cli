@@ -6,6 +6,11 @@ This document compares the current AgentOS Shelf implementation in this reposito
 
 Scope: architecture, templates, projection behavior, runtime workflow support, update safety, and future extension opportunities. Team collaboration rule definition and Vue/framework customization remain out of scope.
 
+Follow-up reference:
+
+- `docs/trellis-core-alignment-dossier.md` records the 2026-05-03 complete official-docs and local-source review.
+- `docs/plans/2026-05-03-001-trellis-core-alignment-plan.md` turns that review into the next alignment plan.
+
 ## Executive Summary
 
 The current project has successfully moved from a small Agent OS scaffold toward a Shelf-style workflow source model:

@@ -1,4 +1,4 @@
-# AgentOS Shelf Self-Iteration Guide
+﻿# AgentOS Shelf Self-Iteration Guide
 
 How to maintain skill documentation when customizing AgentOS Shelf.
 
@@ -9,8 +9,8 @@ How to maintain skill documentation when customizing AgentOS Shelf.
 **Every AgentOS Shelf modification MUST be documented in the appropriate skill.**
 
 ```
-Modification to AgentOS Shelf → Update agentos-local (project skill)
-Update to AgentOS Shelf itself → Update shelf-meta (meta skill)
+Modification to AgentOS Shelf 鈫?Update shelf-local (project skill)
+Update to AgentOS Shelf itself 鈫?Update shelf-meta (meta skill)
 ```
 
 ---
@@ -19,21 +19,16 @@ Update to AgentOS Shelf itself → Update shelf-meta (meta skill)
 
 ```
 Is this a modification to AgentOS Shelf?
-│
-├── YES: What kind?
-│   │
-│   ├── Project-specific customization
-│   │   └── Update .claude/skills/agentos-local/SKILL.md
-│   │
-│   ├── Bug fix to core AgentOS Shelf
-│   │   └── Update ~/.claude/skills/shelf-meta/
-│   │       (or project copy if reviewing first)
-│   │
-│   └── New feature to core AgentOS Shelf
-│       └── Update shelf-meta after release
-│
-└── NO: Just using AgentOS Shelf
-    └── No skill update needed
+鈹?鈹溾攢鈹€ YES: What kind?
+鈹?  鈹?鈹?  鈹溾攢鈹€ Project-specific customization
+鈹?  鈹?  鈹斺攢鈹€ Update .claude/skills/shelf-local/SKILL.md
+鈹?  鈹?鈹?  鈹溾攢鈹€ Bug fix to core AgentOS Shelf
+鈹?  鈹?  鈹斺攢鈹€ Update ~/.claude/skills/shelf-meta/
+鈹?  鈹?      (or project copy if reviewing first)
+鈹?  鈹?鈹?  鈹斺攢鈹€ New feature to core AgentOS Shelf
+鈹?      鈹斺攢鈹€ Update shelf-meta after release
+鈹?鈹斺攢鈹€ NO: Just using AgentOS Shelf
+    鈹斺攢鈹€ No skill update needed
 ```
 
 ---
@@ -44,11 +39,11 @@ Is this a modification to AgentOS Shelf?
 
 ```bash
 # Check if project skill exists
-ls .claude/skills/agentos-local/SKILL.md
+ls .claude/skills/shelf-local/SKILL.md
 
 # If not, create it from template
-mkdir -p .claude/skills/agentos-local
-# Copy template from shelf-meta/references/agentos-local-template.md
+mkdir -p .claude/skills/shelf-local
+# Copy template from shelf-meta/references/shelf-local-template.md
 ```
 
 ### Step 2: Make the AgentOS Shelf Modification
@@ -57,7 +52,7 @@ Do your work: add command, modify hook, etc.
 
 ### Step 3: Document in Project Skill
 
-Open `.claude/skills/agentos-local/SKILL.md` and:
+Open `.claude/skills/shelf-local/SKILL.md` and:
 
 1. **Find the right section** (Commands/Agents/Hooks/Specs/Workflow)
 2. **Add entry using template**
@@ -79,19 +74,19 @@ Ask yourself:
 ### New Command
 
 ```markdown
-#### /agentos:my-command
-- **File**: `.claude/commands/agentos/my-command.md`
+#### /shelf:my-command
+- **File**: `.claude/commands/shelf/my-command.md`
 - **Purpose**: Brief description of what it does
 - **Added**: 2026-01-31
 - **Reason**: Why this command was needed
 
 **Usage**:
 ```
-/agentos:my-command [args]
+/shelf:my-command [args]
 ```
 
 **Example**:
-User asks "..." → Command does "..."
+User asks "..." 鈫?Command does "..."
 ```
 
 ### New Agent
@@ -198,7 +193,7 @@ def get_my_agent_context(repo_root, task_dir):
 - Reason: Complex verification commands were timing out
 
 ### 2026-01-29 - Initial Setup
-- Initialized agentos-local skill
+- Initialized shelf-local skill
 - Base AgentOS Shelf version: 0.3.0
 ```
 
@@ -210,18 +205,18 @@ When working with multiple AgentOS Shelf projects:
 
 ```
 ~/projects/
-├── project-a/
-│   └── .claude/skills/agentos-local/   # Project A customizations
-├── project-b/
-│   └── .claude/skills/agentos-local/   # Project B customizations
-└── project-c/
-    └── .claude/skills/agentos-local/   # Project C customizations
+鈹溾攢鈹€ project-a/
+鈹?  鈹斺攢鈹€ .claude/skills/shelf-local/   # Project A customizations
+鈹溾攢鈹€ project-b/
+鈹?  鈹斺攢鈹€ .claude/skills/shelf-local/   # Project B customizations
+鈹斺攢鈹€ project-c/
+    鈹斺攢鈹€ .claude/skills/shelf-local/   # Project C customizations
 
 ~/.claude/skills/
-└── shelf-meta/                        # Shared meta-skill (vanilla AgentOS Shelf)
+鈹斺攢鈹€ shelf-meta/                        # Shared meta-skill (vanilla AgentOS Shelf)
 ```
 
-**Each project has its own `agentos-local`** documenting that project's specific customizations.
+**Each project has its own `shelf-local`** documenting that project's specific customizations.
 
 **The meta-skill is shared** and documents vanilla AgentOS Shelf.
 
@@ -241,7 +236,7 @@ diff -r ~/.claude/skills/shelf-meta/references/ \
 
 ### 2. Check for Conflicts
 
-Review each customization in `agentos-local`:
+Review each customization in `shelf-local`:
 - Does new version include this feature natively?
 - Does new version break this customization?
 - Can this customization be simplified?
@@ -258,7 +253,7 @@ cp -r ./new-shelf-meta/* ~/.claude/skills/shelf-meta/
 
 ### 4. Update Project Skills
 
-Add migration note to `agentos-local`:
+Add migration note to `shelf-local`:
 
 ```markdown
 ### 2026-02-01 - Upgraded to AgentOS Shelf 0.4.0
@@ -274,7 +269,7 @@ Add migration note to `agentos-local`:
 
 When an AI modifies AgentOS Shelf, it MUST:
 
-1. **Check** if `agentos-local` exists in the project
+1. **Check** if `shelf-local` exists in the project
 2. **Create** it from template if missing
 3. **Document** the change immediately after making it
 4. **Update** the changelog with date and description
@@ -285,4 +280,4 @@ When an AI modifies AgentOS Shelf, it MUST:
 **Always** tell the user what was documented.
 
 Example AI response:
-> "I've added the `/agentos:deploy` command and documented it in `.claude/skills/agentos-local/SKILL.md` under the Commands section."
+> "I've added the `/shelf:deploy` command and documented it in `.claude/skills/shelf-local/SKILL.md` under the Commands section."

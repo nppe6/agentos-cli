@@ -152,7 +152,7 @@ AgentOS Shelf 使用“统一源 + 工具投影”的模型。
 
 `.shelf/` 是共享源。CLI 会根据 manifest 和工具配置生成：
 
-- Codex：`AGENTS.md`、`.codex/agents/`、`.agents/skills/`
+- Codex：`AGENTS.md`、`.codex/agents/`、`.codex/prompts/`、`.agents/skills/`
 - Claude Code：`CLAUDE.md`、`.claude/skills/`、`.claude/agents/`、`.claude/settings.json`、`.claude/hooks/`
 
 根目录文件保持很薄，只负责指向 `.shelf/`。真正的 workflow、规范、任务和项目记忆都留在 Shelf 目录中。
@@ -389,9 +389,9 @@ agentos-cli shelf --help
 
 可以。`.shelf/spec/`、`.shelf/tasks/`、`.shelf/workspace/` 是给人和 AI 共同读取的项目记忆，中文完全可用。建议路径、命令、代码符号保持原样。
 
-### `agent doctor` 提示 Python 缺失怎么办？
+### `shelf doctor` 提示 Python 缺失怎么办？
 
-安装 Python 3，并确保 `python` 或 `python3` 在 PATH 中。没有 Python 时，`agent init` 可以完成，但 task、workspace 和 developer 命令不能运行。
+安装 Python 3，并确保 `python` 或 `python3` 在 PATH 中。没有 Python 时，`shelf init` 可以完成，但 task、workspace 和 developer 命令不能运行。
 
 ### 单包项目执行 `shelf spec scaffold` 显示 0 packages 正常吗？
 

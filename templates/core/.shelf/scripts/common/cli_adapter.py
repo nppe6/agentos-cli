@@ -1,4 +1,4 @@
-"""
+﻿"""
 CLI Adapter for Multi-Platform Support.
 
 Abstracts differences between Claude Code, OpenCode, Cursor, iFlow, Codex, Kilo, Kiro Code, Gemini CLI, Antigravity, Windsurf, Qoder, CodeBuddy, GitHub Copilot, Factory Droid, and Pi Agent interfaces.
@@ -72,7 +72,7 @@ class CLIAdapter:
     _AGENT_NAME_MAP: ClassVar[dict[Platform, dict[str, str]]] = {
         "claude": {},  # No mapping needed
         "opencode": {
-            "plan": "agentos-plan",  # 'plan' is built-in in OpenCode
+            "plan": "shelf-plan",  # 'plan' is built-in in OpenCode
         },
     }
 
@@ -83,7 +83,7 @@ class CLIAdapter:
             agent: Original agent name (e.g., 'plan', 'dispatch')
 
         Returns:
-            Platform-specific agent name (e.g., 'agentos-plan' for OpenCode)
+            Platform-specific agent name (e.g., 'shelf-plan' for OpenCode)
         """
         mapping = self._AGENT_NAME_MAP.get(self.platform, {})
         return mapping.get(agent, agent)
@@ -161,44 +161,44 @@ class CLIAdapter:
 
         Args:
             project_root: Project root directory
-            *parts: Additional path parts (e.g., 'agentos', 'finish-work.md')
+            *parts: Additional path parts (e.g., 'shelf', 'finish-work.md')
 
         Returns:
             Path to commands directory or file
 
         Note:
-            Cursor uses prefix naming: .cursor/commands/agentos-<name>.md
+            Cursor uses prefix naming: .cursor/commands/shelf-<name>.md
             Antigravity uses workflow directory: .agent/workflows/<name>.md
-            Windsurf uses workflow directory: .windsurf/workflows/agentos-<name>.md
+            Windsurf uses workflow directory: .windsurf/workflows/shelf-<name>.md
             Copilot uses prompt files: .github/prompts/<name>.prompt.md
-            Pi uses prompt templates: .pi/prompts/agentos-<name>.md
-            Claude/OpenCode use subdirectory: .claude/commands/agentos/<name>.md
+            Pi uses prompt templates: .pi/prompts/shelf-<name>.md
+            Claude/OpenCode use subdirectory: .claude/commands/shelf/<name>.md
         """
         if self.platform == "pi":
             prompts_dir = self.get_config_dir(project_root) / "prompts"
             if not parts:
                 return prompts_dir
-            if len(parts) >= 2 and parts[0] == "agentos":
+            if len(parts) >= 2 and parts[0] == "shelf":
                 filename = parts[-1]
                 if filename.endswith(".md"):
                     filename = filename[:-3]
-                return prompts_dir / f"agentos-{filename}.md"
+                return prompts_dir / f"shelf-{filename}.md"
             return prompts_dir / Path(*parts)
 
         if self.platform == "windsurf":
             workflow_dir = self.get_config_dir(project_root) / "workflows"
             if not parts:
                 return workflow_dir
-            if len(parts) >= 2 and parts[0] == "agentos":
+            if len(parts) >= 2 and parts[0] == "shelf":
                 filename = parts[-1]
-                return workflow_dir / f"agentos-{filename}"
+                return workflow_dir / f"shelf-{filename}"
             return workflow_dir / Path(*parts)
 
         if self.platform in ("antigravity", "kilo"):
             workflow_dir = self.get_config_dir(project_root) / "workflows"
             if not parts:
                 return workflow_dir
-            if len(parts) >= 2 and parts[0] == "agentos":
+            if len(parts) >= 2 and parts[0] == "shelf":
                 filename = parts[-1]
                 return workflow_dir / filename
             return workflow_dir / Path(*parts)
@@ -207,7 +207,7 @@ class CLIAdapter:
             prompts_dir = project_root / ".github" / "prompts"
             if not parts:
                 return prompts_dir
-            if len(parts) >= 2 and parts[0] == "agentos":
+            if len(parts) >= 2 and parts[0] == "shelf":
                 filename = parts[-1]
                 if filename.endswith(".md"):
                     filename = filename[:-3]
@@ -218,17 +218,17 @@ class CLIAdapter:
             return self.get_config_dir(project_root) / "commands"
 
         # Cursor uses prefix naming instead of subdirectory
-        if self.platform == "cursor" and len(parts) >= 2 and parts[0] == "agentos":
-            # Convert agentos/<name>.md to agentos-<name>.md
+        if self.platform == "cursor" and len(parts) >= 2 and parts[0] == "shelf":
+            # Convert shelf/<name>.md to shelf-<name>.md
             filename = parts[-1]
             return (
-                self.get_config_dir(project_root) / "commands" / f"agentos-{filename}"
+                self.get_config_dir(project_root) / "commands" / f"shelf-{filename}"
             )
 
         return self.get_config_dir(project_root) / "commands" / Path(*parts)
 
     def get_shelf_command_path(self, name: str) -> str:
-        """Get relative path to a agentos command file.
+        """Get relative path to a Shelf command file.
 
         Args:
             name: Command name without extension (e.g., 'finish-work', 'check')
@@ -237,37 +237,37 @@ class CLIAdapter:
             Relative path string for use in JSONL entries
 
         Note:
-            Cursor: .cursor/commands/agentos-<name>.md
-            Codex: .agents/skills/agentos-<name>/SKILL.md
-            Kiro: .kiro/skills/agentos-<name>/SKILL.md
-            Gemini: .gemini/commands/agentos/<name>.toml
+            Cursor: .cursor/commands/shelf-<name>.md
+            Codex: .agents/skills/shelf-<name>/SKILL.md
+            Kiro: .kiro/skills/shelf-<name>/SKILL.md
+            Gemini: .gemini/commands/shelf/<name>.toml
             Antigravity: .agent/workflows/<name>.md
-            Windsurf: .windsurf/workflows/agentos-<name>.md
-            Pi: .pi/prompts/agentos-<name>.md
-            Others: .{platform}/commands/agentos/<name>.md
+            Windsurf: .windsurf/workflows/shelf-<name>.md
+            Pi: .pi/prompts/shelf-<name>.md
+            Others: .{platform}/commands/shelf/<name>.md
         """
         if self.platform == "cursor":
-            return f".cursor/commands/agentos-{name}.md"
+            return f".cursor/commands/shelf-{name}.md"
         elif self.platform == "codex":
-            return f".agents/skills/agentos-{name}/SKILL.md"
+            return f".agents/skills/shelf-{name}/SKILL.md"
         elif self.platform == "kiro":
-            return f".kiro/skills/agentos-{name}/SKILL.md"
+            return f".kiro/skills/shelf-{name}/SKILL.md"
         elif self.platform == "gemini":
-            return f".gemini/commands/agentos/{name}.toml"
+            return f".gemini/commands/shelf/{name}.toml"
         elif self.platform == "antigravity":
             return f".agent/workflows/{name}.md"
         elif self.platform == "windsurf":
-            return f".windsurf/workflows/agentos-{name}.md"
+            return f".windsurf/workflows/shelf-{name}.md"
         elif self.platform == "kilo":
             return f".kilocode/workflows/{name}.md"
         elif self.platform == "copilot":
             return f".github/prompts/{name}.prompt.md"
         elif self.platform == "droid":
-            return f".factory/commands/agentos/{name}.md"
+            return f".factory/commands/shelf/{name}.md"
         elif self.platform == "pi":
-            return f".pi/prompts/agentos-{name}.md"
+            return f".pi/prompts/shelf-{name}.md"
         else:
-            return f"{self.config_dir_name}/commands/agentos/{name}.md"
+            return f"{self.config_dir_name}/commands/shelf/{name}.md"
 
     # =========================================================================
     # Environment Variables
@@ -662,19 +662,19 @@ def detect_platform(project_root: Path) -> Platform:
 
     Detection order:
     1. SHELF_PLATFORM environment variable (if set)
-    2. .opencode directory exists → opencode
-    3. .iflow directory exists → iflow
-    4. .cursor directory exists (without .claude) → cursor
-    5. .codex exists and no other platform dirs → codex
-    6. .kilocode directory exists → kilo
-    7. .kiro/skills exists and no other platform dirs → kiro
-    8. .gemini directory exists → gemini
-    9. .agent/workflows exists and no other platform dirs → antigravity
-    10. .windsurf/workflows exists and no other platform dirs → windsurf
-    11. .codebuddy directory exists → codebuddy
-    12. .qoder directory exists → qoder
-    13. .pi directory exists → pi
-    14. Default → claude
+    2. .opencode directory exists 鈫?opencode
+    3. .iflow directory exists 鈫?iflow
+    4. .cursor directory exists (without .claude) 鈫?cursor
+    5. .codex exists and no other platform dirs 鈫?codex
+    6. .kilocode directory exists 鈫?kilo
+    7. .kiro/skills exists and no other platform dirs 鈫?kiro
+    8. .gemini directory exists 鈫?gemini
+    9. .agent/workflows exists and no other platform dirs 鈫?antigravity
+    10. .windsurf/workflows exists and no other platform dirs 鈫?windsurf
+    11. .codebuddy directory exists 鈫?codebuddy
+    12. .qoder directory exists 鈫?qoder
+    13. .pi directory exists 鈫?pi
+    14. Default 鈫?claude
 
     Args:
         project_root: Project root directory
@@ -776,10 +776,10 @@ def detect_platform(project_root: Path) -> Platform:
         return "pi"
 
     # Fallback: checkout only has the Codex shared-skills layer
-    # (.agents/skills/agentos-* dirs) and no explicit platform config dir.
+    # (.agents/skills/shelf-* dirs) and no explicit platform config dir.
     # Happens on fresh clones where .codex/ is gitignored/absent but the
     # shared skills were committed to git. Must guard against the case
-    # where .claude/ or any other platform dir also exists — .agents/skills/
+    # where .claude/ or any other platform dir also exists 鈥?.agents/skills/
     # can legitimately coexist with any platform as a shared consumption
     # layer for Amp/Cline/Warp/etc.
     agents_skills = project_root / ".agents" / "skills"
@@ -788,7 +788,7 @@ def detect_platform(project_root: Path) -> Platform:
     ):
         try:
             for entry in agents_skills.iterdir():
-                if entry.is_dir() and entry.name.startswith("agentos-"):
+                if entry.is_dir() and entry.name.startswith("shelf-"):
                     return "codex"
         except OSError:
             pass

@@ -1,5 +1,5 @@
 ---
-name: research
+name: shelf-research
 description: |
   Code and tech search expert. Finds patterns, specs, and tech solutions. Populates task JSONL context files.
 tools: read, bash, edit, write, grep, find, ls, web_search

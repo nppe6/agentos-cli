@@ -1,4 +1,4 @@
-# How To: Add Workflow Phase
+﻿# How To: Add Workflow Phase
 
 Add a new phase to the task workflow pipeline.
 
@@ -14,7 +14,7 @@ Add a new phase to the task workflow pipeline.
 | `.claude/agents/dispatch.md` | Modify | Yes |
 | `.claude/agents/{new-agent}.md` | Create | If new agent |
 | `inject-subagent-context.py` | Modify | If new agent |
-| `agentos-local/SKILL.md` | Update | Yes |
+| `shelf-local/SKILL.md` | Update | Yes |
 
 ---
 
@@ -23,7 +23,7 @@ Add a new phase to the task workflow pipeline.
 Default workflow:
 
 ```
-implement → check → finish → create-pr
+implement 鈫?check 鈫?finish 鈫?create-pr
 ```
 
 ---
@@ -102,7 +102,7 @@ Edit `.claude/agents/dispatch.md`:
 
 If the phase uses a new agent, create the agent definition.
 
-→ See `add-agent.md` for full details.
+鈫?See `add-agent.md` for full details.
 
 Quick version:
 
@@ -161,7 +161,7 @@ default_next_action = [
 
 ---
 
-## Step 6: Document in agentos-local
+## Step 6: Document in shelf-local
 
 ```markdown
 ## Workflow Changes
@@ -178,7 +178,7 @@ default_next_action = [
 
 ## Common Phase Patterns
 
-### Design → Implement → Check
+### Design 鈫?Implement 鈫?Check
 
 ```json
 "next_action": [
@@ -188,7 +188,7 @@ default_next_action = [
 ]
 ```
 
-### Implement → Test → Check
+### Implement 鈫?Test 鈫?Check
 
 ```json
 "next_action": [
@@ -198,7 +198,7 @@ default_next_action = [
 ]
 ```
 
-### Research → Implement → Check
+### Research 鈫?Implement 鈫?Check
 
 ```json
 "next_action": [
@@ -227,5 +227,5 @@ default_next_action = [
 - [ ] Agent created (if new)
 - [ ] Hook updated (if new agent)
 - [ ] Task templates updated
-- [ ] Documented in agentos-local
+- [ ] Documented in shelf-local
 - [ ] Tested workflow

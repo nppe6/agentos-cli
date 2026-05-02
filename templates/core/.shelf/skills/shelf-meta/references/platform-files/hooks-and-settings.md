@@ -1,4 +1,4 @@
-# Hooks And Settings
+﻿# Hooks And Settings
 
 Hooks/settings are the entry layer that connects a platform to AgentOS Shelf. They decide which scripts, plugins, or extensions a platform runs for which events.
 
@@ -18,7 +18,7 @@ Common files:
 | --- | --- |
 | Claude Code | `.claude/settings.json` |
 | Cursor | `.cursor/hooks.json` |
-| Codex | `.codex/hooks.json`, `.codex/config.toml` |
+| Codex | Pull-based agent preludes in `.codex/agents/shelf-implement.md` and `.codex/agents/shelf-check.md` |
 | OpenCode | `.opencode/package.json`, `.opencode/plugins/*` |
 | Kiro | `.kiro/hooks/` + platform config |
 | Gemini CLI | `.gemini/settings.json` |
@@ -28,7 +28,7 @@ Common files:
 | Factory Droid | `.factory/settings.json` |
 | Pi Agent | `.pi/settings.json`, `.pi/extensions/agentos/` |
 
-Whether these files exist in a project depends on which `agentos init --<platform>` flags the user ran.
+Whether these files exist in a project depends on which `agentos-cli shelf init --<platform>` flags the user ran.
 
 ## Hook Script Types
 
@@ -46,7 +46,7 @@ Not every platform has every hook. Do not copy files from another platform just 
 | User need | Edit location |
 | --- | --- |
 | AI should see more/less context in a new session | Platform `session-start` hook. |
-| Per-turn hint policy should change | `[workflow-state:STATUS]` block in `.shelf/workflow.md`. The hook parses workflow.md verbatim — no script edit required. |
+| Per-turn hint policy should change | `[workflow-state:STATUS]` block in `.shelf/workflow.md`. The hook parses workflow.md verbatim 鈥?no script edit required. |
 | Sub-agent cannot read PRD/spec | `inject-subagent-context` hook or agent prelude. |
 | `task.py current` in shell has no active task | Shell/session bridge hook or platform environment variable configuration. |
 | Disable an automatic injection | The corresponding hook registration in settings/config. |

@@ -1,4 +1,4 @@
-# Multi-Session Reference
+﻿# Multi-Session Reference
 
 Documentation for parallel isolated sessions using Git worktrees.
 
@@ -9,7 +9,7 @@ Documentation for parallel isolated sessions using Git worktrees.
 Multi-Session enables **parallel, isolated development sessions** using Git worktrees. Each session runs in its own directory with its own branch.
 
 **Key Distinction**:
-- **Multi-Agent** = Multiple agents in current directory (dispatch → implement → check)
+- **Multi-Agent** = Multiple agents in current directory (dispatch 鈫?implement 鈫?check)
 - **Multi-Session** = Parallel sessions in separate worktrees (this document)
 
 ---
@@ -29,38 +29,7 @@ Multi-Session enables **parallel, isolated development sessions** using Git work
 ## Architecture
 
 ```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                         MAIN REPOSITORY                                     │
-│                         (your current directory)                            │
-│                                                                             │
-│  /agentos:parallel → Configure task → start.py                             │
-│                                           │                                 │
-│                                           │ Creates worktree               │
-│                                           │ Starts agent                   │
-│                                           ▼                                 │
-└───────────────────────────────────────────┼─────────────────────────────────┘
-                                            │
-              ┌─────────────────────────────┼─────────────────────────────────┐
-              │                             │                                 │
-              ▼                             ▼                                 ▼
-┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
-│ WORKTREE 1           │  │ WORKTREE 2           │  │ WORKTREE 3           │
-│ feature/add-login    │  │ feature/user-profile │  │ fix/api-bug          │
-│                      │  │                      │  │                      │
-│ ┌──────────────────┐ │  │ ┌──────────────────┐ │  │ ┌──────────────────┐ │
-│ │ Dispatch Agent   │ │  │ │ Dispatch Agent   │ │  │ │ Dispatch Agent   │ │
-│ │       ↓          │ │  │ │       ↓          │ │  │ │       ↓          │ │
-│ │ Implement Agent  │ │  │ │ Implement Agent  │ │  │ │ Implement Agent  │ │
-│ │       ↓          │ │  │ │       ↓          │ │  │ │       ↓          │ │
-│ │ Check Agent      │ │  │ │ Check Agent      │ │  │ │ Check Agent      │ │
-│ │       ↓          │ │  │ │       ↓          │ │  │ │       ↓          │ │
-│ │ create_pr.py     │ │  │ │ create_pr.py     │ │  │ │ create_pr.py     │ │
-│ └──────────────────┘ │  │ └──────────────────┘ │  │ └──────────────────┘ │
-│                      │  │                      │  │                      │
-│ Session: abc123      │  │ Session: def456      │  │ Session: ghi789      │
-│ PID: 12345           │  │ PID: 12346           │  │ PID: 12347           │
-└──────────────────────┘  └──────────────────────┘  └──────────────────────┘
-
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹?                        MAIN REPOSITORY                                     鈹?鈹?                        (your current directory)                            鈹?鈹?                                                                            鈹?鈹? /shelf:parallel 鈫?Configure task 鈫?start.py                             鈹?鈹?                                          鈹?                                鈹?鈹?                                          鈹?Creates worktree               鈹?鈹?                                          鈹?Starts agent                   鈹?鈹?                                          鈻?                                鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                                            鈹?              鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?              鈹?                            鈹?                                鈹?              鈻?                            鈻?                                鈻?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹?WORKTREE 1           鈹? 鈹?WORKTREE 2           鈹? 鈹?WORKTREE 3           鈹?鈹?feature/add-login    鈹? 鈹?feature/user-profile 鈹? 鈹?fix/api-bug          鈹?鈹?                     鈹? 鈹?                     鈹? 鈹?                     鈹?鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹? 鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹? 鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹?鈹?鈹?Dispatch Agent   鈹?鈹? 鈹?鈹?Dispatch Agent   鈹?鈹? 鈹?鈹?Dispatch Agent   鈹?鈹?鈹?鈹?      鈫?         鈹?鈹? 鈹?鈹?      鈫?         鈹?鈹? 鈹?鈹?      鈫?         鈹?鈹?鈹?鈹?Implement Agent  鈹?鈹? 鈹?鈹?Implement Agent  鈹?鈹? 鈹?鈹?Implement Agent  鈹?鈹?鈹?鈹?      鈫?         鈹?鈹? 鈹?鈹?      鈫?         鈹?鈹? 鈹?鈹?      鈫?         鈹?鈹?鈹?鈹?Check Agent      鈹?鈹? 鈹?鈹?Check Agent      鈹?鈹? 鈹?鈹?Check Agent      鈹?鈹?鈹?鈹?      鈫?         鈹?鈹? 鈹?鈹?      鈫?         鈹?鈹? 鈹?鈹?      鈫?         鈹?鈹?鈹?鈹?create_pr.py     鈹?鈹? 鈹?鈹?create_pr.py     鈹?鈹? 鈹?鈹?create_pr.py     鈹?鈹?鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹? 鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹? 鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹?鈹?                     鈹? 鈹?                     鈹? 鈹?                     鈹?鈹?Session: abc123      鈹? 鈹?Session: def456      鈹? 鈹?Session: ghi789      鈹?鈹?PID: 12345           鈹? 鈹?PID: 12346           鈹? 鈹?PID: 12347           鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 Location: ../worktrees/  (default)
 ```
 
@@ -75,9 +44,9 @@ Git worktrees allow multiple working directories from one repository:
 ```
 /project/                              # Main repo (main branch)
 /project/../worktrees/                 # Default: ../worktrees
-├── feature/add-login/                # Worktree 1 (own branch)
-├── feature/user-profile/             # Worktree 2 (own branch)
-└── fix/api-bug/                      # Worktree 3 (own branch)
+鈹溾攢鈹€ feature/add-login/                # Worktree 1 (own branch)
+鈹溾攢鈹€ feature/user-profile/             # Worktree 2 (own branch)
+鈹斺攢鈹€ fix/api-bug/                      # Worktree 3 (own branch)
 ```
 
 ### Benefits
@@ -157,7 +126,7 @@ python3 .shelf/scripts/multi_agent/start.py <task-dir>
 1. Read `task.json` for branch name
 2. Create git worktree:
    ```bash
-   git worktree add -b <branch> ../agentos-worktrees/<branch>
+   git worktree add -b <branch> ../shelf-worktrees/<branch>
    ```
 3. Copy files from `worktree.yaml` copy list
 4. Copy task directory to worktree
@@ -176,7 +145,7 @@ python3 .shelf/scripts/multi_agent/start.py <task-dir>
 **Example**:
 ```bash
 python3 .shelf/scripts/multi_agent/start.py .shelf/tasks/01-31-add-login-taosu
-# Output: Started agent in ../agentos-worktrees/feature/add-login
+# Output: Started agent in ../shelf-worktrees/feature/add-login
 ```
 
 ---
@@ -205,15 +174,9 @@ python3 .shelf/scripts/multi_agent/status.py --registry
 **Output**:
 ```
 Active Sessions:
-┌──────────────┬──────────┬────────────────┬──────────┬───────────┐
-│ Task         │ Status   │ Phase          │ Elapsed  │ Files     │
-├──────────────┼──────────┼────────────────┼──────────┼───────────┤
-│ add-login    │ Running  │ 2/4 (check)    │ 15m 32s  │ 5 changed │
-│ fix-api      │ Stopped  │ 1/4 (implement)│ 8m 15s   │ 2 changed │
-└──────────────┴──────────┴────────────────┴──────────┴───────────┘
-
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹?Task         鈹?Status   鈹?Phase          鈹?Elapsed  鈹?Files     鈹?鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹?add-login    鈹?Running  鈹?2/4 (check)    鈹?15m 32s  鈹?5 changed 鈹?鈹?fix-api      鈹?Stopped  鈹?1/4 (implement)鈹?8m 15s   鈹?2 changed 鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹粹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹粹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹粹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹粹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 Resume stopped sessions:
-  cd ../agentos-worktrees/feature/fix-api && claude --resume <session-id>
+  cd ../shelf-worktrees/feature/fix-api && claude --resume <session-id>
 ```
 
 ---
@@ -290,7 +253,7 @@ Tracks all running sessions.
   "agents": [
     {
       "id": "feature-add-login",
-      "worktree_path": "/abs/path/to/agentos-worktrees/feature/add-login",
+      "worktree_path": "/abs/path/to/shelf-worktrees/feature/add-login",
       "pid": 12345,
       "started_at": "2026-01-31T10:30:00",
       "task_dir": ".shelf/tasks/01-31-add-login-taosu"
@@ -385,7 +348,7 @@ If a session stops:
 python3 .shelf/scripts/multi_agent/status.py --detail <task-name>
 
 # Resume
-cd ../agentos-worktrees/feature/task-name
+cd ../shelf-worktrees/feature/task-name
 claude --resume <session-id>
 ```
 
@@ -399,8 +362,8 @@ Quality enforcement for Check Agent in sessions.
 1. Check Agent completes
 2. SubagentStop hook fires
 3. `ralph-loop.py` runs verify commands
-4. All pass → allow stop
-5. Any fail → block, continue agent
+4. All pass 鈫?allow stop
+5. Any fail 鈫?block, continue agent
 
 **Constants**:
 | Constant | Value | Description |

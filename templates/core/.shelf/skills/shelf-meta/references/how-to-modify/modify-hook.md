@@ -1,4 +1,4 @@
-# How To: Modify Hook
+﻿# How To: Modify Hook
 
 Change hook behavior for context injection or validation.
 
@@ -12,7 +12,7 @@ Change hook behavior for context injection or validation.
 |------|--------|----------|
 | `.claude/hooks/{hook}.py` | Modify | Yes |
 | `.claude/settings.json` | Modify | If changing matcher/timeout |
-| `agentos-local/SKILL.md` | Update | Yes |
+| `shelf-local/SKILL.md` | Update | Yes |
 
 ---
 
@@ -168,9 +168,9 @@ Edit `.claude/settings.json`:
 
 ---
 
-## Step 4: Document in agentos-local
+## Step 4: Document in shelf-local
 
-Update `.claude/skills/agentos-local/SKILL.md`:
+Update `.claude/skills/shelf-local/SKILL.md`:
 
 ```markdown
 ## Hooks Changed
@@ -265,4 +265,4 @@ if not ok:
 - [ ] Settings updated (if needed)
 - [ ] Manual test passed
 - [ ] Integration test passed
-- [ ] Documented in agentos-local
+- [ ] Documented in shelf-local

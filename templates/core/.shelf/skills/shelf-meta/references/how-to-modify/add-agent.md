@@ -1,4 +1,4 @@
-# How To: Add Agent
+﻿# How To: Add Agent
 
 Add a new agent type like `my-agent`.
 
@@ -13,7 +13,7 @@ Add a new agent type like `my-agent`.
 | `.claude/agents/my-agent.md` | Create | Yes |
 | `.claude/hooks/inject-subagent-context.py` | Modify | Yes |
 | `.shelf/tasks/{template}/my-agent.jsonl` | Create | Yes |
-| `agentos-local/SKILL.md` | Update | Yes |
+| `shelf-local/SKILL.md` | Update | Yes |
 | `.claude/agents/dispatch.md` | Modify | If adding to pipeline |
 
 ---
@@ -172,9 +172,9 @@ Add handling for the new phase:
 
 ---
 
-## Step 5: Document in agentos-local
+## Step 5: Document in shelf-local
 
-Update `.claude/skills/agentos-local/SKILL.md`:
+Update `.claude/skills/shelf-local/SKILL.md`:
 
 ```markdown
 ## Agents
@@ -217,5 +217,5 @@ Update `.claude/skills/agentos-local/SKILL.md`:
 - [ ] Hook updated with main switch case
 - [ ] JSONL template created
 - [ ] Added to pipeline (if needed)
-- [ ] Documented in agentos-local
+- [ ] Documented in shelf-local
 - [ ] Tested the agent

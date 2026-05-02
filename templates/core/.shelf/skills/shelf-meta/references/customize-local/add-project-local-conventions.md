@@ -1,4 +1,4 @@
-# Add Project-Local Conventions
+﻿# Add Project-Local Conventions
 
 Often the user does not need to change AgentOS Shelf mechanics; they need local AI to understand their team's conventions. In that case, prefer `.shelf/spec/` or a project-local skill instead of editing `shelf-meta`.
 
@@ -17,15 +17,15 @@ Often the user does not need to change AgentOS Shelf mechanics; they need local 
 If the user wants AI to know "how this project customizes AgentOS Shelf," create a local skill:
 
 ```text
-.claude/skills/agentos-local/
-└── SKILL.md
+.claude/skills/shelf-local/
+鈹斺攢鈹€ SKILL.md
 ```
 
 Example:
 
 ```md
 ---
-name: agentos-local
+name: shelf-local
 description: "Project-local AgentOS Shelf customizations for this repository. Use when changing this project's AgentOS Shelf workflow, hooks, local agents, or team-specific conventions."
 ---
 

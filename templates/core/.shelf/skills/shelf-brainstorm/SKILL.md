@@ -1,4 +1,4 @@
----
+﻿---
 name: shelf-brainstorm
 description: "Guides collaborative requirements discovery before implementation. Creates task directory, seeds PRD, asks high-value questions one at a time, researches technical choices, and converges on MVP scope. Use when requirements are unclear, there are multiple valid approaches, or the user describes a new feature or complex task."
 ---
@@ -10,7 +10,7 @@ Guide AI through collaborative requirements discovery **before implementation**,
 * **Task-first** (capture ideas immediately)
 * **Action-before-asking** (reduce low-value questions)
 * **Research-first** for technical choices (avoid asking users to invent options)
-* **Diverge → Converge** (expand thinking, then lock MVP)
+* **Diverge 鈫?Converge** (expand thinking, then lock MVP)
 
 ---
 
@@ -31,19 +31,19 @@ Triggered from $start when the user describes a development task, especially whe
    Always ensure a task exists at the start so the user's ideas are recorded immediately.
 
 2. **Action before asking**
-   If you can derive the answer from repo code, docs, configs, conventions, or quick research — do that first.
+   If you can derive the answer from repo code, docs, configs, conventions, or quick research 鈥?do that first.
 
 3. **One question per message**
    Never overwhelm the user with a list of questions. Ask one, update PRD, repeat.
 
 4. **Prefer concrete options**
-   For preference/decision questions, present 2–3 feasible, specific approaches with trade-offs.
+   For preference/decision questions, present 2鈥? feasible, specific approaches with trade-offs.
 
 5. **Research-first for technical choices**
    If the decision depends on industry conventions / similar tools / established patterns, do research first, then propose options.
 
-6. **Diverge → Converge**
-   After initial understanding, proactively consider future evolution, related scenarios, and failure/edge cases — then converge to an MVP with explicit out-of-scope.
+6. **Diverge 鈫?Converge**
+   After initial understanding, proactively consider future evolution, related scenarios, and failure/edge cases 鈥?then converge to an MVP with explicit out-of-scope.
 
 7. **No meta questions**
    Do not ask "should I search?" or "can you paste the code so I can continue?"
@@ -56,7 +56,7 @@ Triggered from $start when the user describes a development task, especially whe
 Before any Q&A, ensure a task exists. If none exists, create one immediately.
 
 * Use a **temporary working title** derived from the user's message.
-* It's OK if the title is imperfect — refine later in PRD.
+* It's OK if the title is imperfect 鈥?refine later in PRD.
 
 ```bash
 TASK_DIR=$(python3 ./.shelf/scripts/task.py create "brainstorm: <short goal>" --slug <auto>)
@@ -142,8 +142,8 @@ Write findings into PRD:
 | Complexity   | Criteria                                               | Action                                      |
 | ------------ | ------------------------------------------------------ | ------------------------------------------- |
 | **Trivial**  | Single-line fix, typo, obvious change                  | Skip brainstorm, implement directly         |
-| **Simple**   | Clear goal, 1–2 files, scope well-defined              | Ask 1 confirm question, then implement      |
-| **Moderate** | Multiple files, some ambiguity                         | Light brainstorm (2–3 high-value questions) |
+| **Simple**   | Clear goal, 1鈥? files, scope well-defined              | Ask 1 confirm question, then implement      |
+| **Moderate** | Multiple files, some ambiguity                         | Light brainstorm (2鈥? high-value questions) |
 | **Complex**  | Vague goal, architectural choices, multiple approaches | Full brainstorm                             |
 
 > Note: Task already exists from Step 0. Classification only affects depth of brainstorming.
@@ -154,7 +154,7 @@ Write findings into PRD:
 
 Before asking ANY question, run the following gate:
 
-### Gate A — Can I derive this without the user?
+### Gate A 鈥?Can I derive this without the user?
 
 If answer is available via:
 
@@ -162,9 +162,9 @@ If answer is available via:
 * docs/specs/conventions
 * quick market/OSS research
 
-→ **Do not ask.** Fetch it, summarize, update PRD.
+鈫?**Do not ask.** Fetch it, summarize, update PRD.
 
-### Gate B — Is this a meta/lazy question?
+### Gate B 鈥?Is this a meta/lazy question?
 
 Examples:
 
@@ -172,68 +172,68 @@ Examples:
 * "Can you paste the code so I can proceed?"
 * "What does the code look like?" (when repo is available)
 
-→ **Do not ask.** Take action.
+鈫?**Do not ask.** Take action.
 
-### Gate C — What type of question is it?
+### Gate C 鈥?What type of question is it?
 
 * **Blocking**: cannot proceed without user input
 * **Preference**: multiple valid choices, depends on product/UX/risk preference
 * **Derivable**: should be answered by inspection/research
 
-→ Only ask **Blocking** or **Preference**.
+鈫?Only ask **Blocking** or **Preference**.
 
 ---
 
 ## Step 4: Research-first Mode (Mandatory for technical choices)
 
-### Trigger conditions (any → research-first)
+### Trigger conditions (any 鈫?research-first)
 
 * The task involves selecting an approach, library, protocol, framework, template system, plugin mechanism, or CLI UX convention
 * The user asks for "best practice", "how others do it", "recommendation"
 * The user can't reasonably enumerate options
 
-### Delegate to `agentos-research` sub-agent (don't research inline)
+### Delegate to `shelf-research` sub-agent (don't research inline)
 
-For each research topic, **spawn a `agentos-research` sub-agent via the Task tool** — don't do WebFetch / WebSearch / `gh api` inline in the main conversation.
+For each research topic, **spawn a `shelf-research` sub-agent via the Task tool** 鈥?don't do WebFetch / WebSearch / `gh api` inline in the main conversation.
 
 Why:
-- The sub-agent has its own context window → doesn't pollute brainstorm context with raw tool output
-- It persists findings to `{TASK_DIR}/research/<topic>.md` (the contract — see `workflow.md` Phase 1.2)
+- The sub-agent has its own context window 鈫?doesn't pollute brainstorm context with raw tool output
+- It persists findings to `{TASK_DIR}/research/<topic>.md` (the contract 鈥?see `workflow.md` Phase 1.2)
 - It returns only `{file path, one-line summary}` to the main agent
-- Independent topics can be **parallelized** — spawn multiple sub-agents in one tool call
+- Independent topics can be **parallelized** 鈥?spawn multiple sub-agents in one tool call
 
-Agent type: `agentos-research`
+Agent type: `shelf-research`
 Task description template: "Research <specific question>; persist findings to `{TASK_DIR}/research/<topic-slug>.md`."
 
-❌ Bad (what you must NOT do):
+鉂?Bad (what you must NOT do):
 ```
-Main agent: WebFetch(url-A) → WebFetch(url-B) → Bash(gh api ...)
-          → WebSearch(q1) → WebSearch(q2) → ... (10+ inline calls)
-          → Write(research/topic.md)
+Main agent: WebFetch(url-A) 鈫?WebFetch(url-B) 鈫?Bash(gh api ...)
+          鈫?WebSearch(q1) 鈫?WebSearch(q2) 鈫?... (10+ inline calls)
+          鈫?Write(research/topic.md)
 ```
-→ Pollutes main context with raw HTML/JSON, burns tokens.
+鈫?Pollutes main context with raw HTML/JSON, burns tokens.
 
-✅ Good:
+鉁?Good:
 ```
-Main agent: Task(subagent_type="agentos-research",
+Main agent: Task(subagent_type="shelf-research",
                  prompt="Research topic A; persist to research/topic-a.md")
-          + Task(subagent_type="agentos-research",
+          + Task(subagent_type="shelf-research",
                  prompt="Research topic B; persist to research/topic-b.md")
-          + Task(subagent_type="agentos-research",
+          + Task(subagent_type="shelf-research",
                  prompt="Research topic C; persist to research/topic-c.md")
-→ Reads research/topic-{a,b,c}.md after they finish.
+鈫?Reads research/topic-{a,b,c}.md after they finish.
 ```
 
 ### Research steps (to pass into each sub-agent prompt)
 
-Each `agentos-research` sub-agent should:
+Each `shelf-research` sub-agent should:
 
-1. Identify 2–4 comparable tools/patterns for its topic
+1. Identify 2鈥? comparable tools/patterns for its topic
 2. Summarize common conventions and why they exist
 3. Map conventions onto our repo constraints
 4. Write findings to `{TASK_DIR}/research/<topic>.md`
 
-Main agent then reads the persisted files and produces **2–3 feasible approaches** in PRD.
+Main agent then reads the persisted files and produces **2鈥? feasible approaches** in PRD.
 
 ### Research output format (PRD)
 
@@ -244,8 +244,8 @@ Optionally, add a convergence section with feasible approaches derived from the 
 ```markdown
 ## Research References
 
-* [`research/<topic-a>.md`](research/<topic-a>.md) — <one-line takeaway>
-* [`research/<topic-b>.md`](research/<topic-b>.md) — <one-line takeaway>
+* [`research/<topic-a>.md`](research/<topic-a>.md) 鈥?<one-line takeaway>
+* [`research/<topic-b>.md`](research/<topic-b>.md) 鈥?<one-line takeaway>
 
 ## Research Notes
 
@@ -283,15 +283,15 @@ Then ask **one** preference question:
 
 ---
 
-## Step 5: Expansion Sweep (DIVERGE) — Required after initial understanding
+## Step 5: Expansion Sweep (DIVERGE) 鈥?Required after initial understanding
 
 After you can summarize the goal, proactively broaden thinking before converging.
 
-### Expansion categories (keep to 1–2 bullets each)
+### Expansion categories (keep to 1鈥? bullets each)
 
 1. **Future evolution**
 
-   * What might this feature become in 1–3 months?
+   * What might this feature become in 1鈥? months?
    * What extension points are worth preserving now?
 
 2. **Related scenarios**
@@ -311,9 +311,9 @@ I understand you want to implement: <current goal>.
 
 Before diving into design, let me quickly diverge to consider three categories (to avoid rework later):
 
-1. Future evolution: <1–2 bullets>
-2. Related scenarios: <1–2 bullets>
-3. Failure/edge cases: <1–2 bullets>
+1. Future evolution: <1鈥? bullets>
+2. Related scenarios: <1鈥? bullets>
+3. Failure/edge cases: <1鈥? bullets>
 
 For this MVP, which would you like to include (or none)?
 
@@ -325,8 +325,8 @@ For this MVP, which would you like to include (or none)?
 
 Then update PRD:
 
-* What's in MVP → `Requirements`
-* What's excluded → `Out of Scope`
+* What's in MVP 鈫?`Requirements`
+* What's excluded 鈫?`Out of Scope`
 
 ---
 
@@ -339,7 +339,7 @@ Then update PRD:
 * After each user answer:
 
   * Update PRD immediately
-  * Move answered items from `Open Questions` → `Requirements`
+  * Move answered items from `Open Questions` 鈫?`Requirements`
   * Update `Acceptance Criteria` with testable checkboxes
   * Clarify `Out of Scope`
 
@@ -355,20 +355,20 @@ Then update PRD:
 ```markdown
 For <topic>, which approach do you prefer?
 
-1. **Option A** — <what it means + trade-off>
-2. **Option B** — <what it means + trade-off>
-3. **Option C** — <what it means + trade-off>
-4. **Other** — describe your preference
+1. **Option A** 鈥?<what it means + trade-off>
+2. **Option B** 鈥?<what it means + trade-off>
+3. **Option C** 鈥?<what it means + trade-off>
+4. **Other** 鈥?describe your preference
 ```
 
 ---
 
 ## Step 7: Propose Approaches + Record Decisions (Complex tasks)
 
-After requirements are clear enough, propose 2–3 approaches (if not already done via research-first):
+After requirements are clear enough, propose 2鈥? approaches (if not already done via research-first):
 
 ```markdown
-Based on current information, here are 2–3 feasible approaches:
+Based on current information, here are 2鈥? feasible approaches:
 
 **Approach A: <name>** (Recommended)
 
@@ -512,17 +512,15 @@ After brainstorm completes (Step 8 confirmation approved), the flow continues to
 ```text
 Brainstorm
   Step 0: Create task directory + seed PRD
-  Step 1–7: Discover requirements, research, converge
-  Step 8: Final confirmation → user approves
-  ↓
-Task Workflow Phase 2 (Prepare for Implementation)
+  Step 1鈥?: Discover requirements, research, converge
+  Step 8: Final confirmation 鈫?user approves
+  鈫?Task Workflow Phase 2 (Prepare for Implementation)
   Code-Spec Depth Check (if applicable)
-  → Research codebase (based on confirmed PRD)
-  → Configure code-spec context (jsonl files)
-  → Activate task
-  ↓
-Task Workflow Phase 3 (Execute)
-  Implement → Check → Complete
+  鈫?Research codebase (based on confirmed PRD)
+  鈫?Configure code-spec context (jsonl files)
+  鈫?Activate task
+  鈫?Task Workflow Phase 3 (Execute)
+  Implement 鈫?Check 鈫?Complete
 ```
 
 The task directory and PRD already exist from brainstorm, so Phase 1 of the Task Workflow is skipped entirely.

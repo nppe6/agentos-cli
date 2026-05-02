@@ -1,4 +1,4 @@
-# AgentOS Shelf File Reference
+﻿# AgentOS Shelf File Reference
 
 Complete reference of all files in the `.shelf/` directory.
 
@@ -8,20 +8,19 @@ Complete reference of all files in the `.shelf/` directory.
 
 ```
 .shelf/
-├── .developer              # Developer identity (gitignored)
-├── .runtime/               # Session-scoped runtime state (gitignored)
-├── .current-task           # Legacy ignored pointer; not an active-task source
-├── .ralph-state.json       # Ralph Loop state (gitignored)
-├── .template-hashes.json   # Template version tracking
-├── .version                # Installed AgentOS Shelf version
-├── .gitignore              # Git ignore rules
-├── workflow.md             # Main workflow documentation
-├── worktree.yaml           # Multi-session configuration
-│
-├── workspace/              # Developer workspaces
-├── tasks/                  # Task tracking
-├── spec/                   # Coding guidelines
-└── scripts/                # Automation scripts
+鈹溾攢鈹€ .developer              # Developer identity (gitignored)
+鈹溾攢鈹€ .runtime/               # Session-scoped runtime state (gitignored)
+鈹溾攢鈹€ .current-task           # Legacy ignored pointer; not an active-task source
+鈹溾攢鈹€ .ralph-state.json       # Ralph Loop state (gitignored)
+鈹溾攢鈹€ .template-hashes.json   # Template version tracking
+鈹溾攢鈹€ .version                # Installed AgentOS Shelf version
+鈹溾攢鈹€ .gitignore              # Git ignore rules
+鈹溾攢鈹€ workflow.md             # Main workflow documentation
+鈹溾攢鈹€ worktree.yaml           # Multi-session configuration
+鈹?鈹溾攢鈹€ workspace/              # Developer workspaces
+鈹溾攢鈹€ tasks/                  # Task tracking
+鈹溾攢鈹€ spec/                   # Coding guidelines
+鈹斺攢鈹€ scripts/                # Automation scripts
 ```
 
 ---
@@ -105,9 +104,9 @@ uses `.runtime/sessions/<session-key>.json` only.
 
 ### `.template-hashes.json`
 
-**Purpose**: Track template file versions for `agentos update`.
+**Purpose**: Track template file versions for `agentos-cli shelf update`.
 
-**Created by**: `agentos init` or `agentos update`
+**Created by**: `agentos-cli shelf init` or `agentos-cli shelf update`
 
 **Format**: JSON object mapping file paths to SHA-256 hashes.
 
@@ -120,12 +119,12 @@ uses `.runtime/sessions/<session-key>.json` only.
 ```
 
 **Used by**:
-- `agentos update` - Detect which files have been modified
+- `agentos-cli shelf update` - Detect which files have been modified
 - Determines if files can be auto-updated or need conflict resolution
 
 **Behavior**:
-- File hash matches template → Safe to update
-- File hash differs → User modified, needs manual merge
+- File hash matches template 鈫?Safe to update
+- File hash differs 鈫?User modified, needs manual merge
 
 ---
 
@@ -133,7 +132,7 @@ uses `.runtime/sessions/<session-key>.json` only.
 
 **Purpose**: Track installed AgentOS Shelf CLI version.
 
-**Created by**: `agentos init` or `agentos update`
+**Created by**: `agentos-cli shelf init` or `agentos-cli shelf update`
 
 **Format**: Plain text, semver version string.
 
@@ -142,7 +141,7 @@ uses `.runtime/sessions/<session-key>.json` only.
 ```
 
 **Used by**:
-- `agentos update` - Determine if update is needed
+- `agentos-cli shelf update` - Determine if update is needed
 - Version mismatch detection
 
 ---
@@ -190,7 +189,7 @@ uses `.runtime/sessions/<session-key>.json` only.
 
 **Purpose**: Main workflow documentation for developers and AI.
 
-**Created by**: `agentos init`
+**Created by**: `agentos-cli shelf init`
 
 **Content sections**:
 1. Quick Start guide
@@ -211,7 +210,7 @@ uses `.runtime/sessions/<session-key>.json` only.
 
 **Purpose**: Configure Multi-Session and Ralph Loop.
 
-**Created by**: `agentos init`
+**Created by**: `agentos-cli shelf init`
 
 **Format**: YAML
 
@@ -227,7 +226,7 @@ verify:
   - pnpm typecheck
 ```
 
-→ See `claude-code/worktree-config.md` for details.
+鈫?See `claude-code/worktree-config.md` for details.
 
 ---
 
@@ -275,31 +274,31 @@ verify:
 
 Developer workspaces with journals and indexes.
 
-→ See `core/workspace.md`
+鈫?See `core/workspace.md`
 
 ### `tasks/`
 
 Task directories with PRDs and session files.
 
-→ See `core/tasks.md`
+鈫?See `core/tasks.md`
 
 ### `spec/`
 
 Coding guidelines and specifications.
 
-→ See `core/specs.md`
+鈫?See `core/specs.md`
 
 ### `scripts/`
 
 Automation scripts.
 
-→ See `core/scripts.md` and `claude-code/scripts.md`
+鈫?See `core/scripts.md` and `claude-code/scripts.md`
 
 ---
 
 ## Template Files
 
-These files are managed by `agentos update`:
+These files are managed by `agentos-cli shelf update`:
 
 | File | Purpose |
 |------|---------|
@@ -313,53 +312,53 @@ These files are managed by `agentos update`:
 
 **Update behavior**:
 1. Compare file hash with `.template-hashes.json`
-2. If unchanged → Auto-update
-3. If modified → Create `.new` file for manual merge
+2. If unchanged 鈫?Auto-update
+3. If modified 鈫?Create `.new` file for manual merge
 4. Update hashes after successful update
 
 ---
 
 ## File Lifecycle
 
-### Created by `agentos init`
+### Created by `agentos-cli shelf init`
 
 ```
 .shelf/
-├── .template-hashes.json
-├── .version
-├── .gitignore
-├── workflow.md
-├── worktree.yaml
-├── spec/
-│   ├── frontend/
-│   ├── backend/
-│   └── guides/
-└── scripts/
+鈹溾攢鈹€ .template-hashes.json
+鈹溾攢鈹€ .version
+鈹溾攢鈹€ .gitignore
+鈹溾攢鈹€ workflow.md
+鈹溾攢鈹€ worktree.yaml
+鈹溾攢鈹€ spec/
+鈹?  鈹溾攢鈹€ frontend/
+鈹?  鈹溾攢鈹€ backend/
+鈹?  鈹斺攢鈹€ guides/
+鈹斺攢鈹€ scripts/
 ```
 
 ### Created at runtime
 
 ```
 .shelf/
-├── .developer           # init_developer.py
-├── .runtime/sessions/   # task.py start
-├── .current-task        # legacy ignored file, not active-task source
-├── .ralph-state.json    # ralph-loop.py
-├── workspace/{dev}/     # init_developer.py
-│   ├── index.md
-│   ├── journal-1.md
-│   └── .agents/
-└── tasks/{task}/        # task.py create
-    ├── task.json
-    ├── prd.md
-    └── *.jsonl
+鈹溾攢鈹€ .developer           # init_developer.py
+鈹溾攢鈹€ .runtime/sessions/   # task.py start
+鈹溾攢鈹€ .current-task        # legacy ignored file, not active-task source
+鈹溾攢鈹€ .ralph-state.json    # ralph-loop.py
+鈹溾攢鈹€ workspace/{dev}/     # init_developer.py
+鈹?  鈹溾攢鈹€ index.md
+鈹?  鈹溾攢鈹€ journal-1.md
+鈹?  鈹斺攢鈹€ .agents/
+鈹斺攢鈹€ tasks/{task}/        # task.py create
+    鈹溾攢鈹€ task.json
+    鈹溾攢鈹€ prd.md
+    鈹斺攢鈹€ *.jsonl
 ```
 
 ### Cleaned up
 
 ```
 # After task completion
-.shelf/tasks/{task}/ → .shelf/tasks/archive/YYYY-MM/
+.shelf/tasks/{task}/ 鈫?.shelf/tasks/archive/YYYY-MM/
 
 # After worktree removal
 .agents/registry.json entries removed

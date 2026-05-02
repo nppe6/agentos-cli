@@ -1,4 +1,4 @@
-# How To: Add Spec Category
+﻿# How To: Add Spec Category
 
 Add a new spec category like `mobile/`.
 
@@ -13,7 +13,7 @@ Add a new spec category like `mobile/`.
 | `.shelf/spec/mobile/index.md` | Create | Yes |
 | `.shelf/spec/mobile/*.md` | Create | Yes |
 | Task JSONL templates | Update | Yes |
-| `agentos-local/SKILL.md` | Update | Yes |
+| `shelf-local/SKILL.md` | Update | Yes |
 
 ---
 
@@ -126,9 +126,9 @@ Edit existing JSONL files:
 
 ---
 
-## Step 5: Document in agentos-local
+## Step 5: Document in shelf-local
 
-Update `.claude/skills/agentos-local/SKILL.md`:
+Update `.claude/skills/shelf-local/SKILL.md`:
 
 ```markdown
 ## Specs Customized
@@ -199,5 +199,5 @@ See [State Management](./state-management.md) for more details.
 - [ ] Index file created with overview
 - [ ] Spec files created with proper format
 - [ ] JSONL templates updated
-- [ ] Documented in agentos-local
+- [ ] Documented in shelf-local
 - [ ] Cross-references verified

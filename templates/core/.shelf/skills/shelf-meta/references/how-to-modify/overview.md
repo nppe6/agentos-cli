@@ -1,4 +1,4 @@
-# How-To Modification Guide
+﻿# How-To Modification Guide
 
 Common AgentOS Shelf customization scenarios and what files need to be modified.
 
@@ -8,15 +8,15 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 
 | Task | Files to Modify | Platform |
 |------|-----------------|----------|
-| [Add slash command](#add-slash-command) | commands/, agentos-local | All |
-| [Add agent](#add-agent) | agents/, hook, jsonl, agentos-local | CC |
-| [Modify hook](#modify-hook) | hooks/, settings.json, agentos-local | CC |
-| [Add spec category](#add-spec-category) | spec/, jsonl, agentos-local | All |
+| [Add slash command](#add-slash-command) | commands/, shelf-local | All |
+| [Add agent](#add-agent) | agents/, hook, jsonl, shelf-local | CC |
+| [Modify hook](#modify-hook) | hooks/, settings.json, shelf-local | CC |
+| [Add spec category](#add-spec-category) | spec/, jsonl, shelf-local | All |
 | [Change verify commands](#change-verify-commands) | worktree.yaml | CC |
-| [Add workflow phase](#add-workflow-phase) | task.json, dispatch, agentos-local | CC |
+| [Add workflow phase](#add-workflow-phase) | task.json, dispatch, shelf-local | CC |
 | [Add post_create step](#add-post_create-step) | worktree.yaml | CC |
-| [Modify session start](#modify-session-start) | session-start.py, agentos-local | CC |
-| [Add core script](#add-core-script) | scripts/, agentos-local | All |
+| [Modify session start](#modify-session-start) | session-start.py, shelf-local | CC |
+| [Add core script](#add-core-script) | scripts/, shelf-local | All |
 | [Change task types](#change-task-types) | task.py, jsonl templates | All |
 
 **Platform**: `All` = All platforms | `CC` = Claude Code only
@@ -27,12 +27,12 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 
 ### Add Slash Command
 
-**Scenario**: Add a new `/agentos:my-command` command.
+**Scenario**: Add a new `/shelf:my-command` command.
 
 **Files to modify**:
 
 ```
-.claude/commands/agentos/my-command.md    # Create: Command prompt
+.claude/commands/shelf/my-command.md    # Create: Command prompt
 .cursor/commands/my-command.md            # Create: Mirror for Cursor (optional)
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
@@ -40,9 +40,9 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 **Steps**:
 1. Create command file with YAML frontmatter
 2. Mirror to Cursor if needed
-3. Document in agentos-local
+3. Document in shelf-local
 
-→ See `add-command.md` for details.
+鈫?See `add-command.md` for details.
 
 ---
 
@@ -65,7 +65,7 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 task.json template                                  # Modify: Add to next_action
 ```
 
-→ See `add-agent.md` for details.
+鈫?See `add-agent.md` for details.
 
 ---
 
@@ -81,7 +81,7 @@ task.json template                                  # Modify: Add to next_action
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-→ See `modify-hook.md` for details.
+鈫?See `modify-hook.md` for details.
 
 ---
 
@@ -98,7 +98,7 @@ task.json template                                  # Modify: Add to next_action
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-→ See `add-spec.md` for details.
+鈫?See `add-spec.md` for details.
 
 ---
 
@@ -120,7 +120,7 @@ verify:
   - pnpm test        # Add this
 ```
 
-→ See `change-verify.md` for details.
+鈫?See `change-verify.md` for details.
 
 ---
 
@@ -138,7 +138,7 @@ task.json (in task directories)           # Modify: next_action array
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-→ See `add-phase.md` for details.
+鈫?See `add-phase.md` for details.
 
 ---
 
@@ -172,7 +172,7 @@ post_create:
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-→ See `modify-session-start.md` for details.
+鈫?See `modify-session-start.md` for details.
 
 ---
 
@@ -188,7 +188,7 @@ post_create:
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-→ See `add-script.md` for details.
+鈫?See `add-script.md` for details.
 
 ---
 
@@ -204,7 +204,7 @@ post_create:
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-→ See `change-task-types.md` for details.
+鈫?See `change-task-types.md` for details.
 
 ---
 

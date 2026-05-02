@@ -1,9 +1,9 @@
-# Agents
+﻿# Agents
 
 AgentOS Shelf agent files define specialized roles. Common AgentOS Shelf agents in a user project are:
 
-- `agentos-research`
-- `agentos-implement`
+- `shelf-research`
+- `shelf-implement`
 - `shelf-check`
 
 File locations and formats differ by platform, but responsibility boundaries should stay consistent.
@@ -12,8 +12,8 @@ File locations and formats differ by platform, but responsibility boundaries sho
 
 | Agent | Responsibility |
 | --- | --- |
-| `agentos-research` | Investigate the question and write findings into the current task's `research/`. |
-| `agentos-implement` | Implement against `prd.md`, `info.md`, `implement.jsonl`, and related spec/research. |
+| `shelf-research` | Investigate the question and write findings into the current task's `research/`. |
+| `shelf-implement` | Implement against `prd.md`, `info.md`, `implement.jsonl`, and related spec/research. |
 | `shelf-check` | Review changes, fix discovered issues, and run necessary checks. |
 
 Agent files should not become generic chat prompts. They should define input sources, write boundaries, whether code may be changed, and how results are reported.
@@ -22,16 +22,16 @@ Agent files should not become generic chat prompts. They should define input sou
 
 | Platform | Agent path |
 | --- | --- |
-| Claude Code | `.claude/agents/agentos-*.md` |
-| Cursor | `.cursor/agents/agentos-*.md` |
-| OpenCode | `.opencode/agents/agentos-*.md` |
-| Codex | `.codex/agents/agentos-*.toml` |
-| Kiro | `.kiro/agents/agentos-*.json` |
-| Gemini CLI | `.gemini/agents/agentos-*.md` |
-| Qoder | `.qoder/agents/agentos-*.md` |
-| CodeBuddy | `.codebuddy/agents/agentos-*.md` |
-| Factory Droid | `.factory/droids/agentos-*.md` |
-| Pi Agent | `.pi/agents/agentos-*.md` |
+| Claude Code | `.claude/agents/shelf-*.md` |
+| Cursor | `.cursor/agents/shelf-*.md` |
+| OpenCode | `.opencode/agents/shelf-*.md` |
+| Codex | `.codex/agents/shelf-*.md` |
+| Kiro | `.kiro/agents/shelf-*.json` |
+| Gemini CLI | `.gemini/agents/shelf-*.md` |
+| Qoder | `.qoder/agents/shelf-*.md` |
+| CodeBuddy | `.codebuddy/agents/shelf-*.md` |
+| Factory Droid | `.factory/droids/shelf-*.md` |
+| Pi Agent | `.pi/agents/shelf-*.md` |
 
 GitHub Copilot agent/prompt support is provided by a combination of directories such as `.github/agents/`, `.github/prompts/`, and `.github/skills/`; inspect the files actually generated in the user project.
 
@@ -61,9 +61,9 @@ This mode fits platforms whose hooks cannot reliably rewrite sub-agent prompts.
 
 | User need | Edit location |
 | --- | --- |
-| Implement agent must follow extra restrictions | The platform's `agentos-implement` agent file. |
+| Implement agent must follow extra restrictions | The platform's `shelf-implement` agent file. |
 | Check agent must run project-specific commands | `shelf-check` agent file, and `.shelf/spec/` if needed. |
-| Research agent must output a fixed format | `agentos-research` agent file. |
+| Research agent must output a fixed format | `shelf-research` agent file. |
 | Agent cannot read task context | Agent prelude or `inject-subagent-context` hook. |
 | Add a project-specific agent | Platform agent directory + related workflow/command/skill entry point. |
 

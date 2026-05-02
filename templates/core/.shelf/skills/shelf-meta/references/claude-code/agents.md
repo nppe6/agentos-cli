@@ -1,4 +1,4 @@
-# Agents Reference
+﻿# Agents Reference
 
 Documentation for the AgentOS Shelf agent system - specialized AI agents for different development phases.
 
@@ -65,13 +65,13 @@ model: opus
 
 **Workflow**:
 ```
-1. Run task.py current --source → find session active task directory
-2. Read task.json → get next_action array
+1. Run task.py current --source 鈫?find session active task directory
+2. Read task.json 鈫?get next_action array
 3. For each phase:
-   - implement → Task(subagent_type="implement")
-   - check → Task(subagent_type="check")
-   - finish → Task(subagent_type="check", prompt="[finish]...")
-   - create-pr → Bash("python3 ... create_pr.py")
+   - implement 鈫?Task(subagent_type="implement")
+   - check 鈫?Task(subagent_type="check")
+   - finish 鈫?Task(subagent_type="check", prompt="[finish]...")
+   - create-pr 鈫?Bash("python3 ... create_pr.py")
 ```
 
 **Forbidden**:
@@ -106,18 +106,18 @@ model: opus
 **Output**:
 ```
 task-dir/
-├── task.json      # Configured with branch, scope, dev_type
-├── prd.md         # Clear requirements
-├── implement.jsonl
-├── check.jsonl
-└── debug.jsonl
+鈹溾攢鈹€ task.json      # Configured with branch, scope, dev_type
+鈹溾攢鈹€ prd.md         # Clear requirements
+鈹溾攢鈹€ implement.jsonl
+鈹溾攢鈹€ check.jsonl
+鈹斺攢鈹€ debug.jsonl
 ```
 
 ---
 
 ## Research Agent
 
-**File**: `.claude/agents/research.md`
+**File**: `.claude/agents/shelf-research.md`
 
 **Purpose**: Find and explain code patterns. Pure research, no modifications.
 
@@ -155,7 +155,7 @@ task-dir/
 
 ## Implement Agent
 
-**File**: `.claude/agents/implement.md`
+**File**: `.claude/agents/shelf-implement.md`
 
 **Purpose**: Write code following injected specs.
 
@@ -178,7 +178,7 @@ task-dir/
 
 ## Check Agent
 
-**File**: `.claude/agents/check.md`
+**File**: `.claude/agents/shelf-check.md`
 
 **Purpose**: Review code and **self-fix** issues.
 
@@ -244,7 +244,7 @@ Task(
 
 1. Claude Code looks for `.claude/agents/{subagent_type}.md`
 2. Loads agent definition (tools, model, instructions)
-3. **PreToolUse hook fires** → `inject-subagent-context.py`
+3. **PreToolUse hook fires** 鈫?`inject-subagent-context.py`
 4. Hook injects context from JSONL files
 5. Agent runs with full context
 
@@ -256,24 +256,15 @@ Task(
 
 ```
 Task(subagent_type="implement") called
-            │
-            ▼
-    PreToolUse hook fires
-            │
-            ▼
-inject-subagent-context.py runs
-            │
-            ├── Resolve session active task
-            │
-            ├── Find task directory from .runtime/sessions/<session-key>.json
-            │
-            ├── Load implement.jsonl
-            │   {"file": ".shelf/spec/cli/backend/index.md", "reason": "..."}
-            │   {"file": "src/services/auth.ts", "reason": "..."}
-            │
-            ├── Read each file content
-            │
-            └── Build new prompt:
+            鈹?            鈻?    PreToolUse hook fires
+            鈹?            鈻?inject-subagent-context.py runs
+            鈹?            鈹溾攢鈹€ Resolve session active task
+            鈹?            鈹溾攢鈹€ Find task directory from .runtime/sessions/<session-key>.json
+            鈹?            鈹溾攢鈹€ Load implement.jsonl
+            鈹?  {"file": ".shelf/spec/cli/backend/index.md", "reason": "..."}
+            鈹?  {"file": "src/services/auth.ts", "reason": "..."}
+            鈹?            鈹溾攢鈹€ Read each file content
+            鈹?            鈹斺攢鈹€ Build new prompt:
                 # Implement Agent Task
                 ## Your Context
                 === .shelf/spec/cli/backend/index.md ===
@@ -301,33 +292,27 @@ In the **current directory** (no worktree):
 
 ```
 User request
-    │
-    ▼
-Orchestrator (you or dispatch)
-    │
-    ├── Task(subagent_type="research")
-    │   └── Returns: code patterns, relevant files
-    │
-    ├── Task(subagent_type="implement")
-    │   └── Returns: implemented code
-    │
-    ├── Task(subagent_type="check")
-    │   └── Returns: reviewed & fixed code
-    │
-    └── Human commits
+    鈹?    鈻?Orchestrator (you or dispatch)
+    鈹?    鈹溾攢鈹€ Task(subagent_type="research")
+    鈹?  鈹斺攢鈹€ Returns: code patterns, relevant files
+    鈹?    鈹溾攢鈹€ Task(subagent_type="implement")
+    鈹?  鈹斺攢鈹€ Returns: implemented code
+    鈹?    鈹溾攢鈹€ Task(subagent_type="check")
+    鈹?  鈹斺攢鈹€ Returns: reviewed & fixed code
+    鈹?    鈹斺攢鈹€ Human commits
 ```
 
-### Task Workflow (from /agentos:start)
+### Task Workflow (from /shelf:start)
 
 ```
 1. User describes task
 2. AI classifies (Question / Trivial / Development Task)
 3. For Development Task:
-   a. Research Agent → analyze codebase
+   a. Research Agent 鈫?analyze codebase
    b. Create task directory + JSONL files
-   c. task.py start → set session active task
-   d. Implement Agent → write code
-   e. Check Agent → review & fix
+   c. task.py start 鈫?set session active task
+   d. Implement Agent 鈫?write code
+   e. Check Agent 鈫?review & fix
    f. Human tests and commits
 ```
 
