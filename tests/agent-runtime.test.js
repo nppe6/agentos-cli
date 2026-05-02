@@ -87,7 +87,7 @@ test('resolveShelfScript requires initialized Shelf project', () => {
 
   assert.throws(
     () => resolveShelfScript(projectDirectory, 'task.py'),
-    /Run agent init first/
+    /Run shelf init first/
   );
 });
 
@@ -125,6 +125,23 @@ test('developer init delegates to init_developer.py', async () => {
   assert.equal(calls[0].target, path.resolve(projectDirectory));
   assert.equal(calls[0].script, 'init_developer.py');
   assert.deepEqual(calls[0].args, ['Ada']);
+});
+
+test('developer init can use native Node identity initialization', async () => {
+  const projectDirectory = createTempProject();
+  const calls = [];
+
+  const result = await agentDeveloperInit('Ada', projectDirectory, { native: true }, {
+    initializeDeveloperIdentity: (target, name, options) => {
+      calls.push({ target, name, options });
+      return { initialized: true, developer: name };
+    },
+    printBanner: () => {}
+  });
+
+  assert.equal(result.initialized, true);
+  assert.equal(calls[0].target, path.resolve(projectDirectory));
+  assert.equal(calls[0].name, 'Ada');
 });
 
 test('task action delegates arbitrary args to task.py', async () => {
@@ -204,7 +221,7 @@ test('workspace add-session requires a title', async () => {
   );
 });
 
-test('agent task command forwards passthrough args', async () => {
+test('shelf task command forwards passthrough args', async () => {
   const program = new FakeCommand();
   const calls = [];
 
@@ -214,7 +231,7 @@ test('agent task command forwards passthrough args', async () => {
     }
   });
 
-  const agentCommand = program.find('agent');
+  const agentCommand = program.find('shelf');
   const taskCommand = agentCommand.find('task [args...]');
 
   await taskCommand.actionHandler(['list', '--mine', '--status', 'in_progress'], { target: '.' });
@@ -225,7 +242,7 @@ test('agent task command forwards passthrough args', async () => {
   assert.deepEqual(calls[0].args, ['list', '--mine', '--status', 'in_progress']);
 });
 
-test('agent spec scaffold command forwards target and options', async () => {
+test('shelf spec scaffold command forwards target and options', async () => {
   const program = new FakeCommand();
   const calls = [];
 
@@ -235,7 +252,7 @@ test('agent spec scaffold command forwards target and options', async () => {
     }
   });
 
-  const agentCommand = program.find('agent');
+  const agentCommand = program.find('shelf');
   const specCommand = agentCommand.find('spec');
   const scaffoldCommand = specCommand.find('scaffold [target]');
 
@@ -253,7 +270,7 @@ test('agent spec scaffold command forwards target and options', async () => {
   assert.equal(calls[0].options.package, 'web=apps/web');
 });
 
-test('agent workspace commands forward target and options', async () => {
+test('shelf workspace commands forward target and options', async () => {
   const program = new FakeCommand();
   const calls = [];
 
@@ -266,7 +283,7 @@ test('agent workspace commands forward target and options', async () => {
     }
   });
 
-  const agentCommand = program.find('agent');
+  const agentCommand = program.find('shelf');
   const workspaceCommand = agentCommand.find('workspace');
   const contextCommand = workspaceCommand.find('context [target]');
   const addSessionCommand = workspaceCommand.find('add-session [target]');
@@ -286,4 +303,13 @@ test('agent workspace commands forward target and options', async () => {
   assert.equal(calls[1].target, 'project-c');
   assert.equal(calls[1].options.title, 'Session');
   assert.equal(calls[1].options.noCommit, true);
+});
+
+test('agent command remains a compatibility alias', async () => {
+  const program = new FakeCommand();
+
+  registerAgentCommands(program, {});
+
+  assert.ok(program.find('shelf'));
+  assert.ok(program.find('agent'));
 });

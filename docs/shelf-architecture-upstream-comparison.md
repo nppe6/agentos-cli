@@ -31,15 +31,15 @@ Files:
 
 Current commands:
 
-- `agent init`: writes `.shelf` plus selected tool projections.
-- `agent developer init`: delegates developer identity setup to `.shelf/scripts/init_developer.py`.
-- `agent task`: delegates task lifecycle operations to `.shelf/scripts/task.py`.
-- `agent doctor`: checks required Shelf files, selected tool directories, and warns when detected workspace packages do not yet have package specs.
-- `agent sync`: regenerates projections from `.shelf`.
-- `agent update`: conservatively updates projections with backups and protected deletes.
-- `agent spec scaffold`: generates package-specific spec folders for workspace packages.
-- `agent workspace context/add-session`: reads Shelf context and appends developer journal sessions through runtime scripts.
-- `agent skills import`: imports external skill directories into Shelf or tool-specific destinations.
+- `shelf init`: writes `.shelf` plus selected tool projections.
+- `shelf developer init`: delegates developer identity setup to `.shelf/scripts/init_developer.py`.
+- `shelf task`: delegates task lifecycle operations to `.shelf/scripts/task.py`.
+- `shelf doctor`: checks required Shelf files, selected tool directories, and warns when detected workspace packages do not yet have package specs.
+- `shelf sync`: regenerates projections from `.shelf`.
+- `shelf update`: conservatively updates projections with backups and protected deletes.
+- `shelf spec scaffold`: generates package-specific spec folders for workspace packages.
+- `shelf workspace context/add-session`: reads Shelf context and appends developer journal sessions through runtime scripts.
+- `shelf skills import`: imports external skill directories into Shelf or tool-specific destinations.
 
 Assessment:
 
@@ -122,7 +122,7 @@ Current behavior:
 - `sync` classifies projection files as create, update, unchanged, user-modified, or conflict.
 - User-modified projection files are skipped during sync.
 - For managed root blocks such as `AGENTS.md`, hash comparison is scoped to the Shelf block so user-authored text outside the block is preserved.
-- `agent update` writes `.shelf/update-manifest.json` with from/to CLI versions, lightweight migration records, backups, deletes, skipped writes, and skipped deletes.
+- `shelf update` writes `.shelf/update-manifest.json` with from/to CLI versions, lightweight migration records, backups, deletes, skipped writes, and skipped deletes.
 - `.shelf/update.skip` can freeze exact generated files or generated directories during update.
 
 Assessment:
@@ -185,15 +185,15 @@ Key upstream ideas:
 | Shared implement/check/research agents | `.shelf/agents` projects to Codex/Claude | Platform-specific agents | Partially covered |
 | Thin root AGENTS rules | `AGENTS.shared.md` with block-level sync | managed `AGENTS.md` block | Covered |
 | Claude references AGENTS | `CLAUDE.md` shim | upstream also treats AGENTS as shared rules source | Covered |
-| Task directory model | `.shelf/tasks`, bootstrap task, and `agent task` passthrough | full `.trellis/tasks` lifecycle | Partially covered |
-| Project memory | workspace directory, journal scripts, `agent developer init`, and explicit `agent workspace` wrappers | journal/index system with init/onboarding | Partially covered |
+| Task directory model | `.shelf/tasks`, bootstrap task, and `shelf task` passthrough | full `.trellis/tasks` lifecycle | Partially covered |
+| Project memory | workspace directory, journal scripts, `shelf developer init`, and explicit `shelf workspace` wrappers | journal/index system with init/onboarding | Partially covered |
 | Spec injection | generic specs exist; Codex implement/check agents load context explicitly | hooks/preludes inject curated specs | Partially covered |
 | Automatic session context injection | pull-based Codex prelude plus lightweight Claude session-start hook | shared hooks/plugins/settings | Selective |
 | Platform capability registry | Codex/Claude registry with capability flags | 14-platform `AI_TOOLS` registry | Partial |
 | Rich spec bootstrap | backend/frontend/guides templates plus explicit package spec scaffolding without framework-specific packs | backend/frontend/guides templates and monorepo detection | Selective |
 | Bootstrap task | static `00-bootstrap-guidelines` template | `00-bootstrap-guidelines` | Selective |
-| Joiner onboarding | explicit `agent developer join <name>` task generator | `00-join-<developer>` | Selective |
-| Native update/migration | conservative `agent update` with backups, protected paths, safe deletes, `update.skip`, and lightweight versioned update manifest | full `update` with migrations | Selective |
+| Joiner onboarding | explicit `shelf developer join <name>` task generator | `00-join-<developer>` | Selective |
+| Native update/migration | conservative `shelf update` with backups, protected paths, safe deletes, `update.skip`, and lightweight versioned update manifest | full `update` with migrations | Selective |
 | Internal `.shelf` ignore rules | `.shelf/.gitignore` template | `.trellis/.gitignore` | Covered |
 | Python requirement check | `doctor` warns when Python is missing | Python >= 3.9 check | Partial |
 | Managed block replacement | block-level `AGENTS.md` handling | block-level AGENTS/workflow handling | Partial |
@@ -227,9 +227,9 @@ Current state:
 
 - `.shelf/tasks/` exists.
 - `task.py` and common task utilities are present.
-- `agent task [args...]` delegates to `.shelf/scripts/task.py`.
+- `shelf task [args...]` delegates to `.shelf/scripts/task.py`.
 - A static `00-bootstrap-guidelines` task is included in the template.
-- `agent developer join <name>` creates an explicit onboarding task when needed.
+- `shelf developer join <name>` creates an explicit onboarding task when needed.
 - Workflow skills reference PRD, `info.md`, `implement.jsonl`, `check.jsonl`, research files, and task status.
 
 Gap:
@@ -240,7 +240,7 @@ Gap:
 Recommended next step:
 
 - Keep task logic in Python for now and improve docs/examples around the passthrough CLI.
-- Keep developer-specific onboarding explicit through `agent developer join`.
+- Keep developer-specific onboarding explicit through `shelf developer join`.
 
 ### Parallel Agent Execution
 
@@ -266,15 +266,15 @@ Current state:
 
 - `.shelf/workspace/` exists.
 - `add_session.py` and journal utilities are present.
-- `agent developer init <name>` delegates to `.shelf/scripts/init_developer.py`.
-- `agent workspace context` delegates to `.shelf/scripts/get_context.py`.
-- `agent workspace add-session` delegates to `.shelf/scripts/add_session.py`.
+- `shelf developer init <name>` delegates to `.shelf/scripts/init_developer.py`.
+- `shelf workspace context` delegates to `.shelf/scripts/get_context.py`.
+- `shelf workspace add-session` delegates to `.shelf/scripts/add_session.py`.
 - Claude receives a lightweight session-start reminder hook.
 
 Gap:
 
 - No automatic session-start or finish-work hook writes journal entries.
-- Journal capture is explicit through `agent workspace add-session`.
+- Journal capture is explicit through `shelf workspace add-session`.
 - Developer initialization is available as an explicit command, not as an automatic `agent init` step.
 
 Recommended next step:
@@ -312,7 +312,7 @@ Recommendation:
 
 ### 2. Update Safety
 
-The project now has `agent update` with projection backups, protected paths, safe deletes, `.shelf/update.skip`, and `.shelf/update-manifest.json` version/migration records.
+The project now has `shelf update` with projection backups, protected paths, safe deletes, `.shelf/update.skip`, and `.shelf/update-manifest.json` version/migration records.
 
 Recommendation:
 
@@ -321,7 +321,7 @@ Recommendation:
 
 ### 3. Monorepo Spec Scaffolding
 
-The CLI detects simple `package.json` and `pnpm-workspace.yaml` workspace packages and can now generate per-package spec trees through `agent spec scaffold`.
+The CLI detects simple `package.json` and `pnpm-workspace.yaml` workspace packages and can now generate per-package spec trees through `shelf spec scaffold`.
 
 Recommendation:
 

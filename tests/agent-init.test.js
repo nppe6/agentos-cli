@@ -51,6 +51,8 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'agentos-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'agents', 'check.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'continue.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'finish-work.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'settings.json')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'hooks', 'shelf-session-start.py')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'agents', 'implement.md')), true);
@@ -97,6 +99,61 @@ test('injects core-only workflow when the core stack is selected', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'manifest.json')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'template-hashes.json')), true);
+});
+
+test('init initializes developer identity from git user name by default', async () => {
+  const projectDirectory = createTempProject();
+
+  const result = await agentInit(projectDirectory, {
+    stack: 'core',
+    force: true,
+    gitMode: 'track',
+    tools: ['codex']
+  }, {
+    findGitUserName: () => 'Ada',
+    printBanner: () => {}
+  });
+
+  assert.equal(result.developer, 'Ada');
+  assert.equal(result.developerInitialized, true);
+  assert.match(fs.readFileSync(path.join(projectDirectory, '.shelf', '.developer'), 'utf8'), /name=Ada/);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'workspace', 'Ada', 'journal-1.md')), true);
+
+  const hashes = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'template-hashes.json'), 'utf8'));
+  assert.equal(hashes.files['.shelf/.developer'], undefined);
+});
+
+test('init accepts explicit developer user and can skip developer setup', async () => {
+  const projectDirectory = createTempProject();
+
+  const result = await agentInit(projectDirectory, {
+    stack: 'core',
+    force: true,
+    gitMode: 'track',
+    tools: ['codex'],
+    user: 'Grace'
+  }, {
+    findGitUserName: () => 'Ada',
+    printBanner: () => {}
+  });
+
+  assert.equal(result.developer, 'Grace');
+  assert.match(fs.readFileSync(path.join(projectDirectory, '.shelf', '.developer'), 'utf8'), /name=Grace/);
+
+  const skippedDirectory = createTempProject();
+  const skipped = await agentInit(skippedDirectory, {
+    stack: 'core',
+    force: true,
+    gitMode: 'track',
+    tools: ['codex'],
+    skipDeveloper: true
+  }, {
+    findGitUserName: () => 'Ada',
+    printBanner: () => {}
+  });
+
+  assert.equal(skipped.developerInitialized, false);
+  assert.equal(fs.existsSync(path.join(skippedDirectory, '.shelf', '.developer')), false);
 });
 
 test('rejects deferred vue stack', () => {

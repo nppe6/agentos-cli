@@ -132,7 +132,7 @@ test('doctor warns when detected workspace packages lack package specs', async (
   assert.equal(result.ok, true);
   assert.equal(result.missingPackageSpecs.length, 1);
   assert.equal(result.missingPackageSpecs[0].specPath, '.shelf/spec/packages/demo-web');
-  assert.equal(result.warnings.some((warning) => warning.includes('Run agent spec scaffold')), true);
+  assert.equal(result.warnings.some((warning) => warning.includes('Run shelf spec scaffold')), true);
 });
 
 test('doctor accepts workspace packages after package specs are scaffolded', async () => {
@@ -156,7 +156,7 @@ test('doctor accepts workspace packages after package specs are scaffolded', asy
 
   assert.equal(result.ok, true);
   assert.deepEqual(result.missingPackageSpecs, []);
-  assert.equal(result.warnings.some((warning) => warning.includes('Run agent spec scaffold')), false);
+  assert.equal(result.warnings.some((warning) => warning.includes('Run shelf spec scaffold')), false);
 });
 
 test('sync dry-run reports missing projection files without writing them', async () => {
