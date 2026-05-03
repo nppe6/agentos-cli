@@ -10,6 +10,7 @@ Follow-up reference:
 
 - `docs/trellis-core-alignment-dossier.md` records the 2026-05-03 complete official-docs and local-source review.
 - `docs/plans/2026-05-03-001-trellis-core-alignment-plan.md` turns that review into the next alignment plan.
+- `docs/trellis-alignment-gap-backlog.md` records the remaining Trellis/Shelf differences and their plain-language purpose for future triage.
 
 ## Executive Summary
 

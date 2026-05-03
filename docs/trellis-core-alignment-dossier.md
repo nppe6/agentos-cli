@@ -10,6 +10,7 @@ This document records the current understanding of Trellis after reviewing the c
 - Core official pages used most heavily: `index.md`, `start/install-and-first-task.md`, `start/everyday-use.md`, `start/how-it-works.md`, `advanced/architecture.md`, `advanced/multi-platform.md`, `advanced/custom-commands.md`, `advanced/custom-agents.md`, `advanced/custom-hooks.md`, `advanced/custom-skills.md`, `advanced/appendix-a.md`, `advanced/appendix-b.md`, `advanced/appendix-c.md`, `advanced/appendix-d.md`.
 - Local upstream source: `.tmp/Trellis-main/packages/cli/src/commands/init.ts`, `.tmp/Trellis-main/packages/cli/src/configurators/`, `.tmp/Trellis-main/packages/cli/src/templates/common/`, `.tmp/Trellis-main/packages/cli/src/templates/shared-hooks/`, `.tmp/Trellis-main/packages/cli/src/templates/trellis/`, `.tmp/Trellis-main/packages/cli/src/templates/codex/`, `.tmp/Trellis-main/packages/cli/src/templates/claude/`.
 - Current Shelf implementation: `lib/`, `templates/core/.shelf/`, `templates/tools/`, `README.md`, `docs/shelf-architecture-upstream-comparison.md`, `docs/shelf-trellis-roadmap-reference.md`.
+- Gap backlog: `docs/trellis-alignment-gap-backlog.md` tracks remaining runtime, product, and architecture differences for future alignment decisions.
 
 ## Core Thesis
 

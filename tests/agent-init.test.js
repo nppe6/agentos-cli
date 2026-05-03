@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 
 const agentInit = require('../lib/actions/agent-init');
 const { renderGeneratedTree, renderTree, selectTools } = agentInit._private;
+const { renderBanner } = require('../lib/utils/banner');
 const {
   GITIGNORE_BLOCK_END,
   GITIGNORE_BLOCK_START
@@ -120,6 +121,7 @@ test('injects core-only workflow when the core stack is selected', async () => {
 
 test('init initializes developer identity from git user name by default', async () => {
   const projectDirectory = createTempProject();
+  let bannerOptions;
 
   const result = await agentInit(projectDirectory, {
     stack: 'core',
@@ -128,9 +130,12 @@ test('init initializes developer identity from git user name by default', async 
     tools: ['codex']
   }, {
     findGitUserName: () => 'Ada',
-    printBanner: () => {}
+    printBanner: (options) => {
+      bannerOptions = options;
+    }
   });
 
+  assert.deepEqual(bannerOptions, { developer: 'Ada' });
   assert.equal(result.developer, 'Ada');
   assert.equal(result.developerInitialized, true);
   assert.match(fs.readFileSync(path.join(projectDirectory, '.shelf', '.developer'), 'utf8'), /name=Ada/);
@@ -430,6 +435,15 @@ test('tool prompt starts with no default selections and concise labels', async (
   assert.equal(capturedQuestions[0].type, 'checkbox');
   assert.deepEqual(capturedQuestions[0].choices.map((choice) => choice.name), ['Codex', 'Claude Code']);
   assert.equal(capturedQuestions[0].choices.some((choice) => choice.checked), false);
+});
+
+test('renders banner with accent logo, muted description, spacing, and developer line', () => {
+  const banner = renderBanner({ developer: 'nppe6' });
+
+  assert.match(banner, /\x1b\[38;2;208;209;254m/);
+  assert.match(banner, /  \x1b\[90mShared AI workflow memory for Codex & Claude Code\x1b\[0m/);
+  assert.match(banner, /Developer:\x1b\[0m \x1b\[90mnppe6\x1b\[0m/);
+  assert.match(banner, /Code\x1b\[0m\n\n  \x1b\[38;2;208;209;254m👤 Developer:/);
 });
 
 test('renders simple CLI lists as a readable tree', () => {
