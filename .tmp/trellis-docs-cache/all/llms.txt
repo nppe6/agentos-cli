@@ -1,0 +1,114 @@
+﻿# Trellis Doc
+
+## Docs
+
+- [Appendix A: Key File Paths Quick Reference](https://docs.trytrellis.app/advanced/appendix-a.md)
+- [Appendix B: Command & Skill Cheat Sheet](https://docs.trytrellis.app/advanced/appendix-b.md)
+- [Appendix C: task.json Schema Reference](https://docs.trytrellis.app/advanced/appendix-c.md)
+- [Appendix D: JSONL Configuration Format Reference](https://docs.trytrellis.app/advanced/appendix-d.md)
+- [Appendix F: FAQ](https://docs.trytrellis.app/advanced/appendix-f.md)
+- [Architecture Overview](https://docs.trytrellis.app/advanced/architecture.md)
+- [Custom Sub-agents](https://docs.trytrellis.app/advanced/custom-agents.md)
+- [Custom Slash Commands](https://docs.trytrellis.app/advanced/custom-commands.md)
+- [Custom Hooks](https://docs.trytrellis.app/advanced/custom-hooks.md)
+- [Custom Skills](https://docs.trytrellis.app/advanced/custom-skills.md)
+- [Custom Spec Template Marketplace](https://docs.trytrellis.app/advanced/custom-spec-template-marketplace.md)
+- [Customizing the Workflow](https://docs.trytrellis.app/advanced/custom-workflow.md)
+- [Multi-Platform and Team Configuration](https://docs.trytrellis.app/advanced/multi-platform.md)
+- [Resources & Acknowledgments](https://docs.trytrellis.app/advanced/resources.md)
+- [Roadmap](https://docs.trytrellis.app/advanced/roadmap.md)
+- [Building an AI Collaborative Development System in Real Projects](https://docs.trytrellis.app/blog/ai-collaborative-dev-system.md)
+- [Overview](https://docs.trytrellis.app/blog/index.md)
+- [Understanding Trellis Through Kubernetes](https://docs.trytrellis.app/blog/use-k8s-to-know-trellis.md)
+- [v0.1.9](https://docs.trytrellis.app/changelog/v0.1.9.md): 2026-01-10
+- [v0.2.0](https://docs.trytrellis.app/changelog/v0.2.0.md): 2026-01-15
+- [v0.3.0-beta.0](https://docs.trytrellis.app/changelog/v0.3.0-beta.0.md): 2026-01-25
+- [v0.3.0-beta.10](https://docs.trytrellis.app/changelog/v0.3.0-beta.10.md): 2026-01-23
+- [v0.3.0-beta.11](https://docs.trytrellis.app/changelog/v0.3.0-beta.11.md): 2026-01-23
+- [v0.3.0-beta.12](https://docs.trytrellis.app/changelog/v0.3.0-beta.12.md): 2026-01-24
+- [v0.3.0-beta.13](https://docs.trytrellis.app/changelog/v0.3.0-beta.13.md): 2026-01-25
+- [v0.3.0-beta.14](https://docs.trytrellis.app/changelog/v0.3.0-beta.14.md): 2026-01-26
+- [v0.3.0-beta.15](https://docs.trytrellis.app/changelog/v0.3.0-beta.15.md): 2026-01-27
+- [v0.3.0-beta.16](https://docs.trytrellis.app/changelog/v0.3.0-beta.16.md): 2026-01-28
+- [v0.3.0-beta.7](https://docs.trytrellis.app/changelog/v0.3.0-beta.7.md): 2026-01-30
+- [v0.3.0-beta.8](https://docs.trytrellis.app/changelog/v0.3.0-beta.8.md): 2026-01-31
+- [v0.3.0-beta.9](https://docs.trytrellis.app/changelog/v0.3.0-beta.9.md): 2026-01-22
+- [v0.3.0-rc.0](https://docs.trytrellis.app/changelog/v0.3.0-rc.0.md): 2026-02-06
+- [v0.3.0-rc.1](https://docs.trytrellis.app/changelog/v0.3.0-rc.1.md): 2026-02-07
+- [v0.3.0-rc.2](https://docs.trytrellis.app/changelog/v0.3.0-rc.2.md): 2026-02-09
+- [v0.3.0-rc.3](https://docs.trytrellis.app/changelog/v0.3.0-rc.3.md): 2026-02-15
+- [v0.3.0-rc.4](https://docs.trytrellis.app/changelog/v0.3.0-rc.4.md): 2026-02-19
+- [v0.3.0-rc.5](https://docs.trytrellis.app/changelog/v0.3.0-rc.5.md): 2026-02-24
+- [v0.3.0-rc.6](https://docs.trytrellis.app/changelog/v0.3.0-rc.6.md): 2026-02-26
+- [v0.3.1](https://docs.trytrellis.app/changelog/v0.3.1.md): 2026-03-02
+- [v0.3.10](https://docs.trytrellis.app/changelog/v0.3.10.md): 2026-03-12
+- [v0.3.2](https://docs.trytrellis.app/changelog/v0.3.2.md): 2026-03-03
+- [v0.3.3](https://docs.trytrellis.app/changelog/v0.3.3.md): 2026-03-04
+- [v0.3.4](https://docs.trytrellis.app/changelog/v0.3.4.md): 2026-03-05
+- [v0.3.5](https://docs.trytrellis.app/changelog/v0.3.5.md): 2026-03-05
+- [v0.3.6](https://docs.trytrellis.app/changelog/v0.3.6.md): 2026-03-06
+- [v0.3.7](https://docs.trytrellis.app/changelog/v0.3.7.md): 2026-03-10
+- [v0.3.8](https://docs.trytrellis.app/changelog/v0.3.8.md): 2026-03-12
+- [v0.3.9](https://docs.trytrellis.app/changelog/v0.3.9.md): 2026-03-12
+- [v0.4.0](https://docs.trytrellis.app/changelog/v0.4.0.md): 2026-04-15
+- [v0.4.0-beta.1](https://docs.trytrellis.app/changelog/v0.4.0-beta.1.md): 2026-03-12
+- [v0.4.0-beta.10](https://docs.trytrellis.app/changelog/v0.4.0-beta.10.md): 2026-04-09
+- [v0.4.0-beta.2](https://docs.trytrellis.app/changelog/v0.4.0-beta.2.md): 2026-03-12
+- [v0.4.0-beta.3](https://docs.trytrellis.app/changelog/v0.4.0-beta.3.md): 2026-03-13
+- [v0.4.0-beta.4](https://docs.trytrellis.app/changelog/v0.4.0-beta.4.md): 2026-03-16
+- [v0.4.0-beta.5](https://docs.trytrellis.app/changelog/v0.4.0-beta.5.md): 2026-03-16
+- [v0.4.0-beta.6](https://docs.trytrellis.app/changelog/v0.4.0-beta.6.md): 2026-03-22
+- [v0.4.0-beta.7](https://docs.trytrellis.app/changelog/v0.4.0-beta.7.md): 2026-03-22
+- [v0.4.0-beta.8](https://docs.trytrellis.app/changelog/v0.4.0-beta.8.md): 2026-03-24
+- [v0.4.0-beta.9](https://docs.trytrellis.app/changelog/v0.4.0-beta.9.md): 2026-04-07
+- [v0.4.0-rc.0](https://docs.trytrellis.app/changelog/v0.4.0-rc.0.md): 2026-04-14
+- [v0.4.0-rc.1](https://docs.trytrellis.app/changelog/v0.4.0-rc.1.md): 2026-04-14
+- [v0.5.0-beta.0](https://docs.trytrellis.app/changelog/v0.5.0-beta.0.md): 2026-04-20
+- [v0.5.0-beta.1](https://docs.trytrellis.app/changelog/v0.5.0-beta.1.md): 2026-04-20
+- [v0.5.0-beta.10](https://docs.trytrellis.app/changelog/v0.5.0-beta.10.md): 2026-04-22
+- [v0.5.0-beta.11](https://docs.trytrellis.app/changelog/v0.5.0-beta.11.md): 2026-04-22
+- [v0.5.0-beta.12](https://docs.trytrellis.app/changelog/v0.5.0-beta.12.md): 2026-04-23
+- [v0.5.0-beta.13](https://docs.trytrellis.app/changelog/v0.5.0-beta.13.md): 2026-04-23
+- [v0.5.0-beta.14](https://docs.trytrellis.app/changelog/v0.5.0-beta.14.md): 2026-04-24
+- [v0.5.0-beta.15](https://docs.trytrellis.app/changelog/v0.5.0-beta.15.md): 2026-04-27
+- [v0.5.0-beta.16](https://docs.trytrellis.app/changelog/v0.5.0-beta.16.md): 2026-04-28
+- [v0.5.0-beta.17](https://docs.trytrellis.app/changelog/v0.5.0-beta.17.md): 2026-04-28
+- [v0.5.0-beta.18](https://docs.trytrellis.app/changelog/v0.5.0-beta.18.md): 2026-04-29
+- [v0.5.0-beta.19](https://docs.trytrellis.app/changelog/v0.5.0-beta.19.md): 2026-04-29
+- [v0.5.0-beta.2](https://docs.trytrellis.app/changelog/v0.5.0-beta.2.md): 2026-04-20
+- [v0.5.0-beta.3](https://docs.trytrellis.app/changelog/v0.5.0-beta.3.md): 2026-04-20
+- [v0.5.0-beta.4](https://docs.trytrellis.app/changelog/v0.5.0-beta.4.md): 2026-04-20
+- [v0.5.0-beta.5](https://docs.trytrellis.app/changelog/v0.5.0-beta.5.md): 2026-04-20
+- [v0.5.0-beta.6](https://docs.trytrellis.app/changelog/v0.5.0-beta.6.md): 2026-04-20
+- [v0.5.0-beta.7](https://docs.trytrellis.app/changelog/v0.5.0-beta.7.md): 2026-04-20
+- [v0.5.0-beta.8](https://docs.trytrellis.app/changelog/v0.5.0-beta.8.md): 2026-04-20
+- [v0.5.0-beta.9](https://docs.trytrellis.app/changelog/v0.5.0-beta.9.md): 2026-04-22
+- [v0.5.0-rc.0](https://docs.trytrellis.app/changelog/v0.5.0-rc.0.md): 2026-04-30
+- [Contribute to Docs](https://docs.trytrellis.app/contribute/docs.md): How to contribute to Trellis documentation (mindfold-ai/docs)
+- [Contribute to Trellis](https://docs.trytrellis.app/contribute/trellis.md): How to contribute to the Trellis project (mindfold-ai/Trellis)
+- [Trellis](https://docs.trytrellis.app/index.md): All-in-one AI framework & toolkit for 10+ AI coding platforms
+- [Showcase](https://docs.trytrellis.app/showcase/index.md)
+- [open-typeless](https://docs.trytrellis.app/showcase/open-typeless.md)
+- [Workflow Demo](https://docs.trytrellis.app/showcase/terminal-demo.md): See the full Trellis workflow in action: from brainstorm to ship
+- [Trellis for Cursor](https://docs.trytrellis.app/showcase/trellis-cursor.md)
+- [cc-codex-spec-bootstrap](https://docs.trytrellis.app/skills-market/cc-codex-spec-bootstrap.md): Bootstrap coding specs with Claude Code + Codex parallel pipeline
+- [frontend-fullchain-optimization](https://docs.trytrellis.app/skills-market/frontend-fullchain-optimization.md): Optimize frontend performance with a Web Vitals-driven diagnosis workflow
+- [Overview](https://docs.trytrellis.app/skills-market/index.md): Ready-to-use skills for Trellis
+- [trellis-meta](https://docs.trytrellis.app/skills-market/trellis-meta.md): The essential skill for customizing Trellis
+- [Commands, Tasks & Specs](https://docs.trytrellis.app/start/everyday-use.md)
+- [How It Works](https://docs.trytrellis.app/start/how-it-works.md)
+- [Install & First Task](https://docs.trytrellis.app/start/install-and-first-task.md)
+- [Real-World Scenarios](https://docs.trytrellis.app/start/real-world-scenarios.md): Use Trellis in real engineering work: new products, brownfield repos, refactors, bug fixes, and team rollouts.
+- [Cloudflare Workers + Hono + Turso](https://docs.trytrellis.app/templates/specs-cf-workers.md): Full-stack spec template for Cloudflare Workers apps with Hono framework and Turso database
+- [Electron + React + TypeScript](https://docs.trytrellis.app/templates/specs-electron.md): Full-stack spec template for Electron desktop apps with React frontend
+- [Overview](https://docs.trytrellis.app/templates/specs-index.md): Coding convention templates for common tech stacks
+- [Next.js + oRPC + PostgreSQL](https://docs.trytrellis.app/templates/specs-nextjs.md): Full-stack spec template for Next.js applications with oRPC API layer and PostgreSQL
+- [open-typeless](https://docs.trytrellis.app/use-cases/open-typeless.md): Step-by-step guide: Building a macOS voice input app with Trellis
+
+## OpenAPI Specs
+
+- [openapi](https://docs.trytrellis.app/api-reference/openapi.json)
+
+## Optional
+
+- [GitHub](https://github.com/mindfold-ai/Trellis)

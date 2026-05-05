@@ -1,0 +1,88 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.trytrellis.app/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Electron + React + TypeScript
+
+> Full-stack spec template for Electron desktop apps with React frontend
+
+A complete coding convention template for Electron applications with React frontend and TypeScript.
+
+<Card title="Download Template" icon="download" href="https://download-directory.github.io/?url=https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/electron-fullstack">
+  Download as ZIP and extract to `.trellis/spec/`
+</Card>
+
+## What's Included
+
+| Category | Files    | Coverage                               |
+| -------- | -------- | -------------------------------------- |
+| Frontend | 11 files | Components, hooks, state, IPC, CSS     |
+| Backend  | 14 files | API patterns, database, error handling |
+| Guides   | 8 files  | Cross-layer thinking, debugging        |
+| Shared   | 6 files  | TypeScript, git, code quality          |
+
+## Template Structure
+
+```
+spec/
+├── frontend/
+│   ├── index.md
+│   ├── components.md
+│   ├── hooks.md
+│   ├── state-management.md
+│   ├── ipc-electron.md
+│   └── ...
+│
+├── backend/
+│   ├── index.md
+│   ├── api-patterns.md
+│   ├── database.md
+│   ├── error-handling.md
+│   └── ...
+│
+├── guides/
+│   ├── cross-layer-thinking-guide.md
+│   ├── bug-root-cause-thinking-guide.md
+│   └── ...
+│
+├── shared/
+│   ├── typescript.md
+│   ├── git-conventions.md
+│   └── ...
+│
+└── README.md
+```
+
+## Key Topics
+
+### Frontend
+
+* React component patterns and hooks
+* Electron IPC communication
+* State management with Zustand
+* CSS design system
+
+### Backend
+
+* API module structure
+* SQLite database patterns
+* Error handling and logging
+* macOS permissions
+
+### Guides
+
+* Cross-layer thinking for full-stack changes
+* Bug root cause analysis
+* Database schema migrations
+
+## Usage
+
+1. Download the ZIP file
+2. Extract to your project's `.trellis/spec/` directory
+3. Customize for your specific conventions
+4. Remove sections that don't apply
+5. Update examples to match your codebase
+
+<Card title="View on GitHub" icon="github" href="https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/electron-fullstack">
+  Browse the template source code
+</Card>

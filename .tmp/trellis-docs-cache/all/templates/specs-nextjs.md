@@ -1,0 +1,107 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.trytrellis.app/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Next.js + oRPC + PostgreSQL
+
+> Full-stack spec template for Next.js applications with oRPC API layer and PostgreSQL
+
+A complete coding convention template for production Next.js applications with oRPC API layer, Drizzle ORM, and PostgreSQL.
+
+<Card title="Download Template" icon="download" href="https://download-directory.github.io/?url=https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/nextjs-fullstack">
+  Download as ZIP and extract to `.trellis/spec/`
+</Card>
+
+## What's Included
+
+| Category | Files    | Coverage                                          |
+| -------- | -------- | ------------------------------------------------- |
+| Frontend | 12 files | Components, hooks, state, oRPC, AI SDK, CSS       |
+| Backend  | 10 files | oRPC router, database, auth, performance, logging |
+| Guides   | 3 files  | Cross-layer thinking, pre-implementation          |
+| Shared   | 4 files  | TypeScript, code quality, dependencies            |
+| Pitfalls | 5 files  | PostgreSQL, build system, mobile CSS              |
+
+## Template Structure
+
+```
+spec/
+├── frontend/
+│   ├── index.md
+│   ├── components.md
+│   ├── hooks.md
+│   ├── state-management.md
+│   ├── orpc-usage.md
+│   ├── authentication.md
+│   ├── ai-sdk-integration.md
+│   └── ...
+│
+├── backend/
+│   ├── index.md
+│   ├── orpc-usage.md
+│   ├── database.md
+│   ├── authentication.md
+│   ├── performance.md
+│   └── ...
+│
+├── guides/
+│   ├── pre-implementation-checklist.md
+│   ├── cross-layer-thinking-guide.md
+│   └── ...
+│
+├── shared/
+│   ├── typescript.md
+│   ├── code-quality.md
+│   ├── dependencies.md
+│   └── ...
+│
+├── big-question/
+│   ├── postgres-json-jsonb.md
+│   ├── sentry-nextintl-conflict.md
+│   └── ...
+│
+└── README.md
+```
+
+## Key Topics
+
+### Frontend
+
+* Next.js 15 App Router with React 19
+* oRPC client + React Query integration
+* Server Components vs Client Components
+* Authentication with better-auth
+* Vercel AI SDK (useChat, tool calls, streaming)
+* TailwindCSS 4 + Radix UI patterns
+
+### Backend
+
+* oRPC router, procedures, and middleware
+* Drizzle ORM + PostgreSQL (N+1 prevention, transactions, JSON/JSONB)
+* better-auth server configuration
+* Performance patterns (concurrency, caching, rate limiting)
+* Structured logging with Sentry
+
+### Guides
+
+* Pre-implementation checklist (search before write)
+* Cross-layer thinking for Next.js full-stack changes
+
+### Common Pitfalls
+
+* PostgreSQL `json` vs `jsonb` with Drizzle ORM
+* Sentry + next-intl plugin conflict
+* Turbopack vs Webpack flexbox differences
+* WebKit tap highlight on mobile
+
+## Usage
+
+1. Download the ZIP file
+2. Extract to your project's `.trellis/spec/` directory
+3. Replace `@your-app/*` placeholders with your monorepo package paths
+4. Customize for your specific conventions
+5. Remove sections that don't apply
+
+<Card title="View on GitHub" icon="github" href="https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/nextjs-fullstack">
+  Browse the template source code
+</Card>

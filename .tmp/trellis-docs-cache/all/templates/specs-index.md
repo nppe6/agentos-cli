@@ -1,0 +1,120 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.trytrellis.app/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Overview
+
+> Coding convention templates for common tech stacks
+
+Spec templates help you quickly set up coding guidelines for your project. Download, customize, use.
+
+<Info>
+  **Specs are meant to be customized.** Trellis ships with empty spec templates by default — they are placeholders for *your* project's conventions. Every team's stack, patterns, and quality bar are different, so the specs you write should reflect your actual codebase, not generic best practices. Templates from the marketplace give you a head start, but always tailor them to your project.
+</Info>
+
+## Available Templates
+
+| Template                                                                                                               | Stack      | Description                              |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------- |
+| [Electron + React + TypeScript](https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/electron-fullstack) | Full-stack | Electron desktop app with React frontend |
+| [Next.js + oRPC + PostgreSQL](https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/nextjs-fullstack)     | Full-stack | Next.js app with oRPC API and PostgreSQL |
+| [CF Workers + Hono + Turso](https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/cf-workers-fullstack)   | Full-stack | Cloudflare Workers with Hono and Turso   |
+
+<CardGroup cols={3}>
+  <Card title="Download Electron Template" icon="download" href="https://download-directory.github.io/?url=https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/electron-fullstack">
+    Electron + React + TypeScript (50 files)
+  </Card>
+
+  <Card title="Download Next.js Template" icon="download" href="https://download-directory.github.io/?url=https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/nextjs-fullstack">
+    Next.js + oRPC + PostgreSQL (35 files)
+  </Card>
+
+  <Card title="Download CF Workers Template" icon="download" href="https://download-directory.github.io/?url=https://github.com/mindfold-ai/Trellis/tree/main/marketplace/specs/cf-workers-fullstack">
+    CF Workers + Hono + Turso (38 files)
+  </Card>
+</CardGroup>
+
+## Template Marketplace <sup>v0.3.6</sup>
+
+Starting from v0.3.6, you can fetch spec templates directly from any Git repository using the `--registry` flag:
+
+```bash theme={null}
+# Fetch from a custom registry
+trellis init --registry https://github.com/your-org/your-spec-templates
+
+# Combine with platform flags
+trellis init --registry https://github.com/your-org/your-spec-templates --cursor -u your-name
+```
+
+### How it works
+
+Trellis auto-detects two modes:
+
+* **Marketplace mode**: If the repository contains a `marketplace/index.json` file, Trellis reads the template index and lets you pick which template to install
+* **Direct download mode**: If no `index.json` is found, Trellis treats the entire `marketplace/specs/` directory as a single template and downloads it directly
+
+### Publishing your own templates
+
+To create a spec template registry that others can use with `--registry`:
+
+1. Create a Git repository (GitHub, GitLab, or Bitbucket)
+2. Add a `marketplace/` directory with your spec templates
+3. Create `marketplace/index.json` to list available templates:
+
+```json theme={null}
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "my-stack",
+      "type": "spec",
+      "name": "My Stack Template",
+      "description": "Conventions for our tech stack",
+      "path": "marketplace/specs/my-stack",
+      "tags": ["react", "node", "typescript"]
+    }
+  ]
+}
+```
+
+4. Inside each template path, place your spec files following the standard structure (see below)
+5. Share the repository URL — users install with `trellis init --registry <url>`
+
+## Template Structure
+
+Each template follows this structure:
+
+```
+spec/
+├── frontend/           # Frontend guidelines
+│   ├── index.md        # Navigation index
+│   ├── components.md   # Component patterns
+│   ├── hooks.md        # Hook conventions
+│   └── state-management.md
+│
+├── backend/            # Backend guidelines
+│   ├── index.md
+│   └── ...
+│
+├── guides/             # Thinking guides
+│   ├── index.md
+│   └── ...
+│
+└── README.md           # Template overview
+```
+
+## How to Use
+
+1. Download the template ZIP or use `trellis init --registry`
+2. Extract to `.trellis/spec/` in your project
+3. Customize for your project's specific conventions
+4. Remove sections that don't apply
+5. Update paths and examples to match your codebase
+
+<Tip>
+  You don't have to fill every spec file at once. Start with the areas that matter most to your project, then expand over time. The bootstrap task created by `trellis init` will guide you through the initial fill.
+</Tip>
+
+## Contributing Templates
+
+Want to share your specs with the community? Create a repository with your templates and open a PR to add it to the [official template registry](https://github.com/mindfold-ai/Trellis/tree/main/marketplace).

@@ -1,0 +1,120 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.trytrellis.app/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Custom Slash Commands
+
+## Custom Slash Commands
+
+Trellis 0.5 ships a deliberately small set of slash commands. On agent-capable platforms (Claude Code, OpenCode, Cursor, Codex, Pi Agent, etc.), only `finish-work` and `continue` are installed — `start` isn't, because the SessionStart hook or extension already loads the workflow and context at the top of every session. Agent-less platforms (Kilo, Antigravity, Windsurf) have no hook, so `start` is shipped there as a slash command. Everything else that used to be a command has moved to auto-trigger skills (see [Custom Skills](./custom-skills)). Add your own slash command when you have a specific entry point you want the user to invoke on demand.
+
+### Command File Format and Location
+
+Trellis groups the 14 configured platforms into three delivery models:
+
+**Explicit slash commands** — the user types `/trellis:<name>`; the platform injects the command file's content as a prompt.
+
+| Platform    | Location                                                                           | Invoked as         |
+| ----------- | ---------------------------------------------------------------------------------- | ------------------ |
+| Claude Code | `.claude/commands/trellis/{name}.md`                                               | `/trellis:{name}`  |
+| Cursor      | `.cursor/commands/trellis-{name}.md`                                               | `/trellis-{name}`  |
+| OpenCode    | `.opencode/commands/trellis/{name}.md`                                             | `/trellis:{name}`  |
+| Codex       | `.codex/prompts/trellis-{name}.md`                                                 | `/trellis-{name}`  |
+| Gemini CLI  | `.gemini/commands/trellis/{name}.toml`                                             | `/trellis:{name}`  |
+| Qoder       | `.qoder/commands/trellis-{name}.md` (with `name` + `description` YAML frontmatter) | `/trellis-{name}`  |
+| CodeBuddy   | `.codebuddy/commands/trellis/{name}.md`                                            | `/trellis:{name}`  |
+| Droid       | `.factory/commands/trellis/{name}.md`                                              | `/trellis:{name}`  |
+| Pi Agent    | `.pi/prompts/trellis-{name}.md`                                                    | `/trellis-{name}`  |
+| Copilot     | `.github/prompts/trellis-{name}.prompt.md`                                         | prompt-file picker |
+
+Command files are Markdown; Gemini uses TOML (with a `prompt = """..."""` field).
+
+**Workflow files** — platforms without a dedicated slash-command primitive; the user runs a "workflow" by name.
+
+| Platform    | Location                                | Invoked as                        |
+| ----------- | --------------------------------------- | --------------------------------- |
+| Kilo        | `.kilocode/workflows/{name}.md`         | `/{name}.md` (Kilo's workflow UI) |
+| Antigravity | `.agent/workflows/{name}.md`            | opened from `.agent/workflows/`   |
+| Windsurf    | `.windsurf/workflows/trellis-{name}.md` | `/trellis-{name}`                 |
+
+**Skill-only** — platforms that do not expose a slash-command primitive at all; `start` / `finish-work` / `continue` are shipped as auto-trigger skills.
+
+| Platform | `start` / `finish-work` / `continue` as… | Invoked as                         |
+| -------- | ---------------------------------------- | ---------------------------------- |
+| Kiro     | `.kiro/skills/trellis-{name}/SKILL.md`   | skill match (or `@trellis:{name}`) |
+
+### When to use a command vs. a skill
+
+| Use a slash command when…                                   | Use a skill when…                                           |
+| ----------------------------------------------------------- | ----------------------------------------------------------- |
+| The user should decide when to run it                       | The AI should trigger it automatically based on intent      |
+| It marks a session boundary (start, finish, resume)         | It's a phase inside a task (before-dev, check, update-spec) |
+| There's no natural trigger phrase that would match reliably | There's a predictable user intent you can match on          |
+| You need it available even when no task is active           | It only makes sense in the context of an active task        |
+
+If the answer is "both", ship a skill and expose a command that manually triggers the skill.
+
+### Writing a command
+
+A good command file:
+
+1. Starts with a one-line description of what will happen.
+2. Lists the steps the AI should take, in order.
+3. Specifies files the AI should read before acting.
+4. Defines the expected output format (report, checklist, diff, etc.).
+
+Template:
+
+````markdown theme={null}
+# Command Name
+
+Brief description of what this command does.
+
+## Read context
+
+```bash
+cat .trellis/spec/relevant-spec.md
+```
+
+## Analyze
+
+Describe what to analyze and against which rules.
+
+## Report
+
+Output format and fields.
+````
+
+### Example: a `/trellis:deploy-check` command
+
+`.claude/commands/trellis/deploy-check.md`:
+
+````markdown theme={null}
+# Deploy Check
+
+Pre-deployment verification checklist.
+
+## Read deployment config
+
+```bash
+cat deploy.config.js
+cat .env.production
+```
+
+## Verify
+
+Check these items:
+- [ ] All tests pass
+- [ ] No TODO comments in production code
+- [ ] Environment variables are set
+- [ ] Database migrations are up to date
+- [ ] API endpoints are documented
+
+## Report
+
+Output a deployment readiness report.
+````
+
+To ship the same command on other platforms, create parallel files in the platform-specific locations from the table above. If you want Trellis to distribute the command as part of its update flow, place a canonical copy under `packages/cli/src/templates/common/commands/` and add platform adapters in `packages/cli/src/configurators/`.
+
+***
