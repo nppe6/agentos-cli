@@ -82,8 +82,24 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(claudeContent, /Follow `AGENTS\.md`/);
 
   const bootstrapPrd = fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'prd.md'), 'utf8');
+  const bootstrapTaskJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'task.json'), 'utf8'));
   assert.match(bootstrapPrd, /\.shelf\/spec/);
+  assert.match(bootstrapPrd, /You \(the AI\) are running this task/);
+  assert.match(bootstrapPrd, /Import Existing Convention Sources First/);
+  assert.match(bootstrapPrd, /Inspect Real Code/);
+  assert.match(bootstrapPrd, /Document Current Reality/);
+  assert.match(bootstrapPrd, /shelf-update-spec/);
   assert.doesNotMatch(bootstrapPrd, /\.trellis/);
+  assert.equal(bootstrapTaskJson.status, 'in_progress');
+  assert.match(bootstrapTaskJson.description, /AI-facing first-run task/);
+
+  const updateSpecSkill = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-update-spec', 'SKILL.md'), 'utf8');
+  assert.match(updateSpecSkill, /Code-Spec First Rule/);
+  assert.match(updateSpecSkill, /Mandatory Output \(7 Sections\)/);
+  assert.match(updateSpecSkill, /Code-specs are living documents/);
+  assert.match(updateSpecSkill, /\.shelf\/spec/);
+  assert.doesNotMatch(updateSpecSkill, /\.trellis\/spec/);
+  assert.doesNotMatch(updateSpecSkill, /Daily workflow rule/);
 
   const codexImplementContent = fs.readFileSync(path.join(projectDirectory, '.codex', 'agents', 'shelf-implement.toml'), 'utf8');
   const codexCheckContent = fs.readFileSync(path.join(projectDirectory, '.codex', 'agents', 'shelf-check.toml'), 'utf8');
@@ -117,6 +133,82 @@ test('injects core-only workflow when the core stack is selected', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'manifest.json')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'template-hashes.json')), true);
+});
+
+test('generates frontend-only bootstrap guidance for frontend projects', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'frontend-project',
+    dependencies: {
+      vue: '^3.0.0'
+    }
+  });
+
+  const result = await agentInit(projectDirectory, { stack: 'core', force: true, gitMode: 'track', tools: ['codex'] });
+  const bootstrapPrd = fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'prd.md'), 'utf8');
+  const bootstrapTaskJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'task.json'), 'utf8'));
+
+  assert.equal(result.projectType, 'frontend');
+  assert.match(bootstrapPrd, /### Frontend guidelines/);
+  assert.doesNotMatch(bootstrapPrd, /### Backend guidelines/);
+  assert.deepEqual(bootstrapTaskJson.relatedFiles, ['.shelf/spec/frontend/']);
+});
+
+test('generates backend-only bootstrap guidance for backend projects', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'backend-project',
+    dependencies: {
+      express: '^4.0.0'
+    }
+  });
+
+  const result = await agentInit(projectDirectory, { stack: 'core', force: true, gitMode: 'track', tools: ['codex'] });
+  const bootstrapPrd = fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'prd.md'), 'utf8');
+  const bootstrapTaskJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'task.json'), 'utf8'));
+
+  assert.equal(result.projectType, 'backend');
+  assert.match(bootstrapPrd, /### Backend guidelines/);
+  assert.doesNotMatch(bootstrapPrd, /### Frontend guidelines/);
+  assert.deepEqual(bootstrapTaskJson.relatedFiles, ['.shelf/spec/backend/']);
+});
+
+test('generates package-specific bootstrap guidance for monorepos', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  fs.mkdirSync(path.join(projectDirectory, 'packages', 'web'), { recursive: true });
+  writeJson(path.join(projectDirectory, 'packages', 'web', 'package.json'), {
+    name: '@demo/web',
+    dependencies: {
+      react: '^18.0.0'
+    }
+  });
+  fs.mkdirSync(path.join(projectDirectory, 'packages', 'api'), { recursive: true });
+  writeJson(path.join(projectDirectory, 'packages', 'api', 'package.json'), {
+    name: '@demo/api',
+    dependencies: {
+      express: '^4.0.0'
+    }
+  });
+
+  const result = await agentInit(projectDirectory, { stack: 'core', force: true, gitMode: 'track', tools: ['codex'] });
+  const bootstrapPrd = fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'prd.md'), 'utf8');
+  const bootstrapTaskJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'task.json'), 'utf8'));
+
+  assert.equal(result.detectedPackages.length, 2);
+  assert.match(bootstrapPrd, /### Package-Specific Guidelines/);
+  assert.match(bootstrapPrd, /Package: @demo\/api/);
+  assert.match(bootstrapPrd, /Detected type: `backend`/);
+  assert.match(bootstrapPrd, /\.shelf\/spec\/packages\/demo-api\/quality\.md/);
+  assert.match(bootstrapPrd, /Package: @demo\/web/);
+  assert.match(bootstrapPrd, /Detected type: `frontend`/);
+  assert.match(bootstrapPrd, /agentos-cli shelf spec scaffold/);
+  assert.deepEqual(bootstrapTaskJson.relatedFiles, [
+    '.shelf/spec/packages/demo-api/',
+    '.shelf/spec/packages/demo-web/'
+  ]);
 });
 
 test('init initializes developer identity from git user name by default', async () => {

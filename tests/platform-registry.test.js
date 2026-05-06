@@ -7,6 +7,7 @@ const assert = require('node:assert/strict');
 const agentInit = require('../lib/actions/agent-init');
 const { scaffoldPackageSpecs } = require('../lib/actions/agent-spec');
 const { detectMonorepo } = require('../lib/utils/monorepo');
+const { detectProjectType } = require('../lib/utils/project-detector');
 const { getPlatform } = require('../lib/utils/platform-registry');
 
 function createTempProject() {
@@ -66,6 +67,56 @@ test('monorepo detector reads package.json workspaces', () => {
 
   assert.deepEqual(packages.map((pkg) => pkg.path), ['packages/api', 'packages/web']);
   assert.deepEqual(packages.map((pkg) => pkg.name), ['@demo/api', '@demo/web']);
+});
+
+test('project detector classifies frontend backend and fullstack projects', () => {
+  const frontendDirectory = createTempProject();
+  writeJson(path.join(frontendDirectory, 'package.json'), {
+    dependencies: {
+      vue: '^3.0.0'
+    }
+  });
+
+  const backendDirectory = createTempProject();
+  fs.writeFileSync(path.join(backendDirectory, 'server.js'), 'require("express")();\n', 'utf8');
+
+  const fullstackDirectory = createTempProject();
+  writeJson(path.join(fullstackDirectory, 'package.json'), {
+    dependencies: {
+      express: '^4.0.0',
+      react: '^18.0.0'
+    }
+  });
+
+  assert.equal(detectProjectType(frontendDirectory), 'frontend');
+  assert.equal(detectProjectType(backendDirectory), 'backend');
+  assert.equal(detectProjectType(fullstackDirectory), 'fullstack');
+});
+
+test('monorepo detector includes package project type', () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    workspaces: ['packages/*']
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'web', 'package.json'), {
+    name: '@demo/web',
+    dependencies: {
+      react: '^18.0.0'
+    }
+  });
+  writeJson(path.join(projectDirectory, 'packages', 'api', 'package.json'), {
+    name: '@demo/api',
+    dependencies: {
+      express: '^4.0.0'
+    }
+  });
+
+  const packages = detectMonorepo(projectDirectory);
+
+  assert.deepEqual(packages.map((pkg) => [pkg.name, pkg.type]), [
+    ['@demo/api', 'backend'],
+    ['@demo/web', 'frontend']
+  ]);
 });
 
 test('init reports detected workspace packages', async () => {
