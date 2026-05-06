@@ -69,7 +69,7 @@ After editing, make the AI reread `.shelf/workflow.md`; do not assume the flow f
 `workflow.md` is the semantic center of the local workflow, but each platform can also have its own entry files:
 
 - skills, such as `shelf-brainstorm` and `shelf-check`.
-- commands/prompts/workflows, such as continue and finish-work.
+- commands and projected skills, such as continue and finish-work.
 - hooks, such as session-start or workflow-state injection.
 
 If only `workflow.md` changes, platform entry files may still contain old language. When the user wants to change "what the AI actually does," also inspect the relevant platform directory.

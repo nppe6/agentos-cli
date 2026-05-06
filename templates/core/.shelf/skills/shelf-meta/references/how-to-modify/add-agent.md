@@ -75,7 +75,7 @@ If the agent should become part of the standard workflow, update `.shelf/workflo
 
 - Add the new routing step in the relevant phase.
 - Add or update the matching `[workflow-state:STATUS]` block.
-- Update any command/prompt text that resumes the workflow.
+- Update any common command or platform command text that resumes the workflow.
 
 Do not reference `dispatch.md` or sub-agent context hooks unless those files actually exist in the project. Current default Shelf agents use pull-based context loading from the agent file.
 

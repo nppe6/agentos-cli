@@ -90,6 +90,8 @@ Trellis leans toward namespaced agents. Shelf can stay simpler, but the choice s
 
 ### 3. Commands And Skills Need A Clear Shelf Rule
 
+> Note (2026-05-06): This section reflects an earlier comparison snapshot. Current Shelf no longer projects Codex `continue` / `finish-work` to `.codex/prompts/`. The live layout is shared common-command source -> `.claude/commands/shelf/*.md` for Claude and `.agents/skills/shelf-continue|shelf-finish-work/` for Codex-readable shared skills.
+
 Trellis 0.5 deliberately reduced slash commands. On agent-capable platforms, session-boundary actions are commands/prompts, while phase behavior moved to auto-trigger skills. For Codex, official docs describe `.codex/prompts/trellis-{name}.md` for prompt commands and `.agents/skills/` for shared skills. For Claude, docs describe `.claude/commands/trellis/` and `.claude/skills/`.
 
 Current Shelf:
@@ -112,6 +114,8 @@ Trellis official docs repeatedly emphasize that the initial `00-bootstrap-guidel
 This should stay near the top of the roadmap because it is where users first feel whether the workflow is real or decorative.
 
 ### 6. Codex Was Over-Simplified During Scope Tightening
+
+> Note (2026-05-06): The "after repair" bullet list below is partially outdated. Shelf now keeps Codex-native TOML/config/hooks, but `continue` / `finish-work` are no longer preserved as `.codex/prompts/*.md`; they are projected into `.agents/skills/` from the shared common-command source.
 
 After comparing an initialized Trellis project with an initialized Shelf project, Codex showed a concrete projection mismatch:
 

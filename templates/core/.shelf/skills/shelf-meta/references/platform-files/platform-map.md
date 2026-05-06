@@ -4,10 +4,10 @@ This page lists current AgentOS Shelf file locations in a user project by platfo
 
 ## Matrix
 
-| Platform | CLI selection | Main directory | Skill directory | Agent directory | Hooks/prompts |
+| Platform | CLI selection | Main directory | Skill directory | Agent directory | Hooks/commands |
 | --- | --- | --- | --- | --- | --- |
 | Claude Code | `--tools claude` | `.claude/` | `.claude/skills/` | `.claude/agents/` | `.claude/hooks/`, `.claude/settings.json`, `.claude/commands/shelf/` |
-| Codex | `--tools codex` | `.codex/` | `.agents/skills/` | `.codex/agents/` | `.codex/prompts/`, `.codex/config.toml`, `.codex/hooks.json`, `.codex/hooks/` |
+| Codex | `--tools codex` | `.codex/` | `.agents/skills/` | `.codex/agents/` | `.codex/config.toml`, `.codex/hooks.json`, `.codex/hooks/` |
 
 ## Capability Groups
 
@@ -25,14 +25,14 @@ Codex writes the shared `.agents/skills/` layer. Claude Code receives tool-scope
 2. User says "all platforms should do this": synchronize Codex and Claude Code entry points; add more platforms only if they are actually generated in the project.
 3. User only says "my AI": inspect the configuration directories that actually exist in the project and infer the current AI platform.
 4. User wants project rules: prefer `.shelf/spec/` or a project-local skill.
-5. User wants AgentOS Shelf behavior: edit `.shelf/workflow.md` plus the relevant Codex/Claude hooks, agents, skills, commands, or prompts.
+5. User wants AgentOS Shelf behavior: edit `.shelf/workflow.md` plus the relevant Codex/Claude hooks, agents, skills, or commands.
 
 ## When Paths Differ
 
 Platform ecosystems change, and user projects may already be customized. If this table disagrees with local files, use the actual settings/config in the user project as authoritative:
 
 - Check the hook that settings registers.
-- Check the script that a command/prompt/workflow points to.
+- Check the script that a command/workflow or projected skill points to.
 - Judge behavior by the read rules currently written in the agent file.
 
 Do not delete a custom file just because it is not listed in this path table.

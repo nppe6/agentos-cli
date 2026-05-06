@@ -29,6 +29,8 @@ Bring the generated Shelf workspace into tighter alignment with the Trellis core
 
 Local comparison against an initialized Trellis project found that the current Shelf Codex projection was narrowed too far:
 
+> Status note (2026-05-06): This plan captured an earlier migration target. The current implementation has already moved away from `.codex/prompts/shelf-*.md` for `continue` / `finish-work`. Those entry points now come from shared common-command templates and project to `.agents/skills/shelf-continue/` and `.agents/skills/shelf-finish-work/`, while Codex-native `.codex/agents/*.toml`, `.codex/config.toml`, and hook wiring remain in place.
+
 - Trellis generates `.codex/config.toml`, `.codex/hooks.json`, `.codex/hooks/*.py`, and `.codex/agents/*.toml`.
 - Current Shelf generated `.codex/agents/*.md` and `.codex/prompts/*.md` only.
 - Claude looked closer because its native projection is already markdown agents plus commands/settings/hooks.
@@ -76,6 +78,8 @@ Acceptance criteria:
 - Codex pull-based prelude still applies to implement/check agents.
 
 ### Slice 3: Command And Skill Projection Truth Table
+
+> Historical note: the "optional `.codex/prompts/shelf-*.md`" direction below is now superseded by the common-command -> shared-skill projection used in the current codebase.
 
 Document and test:
 

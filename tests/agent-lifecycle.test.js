@@ -54,14 +54,16 @@ test('init writes manifest and template hashes for a single-tool install', async
   assert.match(manifest.generatedFiles.join('\n'), /\.codex\/agents\/shelf-implement\.toml/);
   assert.match(manifest.generatedFiles.join('\n'), /\.codex\/config\.toml/);
   assert.match(manifest.generatedFiles.join('\n'), /\.codex\/hooks\.json/);
-  assert.match(manifest.generatedFiles.join('\n'), /\.codex\/prompts\/shelf-continue\.md/);
+  assert.match(manifest.generatedFiles.join('\n'), /\.agents\/skills\/shelf-continue\/SKILL\.md/);
+  assert.match(manifest.generatedFiles.join('\n'), /\.agents\/skills\/shelf-finish-work\/SKILL\.md/);
   assert.equal(hashes.schemaVersion, 1);
   assert.equal(typeof hashes.files['AGENTS.md'].hash, 'string');
   assert.equal(typeof hashes.files['.agents/skills/shelf-brainstorm/SKILL.md'].hash, 'string');
   assert.equal(typeof hashes.files['.codex/agents/shelf-implement.toml'].hash, 'string');
   assert.equal(typeof hashes.files['.codex/config.toml'].hash, 'string');
   assert.equal(typeof hashes.files['.codex/hooks.json'].hash, 'string');
-  assert.equal(typeof hashes.files['.codex/prompts/shelf-continue.md'].hash, 'string');
+  assert.equal(typeof hashes.files['.agents/skills/shelf-continue/SKILL.md'].hash, 'string');
+  assert.equal(typeof hashes.files['.agents/skills/shelf-finish-work/SKILL.md'].hash, 'string');
   assert.equal(typeof hashes.files['.shelf/manifest.json'].hash, 'string');
 });
 

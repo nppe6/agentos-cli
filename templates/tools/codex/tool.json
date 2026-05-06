@@ -4,7 +4,6 @@
   "rootDir": ".codex",
   "agentsDir": ".codex/agents",
   "optionalDirs": [
-    ".codex/prompts",
     ".codex/agents"
   ]
 }

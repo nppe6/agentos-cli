@@ -1,8 +1,8 @@
-﻿# How To: Add Slash Command
+# How To: Add Slash Command
 
-Add a new `/shelf:my-command` command.
+Add a new `/shelf:my-command` command from the shared command source.
 
-**Current platforms**: Claude Code commands and Codex prompts
+**Current platforms**: Claude Code commands plus Codex shared-skill projection
 
 ---
 
@@ -10,22 +10,16 @@ Add a new `/shelf:my-command` command.
 
 | File | Action | Required |
 |------|--------|----------|
-| `.claude/commands/shelf/my-command.md` | Create | Yes |
-| `.codex/prompts/shelf-my-command.md` | Create | If Codex is enabled |
+| `.shelf/templates/common-commands/my-command.md` | Create | Yes |
 | `shelf-local/SKILL.md` | Update | Yes |
 
 ---
 
-## Step 1: Create Command File
+## Step 1: Create Common Command Source
 
-Create `.claude/commands/shelf/my-command.md`:
+Create `.shelf/templates/common-commands/my-command.md`:
 
 ```markdown
----
-name: my-command
-description: Short description of what the command does
----
-
 # My Command
 
 ## Purpose
@@ -55,11 +49,14 @@ What the command produces.
 
 ---
 
-## Step 2: Mirror to Codex Prompt Optional
+## Step 2: Let Platform Projections Regenerate
 
-If supporting Codex, create `.codex/prompts/shelf-my-command.md` with matching behavior. Codex prompt files do not use Claude command frontmatter.
+After sync/init:
 
-Use the same Shelf read order: `.shelf/workflow.md`, active task, PRD, JSONL, and referenced spec/research files.
+- Claude projects get `.claude/commands/shelf/my-command.md`
+- Codex projects can expose the same semantics through `.agents/skills/shelf-my-command/SKILL.md`
+
+Keep the common source free of platform-specific frontmatter. The projection layer injects the right wrapper per platform.
 
 ---
 
@@ -73,8 +70,8 @@ Update `.claude/skills/shelf-local/SKILL.md`:
 ### Added Commands
 
 #### /shelf:my-command
-- **File**: `.claude/commands/shelf/my-command.md`
-- **Platform**: Claude Code; Codex prompt if present
+- **Source**: `.shelf/templates/common-commands/my-command.md`
+- **Platform output**: Claude command; Codex shared skill projection if enabled
 - **Purpose**: What it does
 - **Added**: 2026-01-31
 - **Reason**: Why it was added
@@ -87,11 +84,6 @@ Update `.claude/skills/shelf-local/SKILL.md`:
 ### Simple Command
 
 ```markdown
----
-name: check-types
-description: Run TypeScript type checking
----
-
 # Check Types
 
 Run `pnpm typecheck` and report results.
@@ -106,11 +98,6 @@ Run this command after making code changes to verify type safety.
 Commands can reference user input or context:
 
 ```markdown
----
-name: review-file
-description: Review a specific file for code quality
----
-
 # Review File
 
 ## Input
@@ -128,15 +115,16 @@ User should specify which file to review.
 
 ## Testing
 
-1. Run the command: `/shelf:my-command`
-2. Verify behavior matches description
-3. Test edge cases
+1. Regenerate platform projections.
+2. Run the command: `/shelf:my-command`
+3. Verify behavior matches description.
+4. Confirm Codex reads the projected shared skill when relevant.
 
 ---
 
 ## Checklist
 
-- [ ] Command file created with proper frontmatter
-- [ ] Codex prompt created if needed
+- [ ] Common command source created
+- [ ] Platform projections regenerated
 - [ ] Documented in shelf-local
 - [ ] Tested the command

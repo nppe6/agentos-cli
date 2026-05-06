@@ -5,7 +5,7 @@ When the user wants to change AgentOS Shelf phases, next-action hints, whether t
 ## Read These Files First
 
 1. `.shelf/workflow.md`
-2. Entry files for the current platform, such as skills/commands/prompts/workflows
+2. Entry files for the current platform, such as skills/commands/workflows
 3. The current task's `task.json` and `prd.md`
 
 ## Common Needs And Edit Points

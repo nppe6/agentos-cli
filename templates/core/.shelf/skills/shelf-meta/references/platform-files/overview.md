@@ -17,7 +17,7 @@ Platform files do not store business state. They let the corresponding AI tool r
 | hooks | `.claude/hooks/` | Lightweight Claude Code session-start reminder. |
 | agents | `.claude/agents/`, `.codex/agents/` | Define `shelf-research`, `shelf-implement`, and `shelf-check`. |
 | skills | `.claude/skills/`, `.agents/skills/` | Capability descriptions that auto-trigger or can be read on demand. |
-| commands/prompts | `.claude/commands/shelf/`, `.codex/prompts/` | Entry points explicitly invoked by the user. |
+| commands/skill projections | `.claude/commands/shelf/`, `.agents/skills/shelf-continue/`, `.agents/skills/shelf-finish-work/` | Entry points explicitly invoked by the user or projected into Codex-readable shared skills. |
 
 ## Three Platform Integration Modes
 

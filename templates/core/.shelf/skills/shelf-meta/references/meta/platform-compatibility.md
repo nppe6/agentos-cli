@@ -14,9 +14,9 @@ Do not add documentation, settings, hooks, or path tables for another platform u
 | Root entry file | `AGENTS.md` | `CLAUDE.md` |
 | Shared skills | `.agents/skills/shelf-*` | `.claude/skills/shelf-*` |
 | Agents | `.codex/agents/shelf-*.toml` | `.claude/agents/shelf-*.md` |
-| User entry points | `.codex/prompts/shelf-*.md` | `.claude/commands/shelf/*.md` |
+| User entry points | `.agents/skills/shelf-continue/`, `.agents/skills/shelf-finish-work/` | `.claude/commands/shelf/*.md` |
 | Hook behavior | SessionStart plus UserPromptSubmit hooks when Codex hooks are enabled globally | Lightweight `SessionStart` reminder |
-| Context loading | Hook breadcrumbs plus agent/prompt pull | Agent/command pull plus startup reminder |
+| Context loading | Hook breadcrumbs plus agent/skill pull | Agent/command pull plus startup reminder |
 
 ## Context Loading Model
 

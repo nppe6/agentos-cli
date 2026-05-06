@@ -8,12 +8,12 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 
 | Task | Files to Modify | Platform |
 |------|-----------------|----------|
-| [Add slash command](#add-slash-command) | `.claude/commands/`, `.codex/prompts/`, shelf-local | Codex/Claude |
+| [Add slash command](#add-slash-command) | `.shelf/templates/common-commands/`, shelf-local | Codex/Claude |
 | [Add agent](#add-agent) | `.claude/agents/`, `.codex/agents/`, JSONL, shelf-local | Codex/Claude |
 | [Modify hook](#modify-hook) | `.claude/hooks/`, `.claude/settings.json`, shelf-local | Claude |
 | [Add spec category](#add-spec-category) | `.shelf/spec/`, JSONL, shelf-local | Codex/Claude |
 | [Change verify commands](#change-verify-commands) | `.shelf/spec/` or agent files | Codex/Claude |
-| [Add workflow phase](#add-workflow-phase) | `.shelf/workflow.md`, command/prompt files | Codex/Claude |
+| [Add workflow phase](#add-workflow-phase) | `.shelf/workflow.md`, common command files | Codex/Claude |
 | [Add core script](#add-core-script) | `.shelf/scripts/`, shelf-local | Codex/Claude |
 | [Change task types](#change-task-types) | task scripts, JSONL templates | Codex/Claude |
 
@@ -30,14 +30,13 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 **Files to modify**:
 
 ```
-.claude/commands/shelf/my-command.md    # Create: Command prompt
-.codex/prompts/shelf-my-command.md      # Create: Codex prompt if needed
-.shelf-local/SKILL.md                   # Update: Document the change
+.shelf/templates/common-commands/my-command.md   # Create: Shared command source
+.shelf-local/SKILL.md                            # Update: Document the change
 ```
 
 **Steps**:
-1. Create command file with YAML frontmatter
-2. Create a Codex prompt if needed
+1. Create the common command source
+2. Regenerate platform projections
 3. Document in shelf-local
 
 鈫?See `add-command.md` for details.

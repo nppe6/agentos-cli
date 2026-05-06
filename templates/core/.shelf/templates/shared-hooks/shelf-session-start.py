@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Codex SessionStart hook for AgentOS Shelf projects."""
+"""Claude Code SessionStart hook for AgentOS Shelf projects."""
 
 from __future__ import annotations
 
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 from io import StringIO
@@ -19,27 +20,17 @@ Then continue directly with the user's request. This notice is one-shot: do not 
 </first-reply-notice>"""
 
 
-def should_skip_injection() -> bool:
-    return os.environ.get("CODEX_NON_INTERACTIVE") == "1"
-
-
-def configure_project_encoding(project_dir: Path) -> None:
-    scripts_dir = project_dir / ".shelf" / "scripts"
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-    try:
-        from common import configure_encoding  # type: ignore[import-not-found]
-
-        configure_encoding()
-    except Exception:
-        pass
-
-
 def read_file(path: Path, fallback: str = "") -> str:
     try:
         return path.read_text(encoding="utf-8")
     except (FileNotFoundError, PermissionError, OSError):
         return fallback
+
+
+def _detect_platform(hook_input: dict) -> str:
+    if isinstance(hook_input.get("platform"), str):
+        return str(hook_input["platform"])
+    return "claude"
 
 
 def _resolve_context_key(project_dir: Path, hook_input: dict) -> str | None:
@@ -50,7 +41,20 @@ def _resolve_context_key(project_dir: Path, hook_input: dict) -> str | None:
         from common.active_task import resolve_context_key  # type: ignore[import-not-found]
     except Exception:
         return None
-    return resolve_context_key(hook_input, platform="codex")
+    return resolve_context_key(hook_input, platform=_detect_platform(hook_input))
+
+
+def _persist_context_key_for_bash(context_key: str | None) -> None:
+    if not context_key:
+        return
+    env_file = os.environ.get("CLAUDE_ENV_FILE")
+    if not env_file:
+        return
+    try:
+        with open(env_file, "a", encoding="utf-8") as handle:
+            handle.write(f"export SHELF_CONTEXT_ID={shlex.quote(context_key)}\n")
+    except OSError:
+        pass
 
 
 def _resolve_active_task(shelf_dir: Path, hook_input: dict):
@@ -59,7 +63,11 @@ def _resolve_active_task(shelf_dir: Path, hook_input: dict):
         sys.path.insert(0, str(scripts_dir))
     from common.active_task import resolve_active_task  # type: ignore[import-not-found]
 
-    return resolve_active_task(shelf_dir.parent, hook_input, platform="codex")
+    return resolve_active_task(
+        shelf_dir.parent,
+        hook_input,
+        platform=_detect_platform(hook_input),
+    )
 
 
 def _run_context_script(shelf_dir: Path, context_key: str | None = None) -> str:
@@ -287,9 +295,6 @@ def _build_guidelines_index(shelf_dir: Path) -> str:
 
 
 def main() -> int:
-    if should_skip_injection():
-        return 0
-
     try:
         hook_input = json.loads(sys.stdin.read() or "{}")
         if not isinstance(hook_input, dict):
@@ -297,47 +302,46 @@ def main() -> int:
     except json.JSONDecodeError:
         hook_input = {}
 
-    project_dir = Path(hook_input.get("cwd") or ".").resolve()
-    configure_project_encoding(project_dir)
-
+    project_dir = Path(
+        os.environ.get("CLAUDE_PROJECT_DIR") or hook_input.get("cwd") or "."
+    ).resolve()
     shelf_dir = project_dir / ".shelf"
     if not shelf_dir.is_dir():
         return 0
 
     context_key = _resolve_context_key(project_dir, hook_input)
-    context = StringIO()
-    context.write(
+    _persist_context_key_for_bash(context_key)
+
+    output = StringIO()
+    output.write(
         "<session-context>\n"
         "You are starting a new session in an AgentOS Shelf-managed project.\n"
         "Read and follow the injected workflow, task status, and spec index below.\n"
         "</session-context>\n\n"
     )
-    context.write(FIRST_REPLY_NOTICE)
-    context.write("\n\n<current-state>\n")
-    context.write(_run_context_script(shelf_dir, context_key))
-    context.write("\n</current-state>\n\n<workflow>\n")
-    context.write(_build_workflow_overview(shelf_dir / "workflow.md"))
-    context.write("\n</workflow>\n\n<guidelines>\n")
-    context.write(_build_guidelines_index(shelf_dir))
-    context.write("\n</guidelines>\n\n<task-status>\n")
-    context.write(_get_task_status(shelf_dir, hook_input))
-    context.write(
+    output.write(FIRST_REPLY_NOTICE)
+    output.write("\n\n<current-state>\n")
+    output.write(_run_context_script(shelf_dir, context_key))
+    output.write("\n</current-state>\n\n<workflow>\n")
+    output.write(_build_workflow_overview(shelf_dir / "workflow.md"))
+    output.write("\n</workflow>\n\n<guidelines>\n")
+    output.write(_build_guidelines_index(shelf_dir))
+    output.write("\n</guidelines>\n\n<task-status>\n")
+    output.write(_get_task_status(shelf_dir, hook_input))
+    output.write(
         "\n</task-status>\n\n<ready>\n"
         "Context loaded. Follow <task-status> first, then the workflow guide.\n"
         "If a bootstrap task is present, execute its PRD before normal implementation routing.\n"
         "</ready>"
     )
 
-    rendered = context.getvalue()
-    output = {
-        "suppressOutput": True,
-        "systemMessage": f"Shelf context injected ({len(rendered)} chars)",
+    result = {
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",
-            "additionalContext": rendered,
-        },
+            "additionalContext": output.getvalue(),
+        }
     }
-    print(json.dumps(output, ensure_ascii=False), flush=True)
+    print(json.dumps(result, ensure_ascii=False), flush=True)
     return 0
 
 

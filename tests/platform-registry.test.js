@@ -9,6 +9,10 @@ const { scaffoldPackageSpecs } = require('../lib/actions/agent-spec');
 const { detectMonorepo } = require('../lib/utils/monorepo');
 const { detectProjectType } = require('../lib/utils/project-detector');
 const { getPlatform } = require('../lib/utils/platform-registry');
+const {
+  SHARED_HOOKS_BY_PLATFORM,
+  getSharedHookScriptsForPlatform
+} = require('../lib/utils/shared-hooks');
 
 function createTempProject() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'agentos-cli-platform-'));
@@ -36,7 +40,7 @@ test('platform registry describes Codex and Claude capabilities', () => {
   const claude = getPlatform('claude');
 
   assert.equal(codex.capabilities.openAgentSkills, true);
-  assert.equal(codex.capabilities.promptCommands, true);
+  assert.equal(codex.capabilities.promptCommands, false);
   assert.equal(codex.capabilities.agentPullContext, true);
   assert.equal(codex.capabilities.hooks, true);
   assert.equal(codex.capabilities.settings, true);
@@ -67,6 +71,29 @@ test('monorepo detector reads package.json workspaces', () => {
 
   assert.deepEqual(packages.map((pkg) => pkg.path), ['packages/api', 'packages/web']);
   assert.deepEqual(packages.map((pkg) => pkg.name), ['@demo/api', '@demo/web']);
+});
+
+test('shared hook registry maps supported hooks by platform', () => {
+  assert.deepEqual(SHARED_HOOKS_BY_PLATFORM.codex, [
+    'shelf-inject-workflow-state.py'
+  ]);
+  assert.deepEqual(SHARED_HOOKS_BY_PLATFORM.claude, [
+    'shelf-session-start.py',
+    'shelf-inject-workflow-state.py'
+  ]);
+});
+
+test('shared hook registry resolves real template files', () => {
+  const agentOsDirectory = path.join(__dirname, '..', 'templates', 'core', '.shelf');
+  const hooks = [
+    ...getSharedHookScriptsForPlatform('codex', agentOsDirectory),
+    ...getSharedHookScriptsForPlatform('claude', agentOsDirectory)
+  ];
+
+  assert.equal(hooks.length, 3);
+  for (const hook of hooks) {
+    assert.equal(fs.existsSync(hook.sourcePath), true, hook.sourcePath);
+  }
 });
 
 test('project detector classifies frontend backend and fullstack projects', () => {

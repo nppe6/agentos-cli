@@ -39,7 +39,7 @@ description: "Project-local AgentOS Shelf customizations for this repository. Us
 ### Added
 
 #### /shelf:example
-- **Files**: `.claude/commands/shelf/example.md`, `.codex/prompts/shelf-example.md`
+- **Files**: `.shelf/templates/common-commands/example.md`, plus generated platform outputs
 - **Platform**: Claude Code and/or Codex
 - **Purpose**:
 - **Reason**:

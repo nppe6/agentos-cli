@@ -299,8 +299,8 @@ AGENTS.md
 .codex/config.toml
 .codex/hooks.json
 .codex/hooks/*.py
-.codex/prompts/shelf-continue.md
-.codex/prompts/shelf-finish-work.md
+.agents/skills/shelf-continue/SKILL.md
+.agents/skills/shelf-finish-work/SKILL.md
 ```
 
 Claude 投影实际包括：
@@ -529,11 +529,11 @@ Shelf 在 Claude 中：
 /shelf:finish-work
 ```
 
-Shelf 在 Codex 中投影为 prompt 文件：
+Shelf 在 Codex 中投影为共享技能入口：
 
 ```text
-.codex/prompts/shelf-continue.md
-.codex/prompts/shelf-finish-work.md
+.agents/skills/shelf-continue/SKILL.md
+.agents/skills/shelf-finish-work/SKILL.md
 ```
 
 如果当前工具没有 slash command 入口，也可以直接对 AI 说：

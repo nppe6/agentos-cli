@@ -9,7 +9,7 @@ These systems are file-backed and shared by the current Codex and Claude Code pr
 | Workspace | Session tracking and journals | `.shelf/workspace/` |
 | Tasks | Work item tracking | `.shelf/tasks/` |
 | Specs | Project coding guidelines | `.shelf/spec/` |
-| Commands/prompts | Explicit entry points | `.claude/commands/`, `.codex/prompts/` |
+| Commands/skill projections | Explicit entry points | `.claude/commands/`, `.agents/skills/shelf-continue/`, `.agents/skills/shelf-finish-work/` |
 | Scripts | Runtime utilities | `.shelf/scripts/` |
 
 ## Why These Are Portable
@@ -24,7 +24,7 @@ All core systems are file-based:
 
 ### Codex
 
-Codex reads `AGENTS.md`, shared skills in `.agents/skills/`, agents in `.codex/agents/`, and prompts in `.codex/prompts/`.
+Codex reads `AGENTS.md`, shared skills in `.agents/skills/`, and agents in `.codex/agents/`.
 
 ### Claude Code
 
