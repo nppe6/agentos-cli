@@ -152,6 +152,9 @@ test('generates frontend-only bootstrap guidance for frontend projects', async (
   assert.match(bootstrapPrd, /### Frontend guidelines/);
   assert.doesNotMatch(bootstrapPrd, /### Backend guidelines/);
   assert.deepEqual(bootstrapTaskJson.relatedFiles, ['.shelf/spec/frontend/']);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'frontend')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'backend')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'guides')), true);
 });
 
 test('generates backend-only bootstrap guidance for backend projects', async () => {
@@ -171,6 +174,26 @@ test('generates backend-only bootstrap guidance for backend projects', async () 
   assert.match(bootstrapPrd, /### Backend guidelines/);
   assert.doesNotMatch(bootstrapPrd, /### Frontend guidelines/);
   assert.deepEqual(bootstrapTaskJson.relatedFiles, ['.shelf/spec/backend/']);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'backend')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'frontend')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'guides')), true);
+});
+
+test('keeps both backend and frontend specs for unknown fullstack bootstrap guidance', async () => {
+  const projectDirectory = createTempProject();
+  writeJson(path.join(projectDirectory, 'package.json'), {
+    name: 'unknown-project',
+    version: '1.0.0'
+  });
+
+  const result = await agentInit(projectDirectory, { stack: 'core', force: true, gitMode: 'track', tools: ['codex'] });
+  const bootstrapTaskJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'task.json'), 'utf8'));
+
+  assert.equal(result.projectType, 'fullstack');
+  assert.deepEqual(bootstrapTaskJson.relatedFiles, ['.shelf/spec/backend/', '.shelf/spec/frontend/']);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'backend')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'frontend')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'guides')), true);
 });
 
 test('generates package-specific bootstrap guidance for monorepos', async () => {
@@ -209,6 +232,9 @@ test('generates package-specific bootstrap guidance for monorepos', async () => 
     '.shelf/spec/packages/demo-api/',
     '.shelf/spec/packages/demo-web/'
   ]);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'backend')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'frontend')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'guides')), true);
 });
 
 test('init initializes developer identity from git user name by default', async () => {
