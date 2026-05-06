@@ -39,7 +39,7 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 2. Regenerate platform projections
 3. Document in shelf-local
 
-鈫?See `add-command.md` for details.
+→ See `add-command.md` for details.
 
 ---
 
@@ -62,7 +62,7 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 task template code                                  # Modify: Seed JSONL if needed
 ```
 
-鈫?See `add-agent.md` for details.
+→ See `add-agent.md` for details.
 
 ---
 
@@ -78,7 +78,7 @@ task template code                                  # Modify: Seed JSONL if need
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-鈫?See `modify-hook.md` for details.
+→ See `modify-hook.md` for details.
 
 ---
 
@@ -95,7 +95,7 @@ task template code                                  # Modify: Seed JSONL if need
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-鈫?See `add-spec.md` for details.
+→ See `add-spec.md` for details.
 
 ---
 
@@ -119,7 +119,7 @@ verify:
   - pnpm test        # Add this
 ```
 
-鈫?See `change-verify.md` for details.
+→ See `change-verify.md` for details.
 
 ---
 
@@ -136,7 +136,7 @@ task.json (in task directories)           # Modify: next_action array
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-鈫?See `add-phase.md` for details.
+→ See `add-phase.md` for details.
 
 ---
 
@@ -151,7 +151,7 @@ task.json (in task directories)           # Modify: next_action array
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-鈫?See `modify-session-start.md` for details.
+→ See `modify-session-start.md` for details.
 
 ---
 
@@ -167,7 +167,7 @@ task.json (in task directories)           # Modify: next_action array
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-鈫?See `add-script.md` for details.
+→ See `add-script.md` for details.
 
 ---
 
@@ -183,7 +183,7 @@ task.json (in task directories)           # Modify: next_action array
 .shelf-local/SKILL.md                   # Update: Document the change
 ```
 
-鈫?See `change-task-types.md` for details.
+→ See `change-task-types.md` for details.
 
 ---
 

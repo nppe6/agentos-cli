@@ -1,4 +1,4 @@
-﻿# Hooks And Settings
+# Hooks And Settings
 
 Hooks/settings are the entry layer that connects a platform to AgentOS Shelf. Current AgentOS Shelf CLI installs Claude Code and Codex session-start wiring, plus a Codex per-turn workflow-state hook. Implement/check agents still pull task context from `.shelf/tasks` before editing.
 
@@ -34,7 +34,7 @@ Not every platform has every hook. Do not copy files from another platform just 
 | User need | Edit location |
 | --- | --- |
 | AI should see more/less context in a new session | Platform `session-start` hook. |
-| Per-turn hint policy should change | `[workflow-state:STATUS]` block in `.shelf/workflow.md`. The hook parses workflow.md verbatim 鈥?no script edit required. |
+| Per-turn hint policy should change | `[workflow-state:STATUS]` block in `.shelf/workflow.md`. The hook parses workflow.md verbatim — no script edit required. |
 | Sub-agent cannot read PRD/spec | Agent read-order instructions in `shelf-implement` or `shelf-check`. |
 | `task.py current` in shell has no active task | `SHELF_CONTEXT_ID` or the platform session identity available to shell commands. |
 | Disable an automatic injection | The corresponding hook registration in settings/config. |

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Task CRUD operations.
 
@@ -82,7 +82,7 @@ def ensure_tasks_dir(repo_root: Path) -> Path:
 # =============================================================================
 
 # Config directories of platforms that consume implement.jsonl / check.jsonl.
-# Keep in sync with src/types/ai-tools.ts AI_TOOLS entries 鈥?these are the
+# Keep in sync with src/types/ai-tools.ts AI_TOOLS entries — these are the
 # platforms listed in workflow.md's "agent-capable" Skill Routing block
 # (Class-1 hook-inject + Class-2 pull-based preludes). Kilo / Antigravity /
 # Windsurf are NOT in this list: they do not consume JSONL.
@@ -102,7 +102,7 @@ _SUBAGENT_CONFIG_DIRS: tuple[str, ...] = (
 
 _SEED_EXAMPLE = (
     "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. "
-    "Put spec/research files only 鈥?no code paths. "
+    "Put spec/research files only — no code paths. "
     "Run `python3 .shelf/scripts/get_context.py --mode packages` to list available specs. "
     "Delete this line once real entries are added."
 )
@@ -158,7 +158,7 @@ def cmd_create(args: argparse.Namespace) -> int:
             print(colored(f"Error: unknown package '{package}'. Available: {available}", Colors.RED), file=sys.stderr)
             return 1
     else:
-        # Inferred: default_package 鈫?None (no task.json yet for create)
+        # Inferred: default_package → None (no task.json yet for create)
         package = resolve_package(repo_root=repo_root)
 
     # Default assignee to current developer
@@ -229,7 +229,7 @@ def cmd_create(args: argparse.Namespace) -> int:
 
     # Seed implement.jsonl / check.jsonl for sub-agent-capable platforms.
     # Agent curates real entries in Phase 1.3 (see .shelf/workflow.md).
-    # Agent-less platforms (Kilo / Antigravity / Windsurf) skip this 鈥?they
+    # Agent-less platforms (Kilo / Antigravity / Windsurf) skip this — they
     # load specs via the shelf-before-dev skill instead of JSONL.
     seeded_jsonl = False
     if _has_subagent_platform(repo_root):
@@ -263,7 +263,7 @@ def cmd_create(args: argparse.Namespace) -> int:
 
     # Auto-activate the new task so the per-turn breadcrumb fires planning
     # state. Best-effort: gracefully degrade if no session identity (CLI run
-    # outside an AI session) 鈥?the task is still created, the user can run
+    # outside an AI session) — the task is still created, the user can run
     # task.py start later. Pointer is session-scoped so this never affects
     # other AI sessions.
     try:
@@ -283,7 +283,7 @@ def cmd_create(args: argparse.Namespace) -> int:
     print("  1. Create prd.md with requirements", file=sys.stderr)
     if seeded_jsonl:
         print(
-            "  2. Curate implement.jsonl / check.jsonl (spec + research files only 鈥?"
+            "  2. Curate implement.jsonl / check.jsonl (spec + research files only — "
             "see .shelf/workflow.md Phase 1.3)",
             file=sys.stderr,
         )
@@ -340,7 +340,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
 
             # Handle subtask relationships on archive.
             # Keep this task in its parent's children list so progress
-            # counters (children_progress) stay consistent 鈥?children
+            # counters (children_progress) stay consistent — children
             # missing from the active set are treated as completed.
             task_children = data.get("children", [])
 
@@ -530,7 +530,7 @@ def cmd_set_branch(args: argparse.Namespace) -> int:
     data["branch"] = branch
     write_json(task_json, data)
 
-    print(colored(f"鉁?Branch set to: {branch}", Colors.GREEN))
+    print(colored(f"✓ Branch set to: {branch}", Colors.GREEN))
     return 0
 
 
@@ -564,7 +564,7 @@ def cmd_set_base_branch(args: argparse.Namespace) -> int:
     data["base_branch"] = base_branch
     write_json(task_json, data)
 
-    print(colored(f"鉁?Base branch set to: {base_branch}", Colors.GREEN))
+    print(colored(f"✓ Base branch set to: {base_branch}", Colors.GREEN))
     print(f"  PR will target: {base_branch}")
     return 0
 
@@ -596,5 +596,5 @@ def cmd_set_scope(args: argparse.Namespace) -> int:
     data["scope"] = scope
     write_json(task_json, data)
 
-    print(colored(f"鉁?Scope set to: {scope}", Colors.GREEN))
+    print(colored(f"✓ Scope set to: {scope}", Colors.GREEN))
     return 0

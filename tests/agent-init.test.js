@@ -120,6 +120,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   const shelfFinishWorkSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-finish-work', 'SKILL.md'), 'utf8');
   const shelfBrainstormSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md'), 'utf8');
   const shelfMetaFilesContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'references', 'core', 'files.md'), 'utf8');
+  const workflowContent = fs.readFileSync(path.join(projectDirectory, '.shelf', 'workflow.md'), 'utf8');
   assert.match(codexImplementContent, /name = "shelf-implement"/);
   assert.match(codexImplementContent, /developer_instructions = """/);
   assert.match(codexImplementContent, /Required Shelf Context/);
@@ -135,11 +136,15 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(codexSessionStartContent, /<task-status>/);
   assert.match(codexSessionStartContent, /\.shelf\/workflow\.md/);
   assert.match(codexSessionStartContent, /\.shelf\/spec/);
+  assert.match(codexSessionStartContent, /do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm`/);
+  assert.match(codexSessionStartContent, /treat it as the default first-run flow/);
   assert.match(claudeSessionStartContent, /<workflow>/);
   assert.match(claudeSessionStartContent, /<guidelines>/);
   assert.match(claudeSessionStartContent, /<task-status>/);
+  assert.match(claudeSessionStartContent, /Do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm`/);
   assert.match(claudeWorkflowStateContent, /UserPromptSubmit/);
   assert.match(claudeWorkflowStateContent, /\.shelf\/workflow\.md/);
+  assert.match(claudeWorkflowStateContent, /shelf-brainstorm/);
   assert.match(claudeContinueContent, /00-bootstrap-guidelines/);
   assert.match(claudeContinueContent, /python(?:3)? \.\/\.shelf\/scripts\/get_context\.py --mode phase --step <X\.X> --platform claude/);
   assert.match(shelfContinueSkillContent, /Bootstrap fast path/);
@@ -154,6 +159,8 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(shelfMetaFilesContent, /\.shelf\/templates\/common-skills\//);
   assert.match(shelfMetaFilesContent, /\.shelf\/templates\/bundled-skills\//);
   assert.match(shelfMetaFilesContent, /\.shelf\/skills\/` \| Project-local custom skills/);
+  assert.match(workflowContent, /the AI should enter the workflow automatically/);
+  assert.match(workflowContent, /do not ask the user to invoke `shelf-brainstorm`, `shelf-continue`, or another Shelf entrypoint first/);
   assert.match(claudeImplementContent, /Required Shelf Context/);
   assert.match(claudeImplementContent, /implement\.jsonl/);
 });

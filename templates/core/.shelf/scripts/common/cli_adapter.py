@@ -1,4 +1,4 @@
-﻿"""
+"""
 CLI Adapter for Multi-Platform Support.
 
 Abstracts differences between Claude Code, OpenCode, Cursor, iFlow, Codex, Kilo, Kiro Code, Gemini CLI, Antigravity, Windsurf, Qoder, CodeBuddy, GitHub Copilot, Factory Droid, and Pi Agent interfaces.
@@ -662,19 +662,19 @@ def detect_platform(project_root: Path) -> Platform:
 
     Detection order:
     1. SHELF_PLATFORM environment variable (if set)
-    2. .opencode directory exists 鈫?opencode
-    3. .iflow directory exists 鈫?iflow
-    4. .cursor directory exists (without .claude) 鈫?cursor
-    5. .codex exists and no other platform dirs 鈫?codex
-    6. .kilocode directory exists 鈫?kilo
-    7. .kiro/skills exists and no other platform dirs 鈫?kiro
-    8. .gemini directory exists 鈫?gemini
-    9. .agent/workflows exists and no other platform dirs 鈫?antigravity
-    10. .windsurf/workflows exists and no other platform dirs 鈫?windsurf
-    11. .codebuddy directory exists 鈫?codebuddy
-    12. .qoder directory exists 鈫?qoder
-    13. .pi directory exists 鈫?pi
-    14. Default 鈫?claude
+    2. .opencode directory exists → opencode
+    3. .iflow directory exists → iflow
+    4. .cursor directory exists (without .claude) → cursor
+    5. .codex exists and no other platform dirs → codex
+    6. .kilocode directory exists → kilo
+    7. .kiro/skills exists and no other platform dirs → kiro
+    8. .gemini directory exists → gemini
+    9. .agent/workflows exists and no other platform dirs → antigravity
+    10. .windsurf/workflows exists and no other platform dirs → windsurf
+    11. .codebuddy directory exists → codebuddy
+    12. .qoder directory exists → qoder
+    13. .pi directory exists → pi
+    14. Default → claude
 
     Args:
         project_root: Project root directory
@@ -779,7 +779,7 @@ def detect_platform(project_root: Path) -> Platform:
     # (.agents/skills/shelf-* dirs) and no explicit platform config dir.
     # Happens on fresh clones where .codex/ is gitignored/absent but the
     # shared skills were committed to git. Must guard against the case
-    # where .claude/ or any other platform dir also exists 鈥?.agents/skills/
+    # where .claude/ or any other platform dir also exists — .agents/skills/
     # can legitimately coexist with any platform as a shared consumption
     # layer for Amp/Cline/Warp/etc.
     agents_skills = project_root / ".agents" / "skills"

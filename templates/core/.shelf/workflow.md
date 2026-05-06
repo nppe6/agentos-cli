@@ -1,14 +1,14 @@
-﻿# Development Workflow
+# Development Workflow
 
 ---
 
 ## Core Principles
 
-1. **Plan before code** 鈥?figure out what to do before you start
-2. **Specs loaded, not remembered** 鈥?guidelines are loaded through agent preludes, skills, or prompts, not recalled from memory
-3. **Persist everything** 鈥?research, decisions, and lessons all go to files; conversations get compacted, files don't
-4. **Incremental development** 鈥?one task at a time
-5. **Capture learnings** 鈥?after each task, review and write new knowledge back to spec
+1. **Plan before code** — figure out what to do before you start
+2. **Specs loaded, not remembered** — guidelines are loaded through hooks, preludes, skills, or prompts, not recalled from memory
+3. **Persist everything** — research, decisions, and lessons all go to files; conversations get compacted, files don't
+4. **Incremental development** — one task at a time
+5. **Capture learnings** — after each task, review and write new knowledge back to spec
 
 ---
 
@@ -28,14 +28,14 @@ Creates `.shelf/.developer` (gitignored) + `.shelf/workspace/<your-name>/`.
 
 `.shelf/spec/` holds coding guidelines organized by package and layer.
 
-- `.shelf/spec/<package>/<layer>/index.md` 鈥?entry point with **Pre-Development Checklist** + **Quality Check**. Actual guidelines live in the `.md` files it points to.
-- `.shelf/spec/guides/index.md` 鈥?cross-package thinking guides.
+- `.shelf/spec/<package>/<layer>/index.md` — entry point with **Pre-Development Checklist** + **Quality Check**. Actual guidelines live in the `.md` files it points to.
+- `.shelf/spec/guides/index.md` — cross-package thinking guides.
 
 ```bash
 python3 ./.shelf/scripts/get_context.py --mode packages   # list packages / layers
 ```
 
-**When to update spec**: new pattern/convention found 路 bug-fix prevention to codify 路 new technical decision.
+**When to update spec**: new pattern/convention found · bug-fix prevention to codify · new technical decision.
 
 ### Task System
 
@@ -79,8 +79,8 @@ python3 ./.shelf/scripts/task.py create-pr [name] [--dry-run]
 
 Records every AI session for cross-session tracking under `.shelf/workspace/<developer>/`.
 
-- `journal-N.md` 鈥?session log. **Max 2000 lines per file**; a new `journal-(N+1).md` is auto-created when exceeded.
-- `index.md` 鈥?personal index (total sessions, last active).
+- `journal-N.md` — session log. **Max 2000 lines per file**; a new `journal-(N+1).md` is auto-created when exceeded.
+- `index.md` — personal index (total sessions, last active).
 
 ```bash
 python3 ./.shelf/scripts/add_session.py --title "Title" --commit "hash" --summary "Summary"
@@ -107,31 +107,32 @@ python3 ./.shelf/scripts/get_context.py --mode phase --step <X.Y>  # detailed gu
   point here.
 
   STATUS charset: [A-Za-z0-9_-]+. When the hook can't find a tag, it
-  degrades to a generic "Refer to workflow.md for current step." line 鈥?  intentionally visible so users notice and fix a broken workflow.md.
+  degrades to a generic "Refer to workflow.md for current step." line —
+  intentionally visible so users notice and fix a broken workflow.md.
 
   INVARIANT (test/regression.test.ts):
-    Every workflow-walkthrough step marked `[required 路 once]` must have a
+    Every workflow-walkthrough step marked `[required · once]` must have a
     matching enforcement line in its phase's [workflow-state:*] block. The
     breadcrumb is the only per-turn channel; if a mandatory step isn't
     mentioned there, the AI silently skips it (Phase 1.3 jsonl curation
     skip and Phase 3.4 commit skip both manifested via this gap).
 
-  TAG 鈫?PHASE scoping:
-    [workflow-state:no_task]      鈫?no active task; before Phase 1
-    [workflow-state:planning]     鈫?all of Phase 1 (status='planning')
-    [workflow-state:in_progress]  鈫?Phase 2 + Phase 3.1-3.4
+  TAG ↔ PHASE scoping:
+    [workflow-state:no_task]      → no active task; before Phase 1
+    [workflow-state:planning]     → all of Phase 1 (status='planning')
+    [workflow-state:in_progress]  → Phase 2 + Phase 3.1-3.4
                                     (status stays 'in_progress' from
                                     task.py start until task.py archive)
-    [workflow-state:completed]    鈫?currently DEAD: cmd_archive flips
+    [workflow-state:completed]    → currently DEAD: cmd_archive flips
                                     status and moves the dir in the same
                                     call, so the resolver loses the
                                     pointer (block kept for a future
-                                    explicit in_progress鈫抍ompleted
+                                    explicit in_progress→completed
                                     transition)
 
   Editing checklist:
     - When you change a [workflow-state:STATUS] block, also check the
-      matching phase's `[required 路 once]` walkthrough steps for sync
+      matching phase's `[required · once]` walkthrough steps for sync
     - Run `agentos-cli shelf update` after editing to push the new bodies to
       downstream user projects (block-level managed replacement)
     - Full runtime contract:
@@ -141,39 +142,39 @@ python3 ./.shelf/scripts/get_context.py --mode phase --step <X.Y>  # detailed gu
 ## Phase Index
 
 ```
-Phase 1: Plan    鈫?figure out what to do (brainstorm + research 鈫?prd.md)
-Phase 2: Execute 鈫?write code and pass quality checks
-Phase 3: Finish  鈫?distill lessons + wrap-up
+Phase 1: Plan    → figure out what to do (brainstorm + research → prd.md)
+Phase 2: Execute → write code and pass quality checks
+Phase 3: Finish  → distill lessons + wrap-up
 ```
 
 <!-- Per-turn breadcrumb: shown when there is no active task (before Phase 1) -->
 
 [workflow-state:no_task]
-No active task. **A Direct answer** 鈥?pure Q&A / explanation / lookup / chat; no file writes + one-line answer + repo reads 鈮?2 files 鈫?AI judges, no override needed.
-**B Create a task** 鈥?any implementation / code change / build / refactor work. Entry sequence: (1) `python3 ./.shelf/scripts/task.py create "<title>"` to create the task (status=planning, breadcrumb switches to [workflow-state:planning] for brainstorm + jsonl phase guidance) 鈫?(2) load `shelf-brainstorm` skill to discuss requirements with the user and iterate on prd.md 鈫?(3) once prd is done and jsonl is curated, run `task.py start <task-dir>` to enter [workflow-state:in_progress] for the implementation skeleton. For research-heavy work, dispatch `shelf-research` sub-agents 鈥?main agent must NOT do 3+ inline WebFetch / WebSearch / `gh api` calls. **"It looks small" is NOT grounds for downgrading B to A or C**.
-**C Inline change** (per-turn only, escape hatch for B) 鈥?the user's CURRENT message MUST contain one of: "skip shelf" / "no task" / "just do it" / "don't create a task" / "璺宠繃 agentos" / "鍒蛋娴佺▼" / "灏忎慨涓€涓? / "鐩存帴鏀? / "鍏堝埆寤轰换鍔? 鈫?briefly acknowledge ("ok, skipping shelf flow this turn"), then inline. **Without seeing one of these phrases you must NOT inline on your own**; do not invent an override the user never said.
+No active task. **A Direct answer** — pure Q&A / explanation / lookup / chat; no file writes + one-line answer + repo reads <= 2 files → AI judges, no override needed.
+**B Create a task** — any implementation / code change / build / refactor work. After the user simply describes the work, the AI should enter the workflow automatically — do not ask the user to invoke `shelf-brainstorm`, `shelf-continue`, or another Shelf entrypoint first. Entry sequence: (1) `python3 ./.shelf/scripts/task.py create "<title>"` to create the task (status=planning, breadcrumb switches to [workflow-state:planning] for brainstorm + jsonl phase guidance) → (2) load `shelf-brainstorm` to discuss requirements with the user and iterate on prd.md → (3) once prd is done and jsonl is curated, run `task.py start <task-dir>` to enter [workflow-state:in_progress] for the implementation skeleton. For research-heavy work, dispatch `shelf-research` sub-agents — main agent must NOT do 3+ inline WebFetch / WebSearch / `gh api` calls. **"It looks small" is NOT grounds for downgrading B to A or C**.
+**C Inline change** (per-turn only, escape hatch for B) — the user's CURRENT message MUST contain one of: "skip shelf" / "no task" / "just do it" / "don't create a task" / "跳过 shelf" / "别走流程" / "小修一下" / "直接改" / "先别建任务" → briefly acknowledge ("ok, skipping shelf flow this turn"), then inline. **Without seeing one of these phrases you must NOT inline on your own**; do not invent an override the user never said.
 [/workflow-state:no_task]
 
 ### Phase 1: Plan
-- 1.0 Create task `[required 路 once]` (just `task.py create`; status enters planning)
-- 1.1 Requirement exploration `[required 路 repeatable]`
-- 1.2 Research `[optional 路 repeatable]`
-- 1.3 Configure context `[required 路 once]` 鈥?Codex and Claude Code
-- 1.4 Activate task `[required 路 once]` (run `task.py start`; status 鈫?in_progress)
+- 1.0 Create task `[required · once]` (just `task.py create`; status enters planning)
+- 1.1 Requirement exploration `[required · repeatable]`
+- 1.2 Research `[optional · repeatable]`
+- 1.3 Configure context `[required · once]` — Codex and Claude Code
+- 1.4 Activate task `[required · once]` (run `task.py start`; status → in_progress)
 - 1.5 Completion criteria
 
 <!-- Per-turn breadcrumb: shown throughout Phase 1 (status='planning') -->
 
 [workflow-state:planning]
 Load the `shelf-brainstorm` skill and iterate on prd.md with the user.
-Phase 1.3 (required, once): before `task.py start`, you MUST curate `implement.jsonl` and `check.jsonl` 鈥?list the spec / research files sub-agents need so they get the right context injected. You may skip only if the jsonl already has agent-curated entries (the seed `_example` row alone doesn't count).
+Phase 1.3 (required, once): before `task.py start`, you MUST curate `implement.jsonl` and `check.jsonl` — list the spec / research files sub-agents need so they get the right context injected. You may skip only if the jsonl already has agent-curated entries (the seed `_example` row alone doesn't count).
 Then run `task.py start <task-dir>` to flip status to in_progress.
-Research output **must** land in `{task_dir}/research/*.md`, written by `shelf-research` sub-agents. The main agent should not inline WebFetch / WebSearch 鈥?the PRD only links to research files.
+Research output **must** land in `{task_dir}/research/*.md`, written by `shelf-research` sub-agents. The main agent should not inline WebFetch / WebSearch — the PRD only links to research files.
 [/workflow-state:planning]
 
 ### Phase 2: Execute
-- 2.1 Implement `[required 路 repeatable]`
-- 2.2 Quality check `[required 路 repeatable]`
+- 2.1 Implement `[required · repeatable]`
+- 2.2 Quality check `[required · repeatable]`
 - 2.3 Rollback `[on demand]`
 
 <!-- Per-turn breadcrumb: shown while status='in_progress'.
@@ -183,16 +184,16 @@ Research output **must** land in `{task_dir}/research/*.md`, written by `shelf-r
      commit, including Phase 3.3 spec update and Phase 3.4 commit. -->
 
 [workflow-state:in_progress]
-**Flow**: shelf-implement 鈫?shelf-check 鈫?shelf-update-spec 鈫?commit (Phase 3.4) 鈫?`/shelf:finish-work`.
-**Default (no override)**: dispatch the `shelf-implement` / `shelf-check` sub-agents 鈥?the main agent does NOT edit code by default. Phase 3.4 commit (required, once): after shelf-update-spec, or whenever implementation is verifiably complete, the main agent **drives the commit** 鈥?state the commit plan in user-facing text, then run `git commit` 鈥?BEFORE suggesting `/shelf:finish-work`. `/finish-work` refuses to run on a dirty working tree (paths outside `.shelf/workspace/` and `.shelf/tasks/`).
-**Inline override** (per-turn only, escape hatch for sub-agent dispatch): the user's CURRENT message MUST explicitly contain one of: "do it inline" / "no sub-agent" / "浣犵洿鎺ユ敼" / "鍒淳 sub-agent" / "main session 鍐欏氨琛? / "涓嶇敤 sub-agent". **Without seeing one of these phrases you must NOT inline on your own**; do not invent an override the user never said.
+**Flow**: shelf-implement → shelf-check → shelf-update-spec → commit (Phase 3.4) → `/shelf:finish-work`.
+**Default (no override)**: dispatch the `shelf-implement` / `shelf-check` sub-agents — the main agent does NOT edit code by default. Phase 3.4 commit (required, once): after shelf-update-spec, or whenever implementation is verifiably complete, the main agent **drives the commit** — state the commit plan in user-facing text, then run `git commit` — BEFORE suggesting `/shelf:finish-work`. `/finish-work` refuses to run on a dirty working tree (paths outside `.shelf/workspace/` and `.shelf/tasks/`).
+**Inline override** (per-turn only, escape hatch for sub-agent dispatch): the user's CURRENT message MUST explicitly contain one of: "do it inline" / "no sub-agent" / "你直接改" / "别派 sub-agent" / "main session 写就行" / "不用 sub-agent". **Without seeing one of these phrases you must NOT inline on your own**; do not invent an override the user never said.
 [/workflow-state:in_progress]
 
 ### Phase 3: Finish
-- 3.1 Quality verification `[required 路 repeatable]`
+- 3.1 Quality verification `[required · repeatable]`
 - 3.2 Debug retrospective `[on demand]`
-- 3.3 Spec update `[required 路 once]`
-- 3.4 Commit changes `[required 路 once]`
+- 3.3 Spec update `[required · once]`
+- 3.4 Commit changes `[required · once]`
 - 3.5 Wrap-up reminder
 
 <!-- Per-turn breadcrumb: shown while status='completed'.
@@ -200,12 +201,12 @@ Research output **must** land in `{task_dir}/research/*.md`, written by `shelf-r
      the same call that moves the task dir to archive/, so the active-task
      resolver loses the pointer and the hook never fires on archived tasks.
      Block preserved for a future status-transition redesign (e.g. an
-     explicit in_progress鈫抍ompleted command). Edit through the same spec
+     explicit in_progress→completed command). Edit through the same spec
      channel as the live blocks. -->
 
 [workflow-state:completed]
 Code committed via Phase 3.4; run `/shelf:finish-work` to wrap up (archive the task + record session).
-If you reach this state with uncommitted code, return to Phase 3.4 first 鈥?`/finish-work` refuses to run on a dirty working tree.
+If you reach this state with uncommitted code, return to Phase 3.4 first — `/finish-work` refuses to run on a dirty working tree.
 `task.py archive` deletes any runtime session files that still point at the archived task.
 [/workflow-state:completed]
 
@@ -213,12 +214,12 @@ If you reach this state with uncommitted code, return to Phase 3.4 first 鈥?`/f
 
 1. Identify which Phase you're in, then continue from the next step there
 2. Run steps in order inside each Phase; `[required]` steps can't be skipped
-3. Phases can roll back (e.g., Execute reveals a prd defect 鈫?return to Plan to fix, then re-enter Execute)
+3. Phases can roll back (e.g., Execute reveals a prd defect → return to Plan to fix, then re-enter Execute)
 4. Steps tagged `[once]` are skipped if the output already exists; don't re-run
 
 ### Skill Routing
 
-When a user request matches one of these intents, load the corresponding skill (or dispatch the corresponding sub-agent) first 鈥?do not skip skills.
+When a user request matches one of these intents, load the corresponding skill (or dispatch the corresponding sub-agent) first — do not skip skills.
 
 [Codex, Claude Code]
 
@@ -230,7 +231,7 @@ When a user request matches one of these intents, load the corresponding skill (
 | Stuck / fixed same bug several times | `shelf-break-loop` |
 | Spec needs update | `shelf-update-spec` |
 
-**Why `shelf-before-dev` is NOT in this table:** you are not the one writing code 鈥?the `shelf-implement` sub-agent is. The agent reads task context from `implement.jsonl` and the referenced files before editing.
+**Why `shelf-before-dev` is NOT in this table:** you are not the one writing code — the `shelf-implement` sub-agent is. The agent reads task context from `implement.jsonl` and the referenced files before editing.
 
 [/Codex, Claude Code]
 
@@ -240,8 +241,8 @@ When a user request matches one of these intents, load the corresponding skill (
 
 | What you're thinking | Why it's wrong |
 |---|---|
-| "This is simple, I'll just code it in the main thread" | Dispatching `shelf-implement` is the cheap path; skipping it tempts you to write code in the main thread and lose spec context 鈥?sub-agents get `implement.jsonl` injected, you don't |
-| "I already thought it through in plan mode" | Plan-mode output lives in memory 鈥?sub-agents can't see it; must be persisted to prd.md |
+| "This is simple, I'll just code it in the main thread" | Dispatching `shelf-implement` is the cheap path; skipping it tempts you to write code in the main thread and lose spec context — sub-agents get `implement.jsonl` injected, you don't |
+| "I already thought it through in plan mode" | Plan-mode output lives in memory — sub-agents can't see it; must be persisted to prd.md |
 | "I already know the spec" | The spec may have been updated since you last read it; the sub-agent gets the fresh copy, you may not |
 | "Code first, check later" | `shelf-check` surfaces issues you won't notice yourself; earlier is cheaper |
 
@@ -262,7 +263,7 @@ python3 ./.shelf/scripts/get_context.py --mode phase --step <step>
 
 Goal: figure out what to build, produce a clear requirements doc and the context needed to implement it.
 
-#### 1.0 Create task `[required 路 once]`
+#### 1.0 Create task `[required · once]`
 
 Create the task directory (status enters `planning`, the session active-task pointer auto-targets the new task when session identity is available):
 
@@ -274,11 +275,11 @@ python3 ./.shelf/scripts/task.py create "<task title>" --slug <name>
 
 After this command succeeds, the per-turn breadcrumb auto-switches to `[workflow-state:planning]`, telling the AI to enter the brainstorm + jsonl curation phase.
 
-鈿狅笍 **Run only `create` here 鈥?do not also run `start`**. `start` flips status to `in_progress`, which switches the breadcrumb to the implementation phase before brainstorm + jsonl are done 鈥?the AI will silently skip them. Save `start` for step 1.4, after jsonl curation is complete.
+⚠️ **Run only `create` here — do not also run `start`**. `start` flips status to `in_progress`, which switches the breadcrumb to the implementation phase before brainstorm + jsonl are done — the AI will silently skip them. Save `start` for step 1.4, after jsonl curation is complete.
 
 Skip when `python3 ./.shelf/scripts/task.py current --source` already points to a task.
 
-#### 1.1 Requirement exploration `[required 路 repeatable]`
+#### 1.1 Requirement exploration `[required · repeatable]`
 
 Load the `shelf-brainstorm` skill and explore requirements interactively with the user per the skill's guidance.
 
@@ -290,9 +291,9 @@ The brainstorm skill will guide you to:
 
 Return to this step whenever requirements change and revise `prd.md`.
 
-#### 1.2 Research `[optional 路 repeatable]`
+#### 1.2 Research `[optional · repeatable]`
 
-Research can happen at any time during requirement exploration. It isn't limited to local code 鈥?you can use any available tool (MCP servers, skills, web search, etc.) to look up external information, including third-party library docs, industry practices, API references, etc.
+Research can happen at any time during requirement exploration. It isn't limited to local code — you can use any available tool (MCP servers, skills, web search, etc.) to look up external information, including third-party library docs, industry practices, API references, etc.
 
 [Codex, Claude Code]
 
@@ -309,11 +310,11 @@ Spawn the research sub-agent:
 - Record third-party library usage examples, API references, version constraints in files
 - Note relevant spec file paths you discovered for later reference
 
-Brainstorm and research can interleave freely 鈥?pause to research a technical question, then return to talk with the user.
+Brainstorm and research can interleave freely — pause to research a technical question, then return to talk with the user.
 
 **Key principle**: Research output must be written to files, not left only in the chat. Conversations get compacted; files don't.
 
-#### 1.3 Configure context `[required 路 once]`
+#### 1.3 Configure context `[required · once]`
 
 [Codex, Claude Code]
 
@@ -321,19 +322,19 @@ Curate `implement.jsonl` and `check.jsonl` so the Phase 2 sub-agents get the rig
 
 **Location**: `{TASK_DIR}/implement.jsonl` and `{TASK_DIR}/check.jsonl` (already exist).
 
-**Format**: one JSON object per line 鈥?`{"file": "<path>", "reason": "<why>"}`. Paths are repo-root relative.
+**Format**: one JSON object per line — `{"file": "<path>", "reason": "<why>"}`. Paths are repo-root relative.
 
 **What to put in**:
-- **Spec files** 鈥?`.shelf/spec/<package>/<layer>/index.md` and any specific guideline files (`error-handling.md`, `conventions.md`, etc.) relevant to this task
-- **Research files** 鈥?`{TASK_DIR}/research/*.md` that the sub-agent will need to consult
+- **Spec files** — `.shelf/spec/<package>/<layer>/index.md` and any specific guideline files (`error-handling.md`, `conventions.md`, etc.) relevant to this task
+- **Research files** — `{TASK_DIR}/research/*.md` that the sub-agent will need to consult
 
 **What NOT to put in**:
-- Code files (`src/**`, `packages/**/*.ts`, etc.) 鈥?those are read by the sub-agent during implementation, not pre-registered here
-- Files you're about to modify 鈥?same reason
+- Code files (`src/**`, `packages/**/*.ts`, etc.) — those are read by the sub-agent during implementation, not pre-registered here
+- Files you're about to modify — same reason
 
 **Split between the two files**:
-- `implement.jsonl` 鈫?specs + research the implement sub-agent needs to write code correctly
-- `check.jsonl` 鈫?specs for the check sub-agent (quality guidelines, check conventions, same research if needed)
+- `implement.jsonl` → specs + research the implement sub-agent needs to write code correctly
+- `check.jsonl` → specs for the check sub-agent (quality guidelines, check conventions, same research if needed)
 
 **How to discover relevant specs**:
 
@@ -352,13 +353,13 @@ python3 ./.shelf/scripts/task.py add-context "$TASK_DIR" implement "<path>" "<re
 python3 ./.shelf/scripts/task.py add-context "$TASK_DIR" check "<path>" "<reason>"
 ```
 
-Delete the seed `_example` line once real entries exist (optional 鈥?it's skipped automatically by consumers).
+Delete the seed `_example` line once real entries exist (optional — it's skipped automatically by consumers).
 
 Skip when: `implement.jsonl` has agent-curated entries (the seed row alone doesn't count).
 
 [/Codex, Claude Code]
 
-#### 1.4 Activate task `[required 路 once]`
+#### 1.4 Activate task `[required · once]`
 
 Once prd.md is complete and 1.3 jsonl curation is done, flip the task status to `in_progress`:
 
@@ -374,15 +375,15 @@ If `task.py start` errors with a session-identity message (no context key from h
 
 | Condition | Required |
 |------|:---:|
-| `prd.md` exists | 鉁?|
-| User confirms requirements | 鉁?|
-| `task.py start` has been run (status = in_progress) | 鉁?|
+| `prd.md` exists | ✅ |
+| User confirms requirements | ✅ |
+| `task.py start` has been run (status = in_progress) | ✅ |
 | `research/` has artifacts (complex tasks) | recommended |
 | `info.md` technical design (complex tasks) | optional |
 
 [Codex, Claude Code]
 
-| `implement.jsonl` has agent-curated entries (not just the seed row) | 鉁?|
+| `implement.jsonl` has agent-curated entries (not just the seed row) | ✅ |
 
 [/Codex, Claude Code]
 
@@ -392,7 +393,7 @@ If `task.py start` errors with a session-identity message (no context key from h
 
 Goal: turn the prd into code that passes quality checks.
 
-#### 2.1 Implement `[required 路 repeatable]`
+#### 2.1 Implement `[required · repeatable]`
 
 [Claude Code]
 
@@ -421,7 +422,7 @@ The Codex sub-agent definition auto-handles the context load requirement:
 
 [/Codex]
 
-#### 2.2 Quality check `[required 路 repeatable]`
+#### 2.2 Quality check `[required · repeatable]`
 
 [Codex, Claude Code]
 
@@ -439,9 +440,9 @@ The check agent's job:
 
 #### 2.3 Rollback `[on demand]`
 
-- `check` reveals a prd defect 鈫?return to Phase 1, fix `prd.md`, then redo 2.1
-- Implementation went wrong 鈫?revert code, redo 2.1
-- Need more research 鈫?research (same as Phase 1.2), write findings into `research/`
+- `check` reveals a prd defect → return to Phase 1, fix `prd.md`, then redo 2.1
+- Implementation went wrong → revert code, redo 2.1
+- Need more research → research (same as Phase 1.2), write findings into `research/`
 
 ---
 
@@ -449,14 +450,14 @@ The check agent's job:
 
 Goal: ensure code quality, capture lessons, record the work.
 
-#### 3.1 Quality verification `[required 路 repeatable]`
+#### 3.1 Quality verification `[required · repeatable]`
 
 Load the `shelf-check` skill and do a final verification:
 - Spec compliance
 - lint / type-check / tests
 - Cross-layer consistency (when changes span layers)
 
-If issues are found 鈫?fix 鈫?re-check, until green.
+If issues are found → fix → re-check, until green.
 
 #### 3.2 Debug retrospective `[on demand]`
 
@@ -467,7 +468,7 @@ If this task involved repeated debugging (the same issue was fixed multiple time
 
 The goal is to capture debugging lessons so the same class of issue doesn't recur.
 
-#### 3.3 Spec update `[required 路 once]`
+#### 3.3 Spec update `[required · once]`
 
 Load the `shelf-update-spec` skill and review whether this task produced new knowledge worth recording:
 - Newly discovered patterns or conventions
@@ -476,9 +477,9 @@ Load the `shelf-update-spec` skill and review whether this task produced new kno
 
 Update the docs under `.shelf/spec/` accordingly. Even if the conclusion is "nothing to update", walk through the judgment.
 
-#### 3.4 Commit changes `[required 路 once]`
+#### 3.4 Commit changes `[required · once]`
 
-The AI drives a batched commit of this task's code changes so `/finish-work` can run cleanly afterwards. Goal: produce work commits FIRST, then bookkeeping (archive + journal) commits land after 鈥?never interleaved.
+The AI drives a batched commit of this task's code changes so `/finish-work` can run cleanly afterwards. Goal: produce work commits FIRST, then bookkeeping (archive + journal) commits land after — never interleaved.
 
 **Step-by-step**:
 
@@ -492,11 +493,11 @@ The AI drives a batched commit of this task's code changes so `/finish-work` can
    ```bash
    git log --oneline -5
    ```
-   Note the prefix convention (`feat:` / `fix:` / `chore:` / `docs:` ...), language (涓枃/English), and length style.
+   Note the prefix convention (`feat:` / `fix:` / `chore:` / `docs:` ...), language (中文/English), and length style.
 
 3. **Classify dirty files into two groups**:
-   - **AI-edited this session** 鈥?files you wrote/edited via Edit/Write/Bash tool calls in this session. You know what changed and why.
-   - **Unrecognized** 鈥?dirty files you did NOT touch this session (could be the user's manual edits, leftover WIP from a previous session, or unrelated work). Do NOT silently include these.
+   - **AI-edited this session** — files you wrote/edited via Edit/Write/Bash tool calls in this session. You know what changed and why.
+   - **Unrecognized** — dirty files you did NOT touch this session (could be the user's manual edits, leftover WIP from a previous session, or unrelated work). Do NOT silently include these.
 
 4. **Draft a commit plan**. Group AI-edited files into logical commits (1 commit per coherent change unit, not 1 commit per file). Each entry: `<commit message>` + file list. List unrecognized files separately at the bottom.
 
@@ -509,21 +510,21 @@ The AI drives a batched commit of this task's code changes so `/finish-work` can
      2. <message>
         - <file>
 
-   Unrecognized dirty files (NOT in any commit 鈥?confirm include/exclude):
+   Unrecognized dirty files (NOT in any commit — confirm include/exclude):
      - <file>
      - <file>
 
-   Reply 'ok' / '琛? to execute. Reply with edits, or '鎴戣嚜宸辨潵' / 'manual' to abort.
+   Reply 'ok' / '行' to execute. Reply with edits, or '我自己来' / 'manual' to abort.
    ```
 
 6. **On confirmation**: run `git add <files>` + `git commit -m "<msg>"` for each batch in order. Do not amend. Do not push.
 
-7. **On rejection** (user replies "涓嶈" / "鎴戣嚜宸辨潵" / "manual" / any pushback on the plan): stop. Do not attempt a second plan. The user will commit by hand; you skip ahead to 3.5 once they confirm.
+7. **On rejection** (user replies "不行" / "我自己来" / "manual" / any pushback on the plan): stop. Do not attempt a second plan. The user will commit by hand; you skip ahead to 3.5 once they confirm.
 
 **Rules**:
-- No `git commit --amend` anywhere 鈥?three-stage three-commit flow (work commits 鈫?archive commit 鈫?journal commit).
+- No `git commit --amend` anywhere — three-stage three-commit flow (work commits → archive commit → journal commit).
 - Never push to remote in this step.
-- If the user wants different message wording but accepts the file grouping, edit the message and re-confirm once 鈥?but if they reject the grouping, exit to manual mode.
+- If the user wants different message wording but accepts the file grouping, edit the message and re-confirm once — but if they reject the grouping, exit to manual mode.
 - The batched plan is one prompt; do not prompt per commit.
 
 #### 3.5 Wrap-up reminder
@@ -538,20 +539,20 @@ This section is for developers who want to modify the AgentOS Shelf workflow its
 
 ### Changing what a step means
 
-Edit the corresponding step's walkthrough body in the Phase 1 / 2 / 3 sections above. **Critical constraint**: if you change a step's `[required 路 once]` marker or add a new `[required 路 once]` step, you MUST also add a matching enforcement line to that phase's `[workflow-state:STATUS]` tag block 鈥?otherwise the per-turn breadcrumb omits the reinforcement, and the AI silently skips the step. The regression tests assert this.
+Edit the corresponding step's walkthrough body in the Phase 1 / 2 / 3 sections above. **Critical constraint**: if you change a step's `[required · once]` marker or add a new `[required · once]` step, you MUST also add a matching enforcement line to that phase's `[workflow-state:STATUS]` tag block — otherwise the per-turn breadcrumb omits the reinforcement, and the AI silently skips the step. The regression tests assert this.
 
 All 4 tag blocks live in the `## Phase Index` section above, immediately after each phase summary:
 
 | Scope | Corresponding tag |
 |---|---|
 | No active task (before Phase 1) | `[workflow-state:no_task]` (after the Phase Index ASCII art) |
-| All of Phase 1 (task created 鈫?ready for implementation) | `[workflow-state:planning]` (after Phase 1 summary) |
-| Phase 2 + Phase 3.1鈥?.4 (implementation + check + wrap-up) | `[workflow-state:in_progress]` (after Phase 2 summary) |
+| All of Phase 1 (task created → ready for implementation) | `[workflow-state:planning]` (after Phase 1 summary) |
+| Phase 2 + Phase 3.1–3.4 (implementation + check + wrap-up) | `[workflow-state:in_progress]` (after Phase 2 summary) |
 | After Phase 3.5 (archived) | `[workflow-state:completed]` (after Phase 3 summary; **currently DEAD**) |
 
 ### Changing the per-turn prompt text
 
-Directly edit the body of the corresponding `[workflow-state:STATUS]` block. After editing, run `agentos-cli shelf update` (if you're a template maintainer) or restart your AI session (if you're customizing your own project) 鈥?no script changes required.
+Directly edit the body of the corresponding `[workflow-state:STATUS]` block. After editing, run `agentos-cli shelf update` (if you're a template maintainer) or restart your AI session (if you're customizing your own project) — no script changes required.
 
 ### Adding a custom status
 
@@ -582,11 +583,11 @@ Add a `hooks` field to your `task.json`:
 }
 ```
 
-Supported events: `after_create / after_start / after_finish / after_archive`. Note that `after_finish` 鈮?a status change (it only clears the active-task pointer); use `after_archive` for "task is done" notifications.
+Supported events: `after_create / after_start / after_finish / after_archive`. Note that `after_finish` is NOT a status change (it only clears the active-task pointer); use `after_archive` for "task is done" notifications.
 
 ### Full contract
 
 For the workflow state machine's runtime contract, the locations of all status writers, pseudo-statuses (`no_task` / `stale_<source_type>`), the hook reachability matrix, and other deep details, see:
 
-- `.shelf/spec/cli/backend/workflow-state-contract.md` 鈥?runtime contract + writer table + test invariants
-- `.shelf/scripts/inject-workflow-state.py` 鈥?actual parser (reads workflow.md only, no embedded text)
+- `.shelf/spec/cli/backend/workflow-state-contract.md` — runtime contract + writer table + test invariants
+- `.shelf/scripts/inject-workflow-state.py` — actual parser (reads workflow.md only, no embedded text)

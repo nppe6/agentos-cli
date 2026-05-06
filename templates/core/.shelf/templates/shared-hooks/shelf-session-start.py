@@ -151,9 +151,14 @@ def _get_task_status(shelf_dir: Path, hook_input: dict) -> str:
         return (
             "Status: NO ACTIVE TASK\n"
             f"Source: {active.source}\n"
-            "Next: If `task.py list` shows `00-bootstrap-guidelines/ (in_progress)`, "
-            "read `.shelf/tasks/00-bootstrap-guidelines/prd.md` and execute the bootstrap. "
-            "Otherwise describe or create the task before implementation."
+            "Next-Action: If `task.py list` shows `00-bootstrap-guidelines/ (in_progress)`, "
+            "treat it as the default first-run flow. On the user's first substantive message, "
+            "briefly explain that Shelf will first capture this project's real conventions into "
+            "`.shelf/spec/`, then begin the bootstrap by reading "
+            "`.shelf/tasks/00-bootstrap-guidelines/prd.md` and scanning existing convention docs "
+            "plus real code. Do NOT ask the user to invoke `shelf-continue`.\n"
+            "Otherwise, after the user describes their intent, route automatically: answer directly "
+            "for pure Q&A, or create a task for implementation / refactor / build work."
         )
 
     task_ref = active.task_path
@@ -177,14 +182,16 @@ def _get_task_status(shelf_dir: Path, hook_input: dict) -> str:
     if task_dir.name == "00-bootstrap-guidelines":
         return (
             f"Status: BOOTSTRAP\nTask: {title}\nSource: {active.source}\n"
-            "Next: Read `.shelf/tasks/00-bootstrap-guidelines/prd.md`, scan existing convention docs "
-            "and real code, then fill the relevant `.shelf/spec/` files. Archive the task when done."
+            "Next-Action: Treat bootstrap as the current onboarding flow. Open with a short explanation "
+            "that Shelf is doing a one-time project-convention bootstrap, then read "
+            "`.shelf/tasks/00-bootstrap-guidelines/prd.md`, scan existing convention docs and real code, "
+            "and fill the relevant `.shelf/spec/` files. Do NOT ask the user to invoke a Shelf skill or command."
         )
 
     if status == "completed":
         return (
             f"Status: COMPLETED\nTask: {title}\nSource: {active.source}\n"
-            f"Next: Run `shelf-update-spec` if needed, then archive `{task_dir.name}`."
+            f"Next-Action: Run `shelf-update-spec` if needed, then archive `{task_dir.name}`."
         )
 
     has_prd = (task_dir / "prd.md").is_file()
@@ -196,16 +203,16 @@ def _get_task_status(shelf_dir: Path, hook_input: dict) -> str:
     if not has_prd:
         return (
             f"Status: PLANNING\nTask: {title}\nSource: {active.source}\n"
-            "Next: Load `shelf-brainstorm` and write `prd.md`."
+            "Next-Action: After the user describes the task, load `shelf-brainstorm`, clarify requirements, and write `prd.md`."
         )
     if not has_context:
         return (
             f"Status: PLANNING (context not curated)\nTask: {title}\nSource: {active.source}\n"
-            "Next: Curate `implement.jsonl` and `check.jsonl` with `.shelf/spec/` and research files."
+            "Next-Action: Curate `implement.jsonl` and `check.jsonl` with `.shelf/spec/` and research files."
         )
     return (
         f"Status: READY\nTask: {title}\nSource: {active.source}\n"
-        "Next required action: dispatch `shelf-implement` per Phase 2.1, then `shelf-check` per Phase 2.2."
+        "Next-Action: Dispatch `shelf-implement` per Phase 2.1, then `shelf-check` per Phase 2.2. Do not ask the user to invoke `shelf-continue` first."
     )
 
 
@@ -330,8 +337,9 @@ def main() -> int:
     output.write(_get_task_status(shelf_dir, hook_input))
     output.write(
         "\n</task-status>\n\n<ready>\n"
-        "Context loaded. Follow <task-status> first, then the workflow guide.\n"
-        "If a bootstrap task is present, execute its PRD before normal implementation routing.\n"
+        "Context loaded. Do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm` before you act.\n"
+        "If bootstrap is present, treat it as the default first-run flow and begin it naturally.\n"
+        "Otherwise, when the user describes work, route automatically using <task-status> and the workflow guide.\n"
         "</ready>"
     )
 

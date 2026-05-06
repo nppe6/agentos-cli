@@ -1,4 +1,4 @@
-﻿# Change Local Workflow
+# Change Local Workflow
 
 When the user wants to change AgentOS Shelf phases, next-action hints, whether to create tasks, whether to use sub-agents, or when to check/wrap up, edit `.shelf/workflow.md` first.
 
@@ -24,7 +24,7 @@ When the user wants to change AgentOS Shelf phases, next-action hints, whether t
 1. Find the relevant section in `.shelf/workflow.md`.
 2. When changing rules, keep explicit trigger conditions and next actions.
 3. If adding or renaming a skill/agent, synchronize the corresponding files in platform directories.
-4. Workflow-state changes only need an edit to the `[workflow-state:STATUS]` block in `.shelf/workflow.md`. The hook is parser-only 鈥?it reads whatever you put in the block. Keep the opening and closing tags' STATUS strings identical (`[workflow-state:foo]鈥/workflow-state:foo]`); mismatched STATUS pairs are silently dropped.
+4. Workflow-state changes only need an edit to the `[workflow-state:STATUS]` block in `.shelf/workflow.md`. The hook is parser-only — it reads whatever you put in the block. Keep the opening and closing tags' STATUS strings identical (`[workflow-state:foo]…[/workflow-state:foo]`); mismatched STATUS pairs are silently dropped.
 5. Make the AI reread `.shelf/workflow.md`; do not keep using rules from the old conversation.
 
 ## Example: Relax Task Creation Requirements
@@ -57,7 +57,7 @@ If the user wants only one platform to avoid sub-agents, first confirm whether t
 | `in_progress` | check passed | Phase 3.1 (verify quality + spec update) |
 | `completed` | task is still in active tree | Phase 3.5 (run `/shelf:finish-work` to archive) |
 
-When you add a custom status (e.g. `in-review`), add a `[workflow-state:in-review]` block in `.shelf/workflow.md` for the per-turn breadcrumb AND extend this route table 鈥?usually by editing the `/shelf:continue` command file (`.{platform}/commands/shelf/continue.md` or equivalent) to add a row that decides where to resume from. Without the route entry, `/shelf:continue` will fall through to a default branch and the user will not land on the step you intended.
+When you add a custom status (e.g. `in-review`), add a `[workflow-state:in-review]` block in `.shelf/workflow.md` for the per-turn breadcrumb AND extend this route table — usually by editing the `/shelf:continue` command file (`.{platform}/commands/shelf/continue.md` or equivalent) to add a row that decides where to resume from. Without the route entry, `/shelf:continue` will fall through to a default branch and the user will not land on the step you intended.
 
 ## Notes
 
