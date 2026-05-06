@@ -47,7 +47,7 @@ AgentOS Shelf is aligned with this foundation when it treats `.shelf/` as the so
 |---|---|---|
 | Canonical source directory | `.shelf/` contains workflow, config, specs, tasks, scripts, skills, agents, workspace docs, and root rule templates. | Strong |
 | Tool projection | `agentos-cli shelf init/sync/update` project `.shelf/` into Codex and Claude files. | Strong for two platforms |
-| Shared open skills | Codex receives `.agents/skills/*` from `.shelf/skills`; Claude receives `.claude/skills/*`. | Strong and now consistent with Trellis direction |
+| Shared open skills | Codex receives `.agents/skills/*` from shared common/bundled skill sources plus project-local `.shelf/skills`; Claude receives `.claude/skills/*`. | Strong and now consistent with Trellis direction |
 | Claude scoped skills | Claude gets `.claude/skills/*` because Claude Code has its own skill directory. | Strong |
 | Codex skill placement | Current Shelf no longer writes shared workflow skills to `.codex/skills`; it uses `.agents/skills`. | Strong |
 | Agents | `.shelf/agents` projects to `.codex/agents` and `.claude/agents`; implement/check agents pull task context before work. | Partial but directionally correct |
@@ -68,10 +68,10 @@ AgentOS Shelf is aligned with this foundation when it treats `.shelf/` as the so
 The skill directories and `name:` frontmatter now use `shelf-*`, but several generated reference files still mention `agentos-*`, `/agentos:*`, and `agentos-local`. Examples found locally include:
 
 - `templates/core/.shelf/workflow.md`
-- `templates/core/.shelf/skills/shelf-meta/references/platform-files/*.md`
-- `templates/core/.shelf/skills/shelf-meta/references/how-to-modify/*.md`
-- `templates/core/.shelf/skills/shelf-meta/references/meta/*.md`
-- `templates/core/.shelf/skills/shelf-meta/references/customize-local/*.md`
+- `templates/core/.shelf/templates/bundled-skills/shelf-meta/references/platform-files/*.md`
+- `templates/core/.shelf/templates/bundled-skills/shelf-meta/references/how-to-modify/*.md`
+- `templates/core/.shelf/templates/bundled-skills/shelf-meta/references/meta/*.md`
+- `templates/core/.shelf/templates/bundled-skills/shelf-meta/references/customize-local/*.md`
 
 Impact: these files are read by agents when customizing Shelf. If left as-is, AI may generate the old command namespace or wrong agent names even though the CLI entry is now `agentos-cli shelf`.
 
@@ -97,7 +97,7 @@ Trellis 0.5 deliberately reduced slash commands. On agent-capable platforms, ses
 Current Shelf:
 
 - Claude has `continue` and `finish-work` command templates under `.claude/commands/shelf/`.
-- Codex has `.codex/prompts/shelf-continue.md` and `.codex/prompts/shelf-finish-work.md`, plus native `.codex/agents/*.toml`, config, and hooks.
+- Historical snapshot: Codex previously had `.codex/prompts/shelf-continue.md` and `.codex/prompts/shelf-finish-work.md`, alongside native `.codex/agents/*.toml`, config, and hooks.
 
 This is now aligned as a Codex-native projection plus prompt-command affordances; docs should keep the distinction clear so prompts are not treated as the entire Codex integration.
 

@@ -1,8 +1,3 @@
----
-name: shelf-check
-description: "Comprehensive quality verification: spec compliance, lint, type-check, tests, cross-layer data flow, code reuse, and consistency checks. Use when code is written and needs quality verification, before committing changes, or to catch context drift during long sessions."
----
-
 # Code Quality Check
 
 Comprehensive quality verification for recently written code. Combines spec compliance, cross-layer safety, and pre-commit checks.
@@ -19,7 +14,7 @@ git status
 ## Step 2: Read Applicable Specs
 
 ```bash
-python3 ./.shelf/scripts/get_context.py --mode packages
+{{PYTHON_CMD}} ./.shelf/scripts/get_context.py --mode packages
 ```
 
 For each changed package/layer, read the spec index and follow its **Quality Check** section:
@@ -28,7 +23,7 @@ For each changed package/layer, read the spec index and follow its **Quality Che
 cat .shelf/spec/<package>/<layer>/index.md
 ```
 
-Read the specific guideline files referenced — the index is a pointer, not the goal.
+Read the specific guideline files referenced -- the index is a pointer, not the goal.
 
 ## Step 3: Run Project Checks
 
@@ -46,15 +41,15 @@ Run the project's lint, type-check, and test commands. Fix any failures before p
 
 ### Test Coverage
 
-- [ ] New function → unit test added?
-- [ ] Bug fix → regression test added?
-- [ ] Changed behavior → existing tests updated?
+- [ ] New function -> unit test added?
+- [ ] Bug fix -> regression test added?
+- [ ] Changed behavior -> existing tests updated?
 
 ### Spec Sync
 
 - [ ] Does `.shelf/spec/` need updates? (new patterns, conventions, lessons learned)
 
-> "If I fixed a bug or discovered something non-obvious, should I document it so future me won't hit the same issue?" → If YES, update the relevant spec doc.
+> "If I fixed a bug or discovered something non-obvious, should I document it so future me won't hit the same issue?" -> If YES, update the relevant spec doc.
 
 ## Step 5: Cross-Layer Dimensions (if applicable)
 
@@ -62,8 +57,8 @@ Skip this step if your change is confined to a single layer.
 
 ### A. Data Flow (changes touch 3+ layers)
 
-- [ ] Read flow traces correctly: Storage → Service → API → UI
-- [ ] Write flow traces correctly: UI → API → Service → Storage
+- [ ] Read flow traces correctly: Storage -> Service -> API -> UI
+- [ ] Write flow traces correctly: UI -> API -> Service -> Storage
 - [ ] Types/schemas correctly passed between layers?
 - [ ] Errors properly propagated to caller?
 
@@ -73,7 +68,7 @@ Skip this step if your change is confined to a single layer.
   ```bash
   grep -r "pattern" src/
   ```
-- [ ] If 2+ places define same value → extracted to shared constant?
+- [ ] If 2+ places define same value -> extracted to shared constant?
 - [ ] After batch modification, all occurrences updated?
 
 ### C. Import/Dependency (creating new files)

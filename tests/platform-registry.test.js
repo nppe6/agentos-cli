@@ -55,6 +55,15 @@ test('platform registry describes Codex and Claude capabilities', () => {
   assert.equal(claude.skillsDirectory, '.claude/skills');
 });
 
+test('core template source uses common skill and bundled skill directories', () => {
+  const templateRoot = path.join(__dirname, '..', 'templates', 'core', '.shelf', 'templates');
+
+  assert.equal(fs.existsSync(path.join(templateRoot, 'common-skills', 'brainstorm.md')), true);
+  assert.equal(fs.existsSync(path.join(templateRoot, 'bundled-skills', 'shelf-meta', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'templates', 'common-commands', 'start.md')), true);
+  assert.equal(fs.existsSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'skills', 'shelf-brainstorm', 'SKILL.md')), false);
+});
+
 test('monorepo detector reads package.json workspaces', () => {
   const projectDirectory = createTempProject();
   writeJson(path.join(projectDirectory, 'package.json'), {

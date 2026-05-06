@@ -71,6 +71,8 @@ Files/directories:
 - `templates/core/.shelf/workflow.md`
 - `templates/core/.shelf/config.yaml`
 - `templates/core/.shelf/scripts/`
+- `templates/core/.shelf/templates/common-skills/`
+- `templates/core/.shelf/templates/bundled-skills/`
 - `templates/core/.shelf/skills/`
 - `templates/core/.shelf/agents/`
 - `templates/core/.shelf/spec/README.md`
@@ -82,6 +84,7 @@ Files/directories:
 Assessment:
 
 - The migrated workflow, scripts, core skills, and agents have direct upstream counterparts.
+- Built-in workflow skills now fit a closer Trellis shape: shared single-file sources under `templates/common-skills/` and bundled multi-file sources under `templates/bundled-skills/`.
 - The spec/tasks/workspace directories now include generic templates and a static bootstrap guidelines task, but do not yet include upstream's dynamic onboarding generation.
 - `.shelf/config.yaml` contains upstream-style runtime settings, but the CLI does not yet use most of them.
 - `.shelf/workflow.md` includes runtime breadcrumb contracts that assume hooks or platform preludes exist; Codex implement/check agents now get a pull-based prelude, while hook-based injection is still deferred.
@@ -109,7 +112,7 @@ Current behavior:
 Assessment:
 
 - The shared-source-to-tool-projection architecture is clean and easy to reason about.
-- The projection is file-copy based; there is no upstream-style placeholder resolver per platform.
+- The projection is still local/CommonJS, but now includes a shared placeholder resolver plus explicit common-command, common-skill, and bundled-skill discovery.
 - Tool definitions are JSON-driven, but only Codex and Claude are supported.
 - `optionalDirs` is metadata only; it does not currently drive hook/settings generation.
 
@@ -203,7 +206,7 @@ Key upstream ideas:
 | Internal `.shelf` ignore rules | `.shelf/.gitignore` template | `.trellis/.gitignore` | Covered |
 | Python requirement check | `doctor` warns when Python is missing | Python >= 3.9 check | Partial |
 | Managed block replacement | block-level `AGENTS.md` handling | block-level AGENTS/workflow handling | Partial |
-| Open Agent Skills projection | `.agents/skills` generated from `.shelf/skills` for Codex | `.agents/skills` shared layer | Covered for Codex |
+| Open Agent Skills projection | `.agents/skills` generated from shared common/bundled skill sources plus local custom `.shelf/skills` for Codex | `.agents/skills` shared layer | Covered for Codex |
 | Multi-platform reuse | Codex + Claude only | 14 platforms | Partial by design |
 
 ## Core Advantages Coverage

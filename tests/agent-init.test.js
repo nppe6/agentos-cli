@@ -51,9 +51,12 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-brainstorm', 'SKILL.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-meta', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'agents', 'shelf-check.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'continue.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'finish-work.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'start.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'settings.json')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'hooks', 'shelf-session-start.py')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'hooks', 'shelf-inject-workflow-state.py')), true);
@@ -64,6 +67,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'hooks', 'shelf-inject-workflow-state.py')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'prompts', 'shelf-continue.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'prompts', 'shelf-finish-work.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-start', 'SKILL.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'planning')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-planning')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agent-os')), false);
@@ -114,6 +118,8 @@ test('injects full Shelf workflow into a clean project', async () => {
   const claudeImplementContent = fs.readFileSync(path.join(projectDirectory, '.claude', 'agents', 'shelf-implement.md'), 'utf8');
   const shelfContinueSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-continue', 'SKILL.md'), 'utf8');
   const shelfFinishWorkSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-finish-work', 'SKILL.md'), 'utf8');
+  const shelfBrainstormSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md'), 'utf8');
+  const shelfMetaFilesContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'references', 'core', 'files.md'), 'utf8');
   assert.match(codexImplementContent, /name = "shelf-implement"/);
   assert.match(codexImplementContent, /developer_instructions = """/);
   assert.match(codexImplementContent, /Required Shelf Context/);
@@ -142,6 +148,12 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(shelfContinueSkillContent, /python(?:3)? \.\/\.shelf\/scripts\/get_context\.py --mode phase --step <X\.X> --platform codex/);
   assert.match(shelfFinishWorkSkillContent, /^---\r?\nname: shelf-finish-work\r?\ndescription:/);
   assert.match(shelfFinishWorkSkillContent, /python(?:3)? \.\/\.shelf\/scripts\/task\.py archive <task-name>/);
+  assert.match(shelfBrainstormSkillContent, /^---\r?\nname: shelf-brainstorm\r?\ndescription:/);
+  assert.match(shelfBrainstormSkillContent, /\$start/);
+  assert.match(shelfBrainstormSkillContent, /\$update-spec/);
+  assert.match(shelfMetaFilesContent, /\.shelf\/templates\/common-skills\//);
+  assert.match(shelfMetaFilesContent, /\.shelf\/templates\/bundled-skills\//);
+  assert.match(shelfMetaFilesContent, /\.shelf\/skills\/` \| Project-local custom skills/);
   assert.match(claudeImplementContent, /Required Shelf Context/);
   assert.match(claudeImplementContent, /implement\.jsonl/);
 });
@@ -154,6 +166,7 @@ test('injects core-only workflow when the core stack is selected', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-before-dev', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-check', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-start', 'SKILL.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'agents', 'shelf-research.toml')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'config.toml')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'hooks.json')), true);

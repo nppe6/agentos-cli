@@ -84,7 +84,8 @@ Shelf 把核心工作流放在 `.shelf/` 里，再按启用的平台生成接入
 ├── spec/        # 项目规范、模式和指南
 ├── tasks/       # 任务 PRD、上下文文件和状态
 ├── workspace/   # Journal 和开发者级连续性
-├── skills/      # 项目级 skills
+├── templates/   # built-in common commands / common skills / bundled skills sources
+├── skills/      # 项目级自定义 skills
 ├── agents/      # research / implement / check agent 定义
 ├── workflow.md  # 共享工作流规则
 └── scripts/     # task、workspace、developer 脚本

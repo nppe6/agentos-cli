@@ -16,7 +16,7 @@ AgentOS Shelf provides three layers inside a user project:
 
 1. **Workflow layer**: `.shelf/workflow.md` defines phases, routing, next actions, and prompt blocks.
 2. **Persistence layer**: `.shelf/tasks/`, `.shelf/spec/`, and `.shelf/workspace/` store tasks, specs, and session memory.
-3. **Platform integration layer**: hooks, settings, agents, skills, commands, and prompts in platform directories connect the AgentOS Shelf workflow to Codex and Claude Code.
+3. **Platform integration layer**: hooks, settings, agents, skills, and commands in platform directories connect the AgentOS Shelf workflow to Codex and Claude Code.
 
 All three layers live inside the user project, so an AI can read and modify them directly.
 
@@ -32,6 +32,9 @@ All three layers live inside the user project, so an AI can read and modify them
 | `.shelf/scripts/` | Local Python runtime used by commands, hooks, and context injection. |
 | `.shelf/.runtime/` | Session-level runtime state, such as the current task pointer. |
 | `.shelf/.template-hashes.json` | Template hashes for AgentOS Shelf-managed files, used by update to determine whether local files were modified by the user. |
+| `.shelf/templates/common-skills/` | Built-in workflow skill source templates. |
+| `.shelf/templates/bundled-skills/` | Built-in bundled skill source templates. |
+| `.shelf/skills/` | Project-local custom skills. |
 
 ## AI Customization Principles
 
