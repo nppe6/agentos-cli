@@ -43,7 +43,7 @@ Source of truth in the CLI template tree:
 
 - `.shelf/skills/` for project-local custom skills
 - CLI package built-in common templates for shared workflow skills and bundled skills
-- CLI package built-in Codex templates for Codex-specific compatibility skills
+- CLI package built-in Codex templates for Codex-specific local skills
 
 ## Command/Workflow Structure
 

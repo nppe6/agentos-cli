@@ -1,8 +1,8 @@
 # How To: Modify Hook
 
-Change Claude Code hook behavior.
+Change Claude Code or Codex hook behavior.
 
-**Current hook support**: the default CLI installs a lightweight Claude Code `SessionStart` hook and Codex project hooks for `SessionStart` plus `UserPromptSubmit`. Codex hooks require the user's global Codex hook feature flag.
+**Current hook support**: the default CLI installs Claude Code and Codex hooks for `SessionStart` and `UserPromptSubmit` where the platform supports them. Codex hooks require the user's global Codex hook feature flag.
 
 ---
 
@@ -10,8 +10,12 @@ Change Claude Code hook behavior.
 
 | File | Action | Required |
 |------|--------|----------|
-| `.claude/hooks/shelf-session-start.py` | Modify | Yes |
+| `.claude/hooks/shelf-session-start.py` | Modify | Sometimes |
+| `.claude/hooks/shelf-inject-workflow-state.py` | Modify | Sometimes |
 | `.claude/settings.json` | Modify if changing registration | Sometimes |
+| `.codex/hooks/shelf-session-start.py` | Modify | Sometimes |
+| `.codex/hooks/shelf-inject-workflow-state.py` | Modify | Sometimes |
+| `.codex/hooks.json` | Modify if changing registration | Sometimes |
 | `shelf-local/SKILL.md` or project-local notes | Document | Recommended |
 
 ---
@@ -20,9 +24,10 @@ Change Claude Code hook behavior.
 
 | Hook | File | Purpose |
 |------|------|---------|
-| SessionStart | `shelf-session-start.py` | Reminds Claude Code to read `AGENTS.md`, `.shelf/workflow.md`, and task context. |
+| SessionStart | `shelf-session-start.py` | Reminds the platform to read `AGENTS.md`, `.shelf/workflow.md`, and task context. |
+| UserPromptSubmit | `shelf-inject-workflow-state.py` | Injects the current workflow-state breadcrumb from `.shelf/workflow.md`. |
 
-The current default install does not include agent context hooks, workflow-state per-turn hooks, shell bridges, or quality-loop hooks.
+The current default install does not include agent context hooks, shell bridges, or quality-loop hooks.
 
 ---
 
@@ -33,13 +38,17 @@ Read:
 ```text
 .claude/settings.json
 .claude/hooks/shelf-session-start.py
+.claude/hooks/shelf-inject-workflow-state.py
+.codex/hooks.json
+.codex/hooks/shelf-session-start.py
+.codex/hooks/shelf-inject-workflow-state.py
 ```
 
 The default hook prints plain text. It intentionally avoids mutating task state.
 
 ---
 
-## Step 2: Modify Session-Start Reminder
+## Step 2: Modify Hook Behavior
 
 Example:
 
@@ -50,11 +59,16 @@ print("AgentOS Shelf: run agentos-cli shelf workspace context when resuming work
 
 Keep output short. If the hook becomes large, move durable rules into `.shelf/workflow.md` or `.shelf/spec/` and make the hook point there.
 
+For workflow-state hooks, prefer editing `[workflow-state:STATUS]` blocks in `.shelf/workflow.md` before changing parser logic.
+
 ---
 
 ## Step 3: Modify Settings Optional
 
-If the script path or hook event changes, update `.claude/settings.json`.
+If the script path or hook event changes, update the relevant platform registration file:
+
+- `.claude/settings.json`
+- `.codex/hooks.json`
 
 Do not register hook files that do not exist. If you add a new hook, create the script, document its event, and test it manually.
 
@@ -65,10 +79,10 @@ Do not register hook files that do not exist. If you add a new hook, create the 
 ```markdown
 ## Hooks Changed
 
-#### shelf-session-start.py
-- **Hook Event**: SessionStart
-- **Change**: Added project-specific reminder
-- **Reason**: Help new sessions load Shelf context
+#### shelf-session-start.py / shelf-inject-workflow-state.py
+- **Hook Event**: SessionStart or UserPromptSubmit
+- **Change**: Added project-specific reminder or workflow-state override
+- **Reason**: Help sessions load or resume Shelf context
 ```
 
 ---
@@ -77,6 +91,9 @@ Do not register hook files that do not exist. If you add a new hook, create the 
 
 ```bash
 python3 .claude/hooks/shelf-session-start.py
+python3 .claude/hooks/shelf-inject-workflow-state.py
+python3 .codex/hooks/shelf-session-start.py
+python3 .codex/hooks/shelf-inject-workflow-state.py
 ```
 
 Then start a new Claude Code session and verify the reminder appears.

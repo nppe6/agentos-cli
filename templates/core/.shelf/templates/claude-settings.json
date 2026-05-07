@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/shelf-session-start.py"
+            "command": "{{PYTHON_CMD}} .claude/hooks/shelf-session-start.py"
           }
         ]
       }
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/shelf-inject-workflow-state.py"
+            "command": "{{PYTHON_CMD}} .claude/hooks/shelf-inject-workflow-state.py"
           }
         ]
       }

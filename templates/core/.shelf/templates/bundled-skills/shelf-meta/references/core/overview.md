@@ -28,7 +28,7 @@ Codex reads `AGENTS.md`, shared skills in `.agents/skills/`, and agents in `.cod
 
 ### Claude Code
 
-Claude Code reads `CLAUDE.md`, `.claude/skills/`, `.claude/agents/`, `.claude/commands/shelf/`, and the lightweight session-start hook.
+Claude Code reads `AGENTS.md`, `.claude/skills/`, `.claude/agents/`, `.claude/commands/shelf/`, and the installed hooks.
 
 ## Documents In This Directory
 

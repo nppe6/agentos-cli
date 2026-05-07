@@ -31,7 +31,7 @@ All three layers live inside the user project, so an AI can read and modify them
 | `.shelf/workspace/` | Per-developer journals and cross-session memory. |
 | `.shelf/scripts/` | Local Python runtime used by commands, hooks, and context injection. |
 | `.shelf/.runtime/` | Session-level runtime state, such as the current task pointer. |
-| `.shelf/.template-hashes.json` | Template hashes for AgentOS Shelf-managed files, used by update to determine whether local files were modified by the user. |
+| `.shelf/template-hashes.json` | Template hashes for AgentOS Shelf-managed files, used by update to determine whether local files were modified by the user. |
 | `.shelf/skills/` | Optional project-local custom skills. |
 | `.shelf/agents/` | Optional project-local agent overrides. |
 | `.shelf/rules/` | Optional local managed-entry override sources. |

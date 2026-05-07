@@ -45,6 +45,7 @@ test('platform registry describes Codex and Claude capabilities', () => {
   assert.equal(codex.capabilities.hooks, true);
   assert.equal(codex.capabilities.settings, true);
   assert.equal(codex.capabilities.toolScopedSkills, true);
+  assert.equal(codex.capabilities.projectedToolScopedSkills, false);
   assert.equal(codex.rootDirectory, '.codex');
   assert.equal(codex.skillsDirectory, '.codex/skills');
   assert.equal(claude.capabilities.hooks, true);
@@ -52,6 +53,8 @@ test('platform registry describes Codex and Claude capabilities', () => {
   assert.equal(claude.capabilities.commands, true);
   assert.equal(claude.capabilities.settings, true);
   assert.equal(claude.capabilities.toolScopedSkills, true);
+  assert.equal(claude.capabilities.projectedToolScopedSkills, true);
+  assert.equal(claude.entryFile, undefined);
   assert.equal(claude.skillsDirectory, '.claude/skills');
 });
 

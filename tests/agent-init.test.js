@@ -56,11 +56,12 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'README.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'manifest.template.json')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'brainstorm', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'start', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'finish-work', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'brainstorm', 'SKILL.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'start', 'SKILL.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'finish-work', 'SKILL.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-meta', 'SKILL.md')), true);
@@ -90,12 +91,10 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.gitignore')), false);
 
   const agentsContent = fs.readFileSync(path.join(projectDirectory, 'AGENTS.md'), 'utf8');
-  const claudeContent = fs.readFileSync(path.join(projectDirectory, 'CLAUDE.md'), 'utf8');
   assert.match(agentsContent, /<!-- SHELF:START -->/);
   assert.match(agentsContent, /\.shelf\/workflow\.md/);
   assert.match(agentsContent, /\.shelf\/scripts/);
   assert.doesNotMatch(agentsContent, /shelf-project-context/);
-  assert.match(claudeContent, /Follow `AGENTS\.md`/);
 
   const bootstrapPrd = fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'prd.md'), 'utf8');
   const bootstrapTaskJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, '.shelf', 'tasks', '00-bootstrap-guidelines', 'task.json'), 'utf8'));
@@ -130,8 +129,6 @@ test('injects full Shelf workflow into a clean project', async () => {
   const shelfContinueSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-continue', 'SKILL.md'), 'utf8');
   const shelfFinishWorkSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-finish-work', 'SKILL.md'), 'utf8');
   const shelfBrainstormSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md'), 'utf8');
-  const codexBrainstormSkillContent = fs.readFileSync(path.join(projectDirectory, '.codex', 'skills', 'brainstorm', 'SKILL.md'), 'utf8');
-  const codexStartSkillContent = fs.readFileSync(path.join(projectDirectory, '.codex', 'skills', 'start', 'SKILL.md'), 'utf8');
   const shelfMetaFilesContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'references', 'core', 'files.md'), 'utf8');
   const workflowContent = fs.readFileSync(path.join(projectDirectory, '.shelf', 'workflow.md'), 'utf8');
   assert.match(codexImplementContent, /name = "shelf-implement"/);
@@ -170,9 +167,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(shelfBrainstormSkillContent, /^---\r?\nname: shelf-brainstorm\r?\ndescription:/);
   assert.match(shelfBrainstormSkillContent, /\$start/);
   assert.match(shelfBrainstormSkillContent, /\$update-spec/);
-  assert.match(codexBrainstormSkillContent, /^---\r?\nname: brainstorm\r?\ndescription:/);
-  assert.match(codexStartSkillContent, /^---\r?\nname: start\r?\ndescription:/);
-  assert.match(shelfMetaFilesContent, /\.shelf\/skills\/` \| Project-local custom skills/);
+  assert.match(shelfMetaFilesContent, /\| `\.shelf\/skills\/` \| Optional project-local custom skills/);
   assert.match(workflowContent, /the AI should enter the workflow automatically/);
   assert.match(workflowContent, /do not ask the user to invoke `shelf-brainstorm`, `shelf-continue`, or another Shelf entrypoint first/);
   assert.match(claudeImplementContent, /Required Shelf Context/);
@@ -191,6 +186,7 @@ test('injects core-only workflow when the core stack is selected', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'agents', 'shelf-research.toml')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'config.toml')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'hooks.json')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-continue', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'prompts', 'shelf-continue.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'ui-ux-pro-max')), false);
@@ -439,7 +435,6 @@ test('track mode only removes the managed block from .gitignore', async () => {
       '',
       GITIGNORE_BLOCK_START,
       'AGENTS.md',
-      'CLAUDE.md',
       '.shelf/',
       '.claude/',
       '.codex/',
@@ -521,6 +516,7 @@ test('injects only codex files when codex is the only selected tool', async () =
 
   assert.deepEqual(result.tools, ['codex']);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-brainstorm', 'SKILL.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-continue', 'SKILL.md')), true);
@@ -600,7 +596,7 @@ test('reinitializing from both tools to codex removes unselected managed files',
   const packageJson = JSON.parse(fs.readFileSync(path.join(projectDirectory, 'package.json'), 'utf8'));
   assert.equal(packageJson.scripts, undefined);
   assert.match(logs.join('\n'), /未选择的受管内容已删除/);
-  assert.match(logs.join('\n'), /CLAUDE\.md/);
+  assert.match(logs.join('\n'), /\.claude\//);
   assert.doesNotMatch(logs.join('\n'), /未选择的受管内容已删除：[\s\S]*\.shelf\//);
 });
 
@@ -614,16 +610,13 @@ test('prompts for selected tools when tools are not provided', async () => {
   );
 
   assert.deepEqual(result.tools, ['claude']);
-  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'agents', 'shelf-implement.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.codex')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf')), true);
-
-  const claudeContent = fs.readFileSync(path.join(projectDirectory, 'CLAUDE.md'), 'utf8');
-  assert.match(claudeContent, /AGENTS\.md/);
 });
 
 test('tool prompt starts with no default selections and concise labels', async () => {
@@ -657,12 +650,12 @@ test('renders simple CLI lists as a readable tree', () => {
 
 test('renders generated file summary as a readable tree', () => {
   assert.equal(renderGeneratedTree(['codex', 'claude'], true), [
+    '\u251c\u2500 Shared',
+    '\u2502  \u2514\u2500 AGENTS.md',
     '\u251c\u2500 Codex',
-    '\u2502  \u251c\u2500 AGENTS.md',
     '\u2502  \u251c\u2500 .codex/',
     '\u2502  \u2514\u2500 .agents/skills/',
     '\u251c\u2500 Claude Code',
-    '\u2502  \u251c\u2500 CLAUDE.md',
     '\u2502  \u2514\u2500 .claude/',
     '\u2514\u2500 Shared Shelf source',
     '   \u2514\u2500 .shelf/'
@@ -686,9 +679,10 @@ test('prints generated file summary tree in blue after completion', async () => 
   }
 
   const output = logs.join('\n');
-  assert.match(output, /\x1b\[34m生成内容：\n\u251c\u2500 Codex/);
-  assert.match(output, /\u2502  \u251c\u2500 AGENTS\.md/);
+  assert.match(output, /\x1b\[34m生成内容：\n\u251c\u2500 Shared/);
+  assert.match(output, /\u2502  \u2514\u2500 AGENTS\.md/);
   assert.match(output, /\.agents\/skills\//);
+  assert.match(output, /\u251c\u2500 Codex/);
   assert.match(output, /\u251c\u2500 Claude Code/);
   assert.match(output, /\u2514\u2500 Shared Shelf source/);
   assert.match(output, /   \u2514\u2500 \.shelf\/\x1b\[0m/);

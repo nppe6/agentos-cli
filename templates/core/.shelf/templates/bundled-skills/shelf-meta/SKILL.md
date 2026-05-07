@@ -62,7 +62,7 @@ Do not assume the user has the AgentOS Shelf source repository. Do not default t
 - `.shelf/tasks/` stores task PRDs, technical notes, research files, and JSONL context.
 - `.shelf/workspace/` stores developer journals and cross-session memory.
 - Platform settings/config files decide which hooks, agents, skills, and commands actually run. Current built-in projections cover only Codex and Claude Code.
-- `.shelf/.template-hashes.json` and `.shelf/.runtime/` are management/runtime state files. Confirm necessity before editing them.
+- `.shelf/template-hashes.json` and `.shelf/.runtime/` are management/runtime state files. Confirm necessity before editing them.
 
 ## Do Not
 

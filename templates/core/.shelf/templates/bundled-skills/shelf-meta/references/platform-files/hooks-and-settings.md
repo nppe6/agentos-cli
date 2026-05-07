@@ -1,13 +1,13 @@
 # Hooks And Settings
 
-Hooks/settings are the entry layer that connects a platform to AgentOS Shelf. Current AgentOS Shelf CLI installs Claude Code and Codex session-start wiring, plus a Codex per-turn workflow-state hook. Implement/check agents still pull task context from `.shelf/tasks` before editing.
+Hooks/settings are the entry layer that connects a platform to AgentOS Shelf. Current AgentOS Shelf CLI installs Claude Code and Codex session-start wiring, plus a per-turn workflow-state hook for both platforms. Implement/check agents still pull task context from `.shelf/tasks` before editing.
 
 ## Settings Responsibilities
 
 settings/config files may register:
 
 - session-start hook: injects a AgentOS Shelf overview when a new session starts or context resets.
-- future workflow-state hooks.
+- future hook surfaces beyond the current SessionStart and UserPromptSubmit wiring.
 - future shell/session bridges.
 
 Common files:
@@ -24,6 +24,7 @@ Whether these files exist in a project depends on which tools were selected with
 | Script | Purpose |
 | --- | --- |
 | `.claude/hooks/shelf-session-start.py` | Prints a lightweight Claude Code reminder to read `AGENTS.md`, `.shelf/workflow.md`, and task context. |
+| `.claude/hooks/shelf-inject-workflow-state.py` | Emits a Claude UserPromptSubmit breadcrumb by parsing `[workflow-state:*]` blocks from `.shelf/workflow.md`. |
 | `.codex/hooks/shelf-session-start.py` | Emits Codex SessionStart context from `.shelf/scripts/get_context.py`. |
 | `.codex/hooks/shelf-inject-workflow-state.py` | Emits a Codex UserPromptSubmit breadcrumb from `.shelf/workflow.md` and the active task. |
 

@@ -11,12 +11,12 @@ Do not add documentation, settings, hooks, or path tables for another platform u
 
 | Capability | Codex | Claude Code |
 | --- | --- | --- |
-| Root entry file | `AGENTS.md` | `CLAUDE.md` |
+| Root entry file | `AGENTS.md` | `AGENTS.md` |
 | Shared skills | `.agents/skills/shelf-*` | `.claude/skills/shelf-*` |
 | Agents | `.codex/agents/shelf-*.toml` | `.claude/agents/shelf-*.md` |
 | User entry points | `.agents/skills/shelf-continue/`, `.agents/skills/shelf-finish-work/` | `.claude/commands/shelf/*.md` |
-| Hook behavior | SessionStart plus UserPromptSubmit hooks when Codex hooks are enabled globally | Lightweight `SessionStart` reminder |
-| Context loading | Hook breadcrumbs plus agent/skill pull | Agent/command pull plus startup reminder |
+| Hook behavior | SessionStart plus UserPromptSubmit hooks when Codex hooks are enabled globally | SessionStart plus UserPromptSubmit hooks through `.claude/settings.json` |
+| Context loading | Hook breadcrumbs plus agent/skill pull | Hook breadcrumbs plus agent/command pull |
 
 ## Context Loading Model
 
@@ -35,7 +35,7 @@ Implementation and check agents must keep this read order explicit in their agen
 The default CLI does not install:
 
 - other platform projections beyond Codex and Claude Code.
-- Claude sub-agent context injection hooks.
+- Claude sub-agent context injection hooks beyond the current SessionStart and workflow-state breadcrumb wiring.
 - Quality-loop hooks or worktree orchestration.
 
 If a user project has any of those directories, treat them as custom local files and inspect them directly before changing behavior.

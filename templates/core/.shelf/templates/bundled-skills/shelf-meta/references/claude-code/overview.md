@@ -1,18 +1,19 @@
 # Claude Code Projection
 
-AgentOS Shelf currently installs a lightweight Claude Code projection. It is intentionally smaller than Trellis-style heavy hook automation.
+AgentOS Shelf currently installs a Claude Code projection that follows the shared `.shelf/` workflow while keeping Claude-specific files under `.claude/`.
 
 ## Generated Files
 
 | Path | Purpose |
 | --- | --- |
-| `CLAUDE.md` | Thin entry file that points Claude Code to `AGENTS.md`. |
+| `AGENTS.md` | Shared root rules entry that Claude Code reads alongside `.claude/`. |
 | `.claude/skills/shelf-*` | Claude-local copies of Shelf skills. |
 | `.claude/agents/shelf-*.md` | Research, implement, and check agent definitions. |
 | `.claude/commands/shelf/continue.md` | Continue entry point. |
 | `.claude/commands/shelf/finish-work.md` | Finish-work entry point. |
 | `.claude/settings.json` | Registers the session-start hook. |
 | `.claude/hooks/shelf-session-start.py` | Prints a short reminder to read Shelf context. |
+| `.claude/hooks/shelf-inject-workflow-state.py` | Emits a per-turn workflow-state breadcrumb from `.shelf/workflow.md`. |
 
 ## Context Loading
 
@@ -26,7 +27,6 @@ The default install does not inject PRD/spec content into sub-agent prompts thro
 ## Not Installed By Default
 
 - sub-agent context injection hooks
-- per-turn workflow-state hook
 - quality-loop hook
 - worktree orchestration
 - dispatch agent

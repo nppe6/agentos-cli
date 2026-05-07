@@ -24,7 +24,7 @@ If the user feels the AI does not know the current task in a new session, first 
 
 ## workflow-state
 
-workflow-state blocks are the source for state-specific guidance in `.shelf/workflow.md`, such as `no_task`, `planning`, `in_progress`, or `completed`. The current CLI does not install a per-turn workflow-state hook; commands, skills, and agents should read `.shelf/workflow.md` directly.
+workflow-state blocks are the source for state-specific guidance in `.shelf/workflow.md`, such as `no_task`, `planning`, `in_progress`, or `completed`. The current CLI installs a per-turn workflow-state hook for both Codex and Claude Code, and the hook parses `.shelf/workflow.md` directly.
 
 If the user wants to change "what the AI should do next in a given state," edit the corresponding state block in `.shelf/workflow.md` first.
 
@@ -57,7 +57,7 @@ If shell commands cannot see the same context key, `task.py current --source` ma
 
 | Need | Edit location |
 | --- | --- |
-| Change session-start reminder content | `.claude/hooks/shelf-session-start.py`. |
+| Change session-start reminder content | `.claude/hooks/shelf-session-start.py` or `.codex/hooks/shelf-session-start.py`, depending on platform. |
 | Change workflow-state rules | `[workflow-state:STATUS]` block in `.shelf/workflow.md`. |
 | Change how sub-agents read context | Platform agent definitions or common command files. |
 | Change JSONL validation/display | `.shelf/scripts/common/task_context.py`. |

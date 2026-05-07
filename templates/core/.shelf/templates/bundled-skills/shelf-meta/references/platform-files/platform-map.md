@@ -7,7 +7,7 @@ This page lists current AgentOS Shelf file locations in a user project by platfo
 | Platform | CLI selection | Main directory | Skill directory | Agent directory | Hooks/commands |
 | --- | --- | --- | --- | --- | --- |
 | Claude Code | `--tools claude` | `.claude/` | `.claude/skills/` | `.claude/agents/` | `.claude/hooks/`, `.claude/settings.json`, `.claude/commands/shelf/` |
-| Codex | `--tools codex` | `.codex/` | `.agents/skills/` | `.codex/agents/` | `.codex/config.toml`, `.codex/hooks.json`, `.codex/hooks/` |
+| Codex | `--tools codex` | `.codex/` | `.agents/skills/` (shared), `.codex/skills/` (Codex-specific) | `.codex/agents/` | `.codex/config.toml`, `.codex/hooks.json`, `.codex/hooks/` |
 
 ## Capability Groups
 
@@ -18,6 +18,10 @@ Codex and Claude Code both receive `shelf-research`, `shelf-implement`, and `she
 ### Shared `.agents/skills/`
 
 Codex writes the shared `.agents/skills/` layer. Claude Code receives tool-scoped copies under `.claude/skills/`.
+
+### Codex `.codex/skills/`
+
+`.codex/skills/` is reserved for Codex-specific local skills. The current default Shelf projection creates the directory but does not duplicate shared skills into it.
 
 ## Decision Rules When Modifying Platform Files
 
