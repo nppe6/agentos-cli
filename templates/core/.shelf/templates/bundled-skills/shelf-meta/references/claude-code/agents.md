@@ -25,6 +25,6 @@ The default Claude projection does not inject agent context through hooks. Imple
 
 ## Changing Agents
 
-Edit `.claude/agents/shelf-*.md` for Claude-specific behavior. If Codex is also enabled, usually update the `.shelf/agents/` source and resync so Codex receives matching `.codex/agents/shelf-*.toml` files.
+Edit `.claude/agents/shelf-*.md` for Claude-specific behavior. If Codex is also enabled, either update both generated platform agents directly or add a project-local `.shelf/agents/` override source and resync so Codex receives matching `.codex/agents/shelf-*.toml` files.
 
 The default install does not include a dispatch agent or sub-agent context hook. Do not reference those files unless they exist as local customizations.

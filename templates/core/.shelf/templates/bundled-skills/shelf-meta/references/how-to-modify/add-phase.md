@@ -12,7 +12,7 @@ Add a new phase to the AgentOS Shelf task workflow.
 |------|--------|----------|
 | `.shelf/workflow.md` | Modify | Yes |
 | `.shelf/scripts/common/task_store.py` | Modify if task defaults change | Sometimes |
-| `.shelf/templates/common-commands/continue.md` | Modify if resume behavior changes | Sometimes |
+| generated continue entrypoints or upstream CLI common-command source | Modify if resume behavior changes | Sometimes |
 | Platform agent file | Create/modify if the phase uses an agent | Sometimes |
 | `shelf-local/SKILL.md` or project-local notes | Document | Recommended |
 
@@ -39,11 +39,7 @@ Keep task state simple. Prefer using existing task statuses (`planning`, `in_pro
 
 ## Step 3: Update Entry Points
 
-If `/shelf:continue` needs new routing, update the shared command source:
-
-- `.shelf/templates/common-commands/continue.md`
-
-Then regenerate or sync projections so Claude and Codex outputs stay aligned.
+If `/shelf:continue` needs new routing, update the generated continue entrypoints in the local project, or update the upstream CLI common-command source if you are changing Shelf itself.
 
 Do not update nonexistent `dispatch.md` or hook files. Current default Shelf flow uses workflow text plus pull-based agent definitions.
 

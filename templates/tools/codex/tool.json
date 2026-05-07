@@ -2,8 +2,10 @@
   "name": "codex",
   "entryFile": "AGENTS.md",
   "rootDir": ".codex",
+  "skillsDir": ".codex/skills",
   "agentsDir": ".codex/agents",
   "optionalDirs": [
+    ".codex/skills",
     ".codex/agents"
   ]
 }

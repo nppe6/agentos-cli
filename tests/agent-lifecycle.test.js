@@ -49,7 +49,8 @@ test('init writes manifest and template hashes for a single-tool install', async
   assert.equal(manifest.schemaVersion, 1);
   assert.deepEqual(manifest.tools, ['codex']);
   assert.match(manifest.generatedFiles.join('\n'), /AGENTS\.md/);
-  assert.doesNotMatch(manifest.generatedFiles.join('\n'), /\.codex\/skills\/shelf-brainstorm\/SKILL\.md/);
+  assert.match(manifest.generatedFiles.join('\n'), /\.codex\/skills\/brainstorm\/SKILL\.md/);
+  assert.match(manifest.generatedFiles.join('\n'), /\.codex\/skills\/start\/SKILL\.md/);
   assert.match(manifest.generatedFiles.join('\n'), /\.agents\/skills\/shelf-brainstorm\/SKILL\.md/);
   assert.match(manifest.generatedFiles.join('\n'), /\.agents\/skills\/shelf-meta\/SKILL\.md/);
   assert.match(manifest.generatedFiles.join('\n'), /\.codex\/agents\/shelf-implement\.toml/);
@@ -60,6 +61,7 @@ test('init writes manifest and template hashes for a single-tool install', async
   assert.doesNotMatch(manifest.generatedFiles.join('\n'), /\.agents\/skills\/shelf-start\/SKILL\.md/);
   assert.equal(hashes.schemaVersion, 1);
   assert.equal(typeof hashes.files['AGENTS.md'].hash, 'string');
+  assert.equal(typeof hashes.files['.codex/skills/brainstorm/SKILL.md'].hash, 'string');
   assert.equal(typeof hashes.files['.agents/skills/shelf-brainstorm/SKILL.md'].hash, 'string');
   assert.equal(typeof hashes.files['.agents/skills/shelf-meta/SKILL.md'].hash, 'string');
   assert.equal(typeof hashes.files['.codex/agents/shelf-implement.toml'].hash, 'string');
@@ -219,6 +221,12 @@ test('sync preserves user content outside the managed AGENTS block', async () =>
   const original = fs.readFileSync(agentsPath, 'utf8');
   fs.writeFileSync(agentsPath, `# Local Notes\n\nKeep this.\n\n${original}`, 'utf8');
   const sharedRulesPath = path.join(projectDirectory, '.shelf', 'rules', 'AGENTS.shared.md');
+  fs.mkdirSync(path.dirname(sharedRulesPath), { recursive: true });
+  fs.writeFileSync(
+    sharedRulesPath,
+    fs.readFileSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'rules', 'AGENTS.shared.md'), 'utf8'),
+    'utf8'
+  );
   fs.writeFileSync(
     sharedRulesPath,
     fs.readFileSync(sharedRulesPath, 'utf8').replace('<!-- SHELF:END -->', 'New source rule.\n\n<!-- SHELF:END -->'),
@@ -266,7 +274,14 @@ test('sync dry-run compares transformed Codex agent templates', async () => {
     tools: ['codex']
   }));
 
-  fs.appendFileSync(path.join(projectDirectory, '.shelf', 'agents', 'shelf-implement.md'), '\nSource agent update.\n', 'utf8');
+  const localAgentsDirectory = path.join(projectDirectory, '.shelf', 'agents');
+  fs.mkdirSync(localAgentsDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(localAgentsDirectory, 'shelf-implement.md'),
+    fs.readFileSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'agents', 'shelf-implement.md'), 'utf8'),
+    'utf8'
+  );
+  fs.appendFileSync(path.join(localAgentsDirectory, 'shelf-implement.md'), '\nSource agent update.\n', 'utf8');
 
   const result = await runSilently(() => agentSync(projectDirectory, { dryRun: true }));
 
@@ -308,6 +323,12 @@ test('sync dry-run classifies projection conflicts when source and user file bot
   }));
 
   const sharedRulesPath = path.join(projectDirectory, '.shelf', 'rules', 'AGENTS.shared.md');
+  fs.mkdirSync(path.dirname(sharedRulesPath), { recursive: true });
+  fs.writeFileSync(
+    sharedRulesPath,
+    fs.readFileSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'rules', 'AGENTS.shared.md'), 'utf8'),
+    'utf8'
+  );
   fs.writeFileSync(
     sharedRulesPath,
     fs.readFileSync(sharedRulesPath, 'utf8').replace('<!-- SHELF:END -->', 'New source rule.\n\n<!-- SHELF:END -->'),
@@ -413,7 +434,14 @@ test('update creates backups before applying projection changes', async () => {
     tools: ['codex']
   }));
 
-  fs.appendFileSync(path.join(projectDirectory, '.shelf', 'agents', 'shelf-research.md'), '\nUpdated research agent.\n', 'utf8');
+  const localAgentsDirectory = path.join(projectDirectory, '.shelf', 'agents');
+  fs.mkdirSync(localAgentsDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(localAgentsDirectory, 'shelf-research.md'),
+    fs.readFileSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'agents', 'shelf-research.md'), 'utf8'),
+    'utf8'
+  );
+  fs.appendFileSync(path.join(localAgentsDirectory, 'shelf-research.md'), '\nUpdated research agent.\n', 'utf8');
 
   const result = await runSilently(() => agentUpdate(projectDirectory));
 
@@ -495,6 +523,12 @@ test('update.skip prevents selected projection files from being rewritten', asyn
   fs.writeFileSync(path.join(projectDirectory, '.shelf', 'update.skip'), 'AGENTS.md\n', 'utf8');
   const before = fs.readFileSync(agentsPath, 'utf8');
   const sharedRulesPath = path.join(projectDirectory, '.shelf', 'rules', 'AGENTS.shared.md');
+  fs.mkdirSync(path.dirname(sharedRulesPath), { recursive: true });
+  fs.writeFileSync(
+    sharedRulesPath,
+    fs.readFileSync(path.join(__dirname, '..', 'templates', 'core', '.shelf', 'rules', 'AGENTS.shared.md'), 'utf8'),
+    'utf8'
+  );
   fs.writeFileSync(
     sharedRulesPath,
     fs.readFileSync(sharedRulesPath, 'utf8').replace('<!-- SHELF:END -->', 'Skipped source rule.\n\n<!-- SHELF:END -->'),

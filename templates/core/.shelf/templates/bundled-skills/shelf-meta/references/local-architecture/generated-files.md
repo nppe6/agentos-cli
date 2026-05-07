@@ -28,9 +28,9 @@ This page only describes files that are visible and editable inside the user pro
 | `.shelf/tasks/` | Yes | Task material and research artifacts, maintained by the task workflow. |
 | `.shelf/workspace/` | Yes | Session records, usually written by `add_session.py`. |
 | `.shelf/scripts/` | Carefully | Local runtime. It can be customized, but only after understanding the call chain. |
-| `.shelf/templates/common-skills/` | Carefully | Built-in workflow skill sources; change when you want generated built-in skill behavior to differ. |
-| `.shelf/templates/bundled-skills/` | Carefully | Built-in bundled skill sources such as `shelf-meta`. |
-| `.shelf/skills/` | Yes | Project-local custom skills, separate from built-in skill templates. |
+| `.shelf/skills/` | Yes | Optional project-local custom skills, separate from built-in package templates. |
+| `.shelf/agents/` | Yes | Optional project-local agent overrides for implement/check/research behavior. |
+| `.shelf/rules/` | Yes | Optional local managed-entry overrides such as `AGENTS.shared.md`. |
 | `.shelf/.runtime/` | No | Runtime state, usually written automatically by hooks/scripts. |
 | `.shelf/.developer` | Carefully | Current developer identity. |
 | `.shelf/.version` | No | AgentOS Shelf version record used by update/migration logic. |

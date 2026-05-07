@@ -9,9 +9,9 @@ This project is managed by AgentOS Shelf. The working knowledge you need lives u
 - `.shelf/spec/`: package- and layer-scoped coding guidelines; read relevant specs before writing code.
 - `.shelf/workspace/`: per-developer journals and session traces.
 - `.shelf/tasks/`: active and archived tasks, PRDs, research, and JSONL context.
-- `.shelf/templates/common-skills/` and `.shelf/templates/bundled-skills/`: built-in Shelf workflow skills and bundled meta skills.
-- `.shelf/skills/`: project-local custom skills that can still project into supported tools.
-- `.shelf/agents/`: optional project-scoped implement, check, and research agents.
+- `.shelf/scripts/`: local runtime scripts used by hooks, task commands, and context loading.
+- `.shelf/skills/` (optional): project-local custom skills that can still project into supported tools.
+- `.shelf/agents/` (optional): project-scoped implement, check, and research agent overrides.
 
 If an Shelf command or skill is available on your platform, prefer it over manual steps. Not every platform exposes every command.
 

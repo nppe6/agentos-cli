@@ -25,7 +25,7 @@ Do not edit upstream package files for a local project customization.
 
 ```markdown
 #### /shelf:my-command
-- **Files**: `.shelf/templates/common-commands/my-command.md`, plus generated platform outputs
+- **Files**: generated platform outputs, plus upstream CLI common-command source if this is a Shelf source change
 - **Purpose**:
 - **Reason**:
 - **Verification**:

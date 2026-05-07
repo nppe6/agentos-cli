@@ -10,14 +10,14 @@ Add a new `/shelf:my-command` command from the shared command source.
 
 | File | Action | Required |
 |------|--------|----------|
-| `.shelf/templates/common-commands/my-command.md` | Create | Yes |
+| `.claude/commands/shelf/my-command.md` and/or `.agents/skills/shelf-my-command/SKILL.md` | Create/update | Yes |
 | `shelf-local/SKILL.md` | Update | Yes |
 
 ---
 
-## Step 1: Create Common Command Source
+## Step 1: Create Or Update The Local Entry Files
 
-Create `.shelf/templates/common-commands/my-command.md`:
+Create the generated local file that matches your platform surface:
 
 ```markdown
 # My Command
@@ -49,14 +49,12 @@ What the command produces.
 
 ---
 
-## Step 2: Let Platform Projections Regenerate
+## Step 2: Keep Platforms Aligned
 
-After sync/init:
+- Claude uses `.claude/commands/shelf/my-command.md`
+- Codex can expose the same semantics through `.agents/skills/shelf-my-command/SKILL.md`
 
-- Claude projects get `.claude/commands/shelf/my-command.md`
-- Codex projects can expose the same semantics through `.agents/skills/shelf-my-command/SKILL.md`
-
-Keep the common source free of platform-specific frontmatter. The projection layer injects the right wrapper per platform.
+If you are modifying Shelf upstream rather than a single initialized project, change the CLI common-command source instead of these generated files.
 
 ---
 
@@ -70,7 +68,7 @@ Update `.claude/skills/shelf-local/SKILL.md`:
 ### Added Commands
 
 #### /shelf:my-command
-- **Source**: `.shelf/templates/common-commands/my-command.md`
+- **Source**: local generated platform files, or upstream CLI common-command source
 - **Platform output**: Claude command; Codex shared skill projection if enabled
 - **Purpose**: What it does
 - **Added**: 2026-01-31

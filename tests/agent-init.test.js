@@ -50,10 +50,17 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'workspace', 'README.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'workflow.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'scripts', 'task.py')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'templates')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'rules')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'agents')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'README.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'manifest.template.json')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'AGENTS.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
-  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'shelf-brainstorm', 'SKILL.md')), false);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'brainstorm', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'start', 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'skills', 'finish-work', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'SKILL.md')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'skills', 'shelf-meta', 'SKILL.md')), true);
@@ -86,7 +93,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   const claudeContent = fs.readFileSync(path.join(projectDirectory, 'CLAUDE.md'), 'utf8');
   assert.match(agentsContent, /<!-- SHELF:START -->/);
   assert.match(agentsContent, /\.shelf\/workflow\.md/);
-  assert.match(agentsContent, /\.shelf\/agents/);
+  assert.match(agentsContent, /\.shelf\/scripts/);
   assert.doesNotMatch(agentsContent, /shelf-project-context/);
   assert.match(claudeContent, /Follow `AGENTS\.md`/);
 
@@ -123,6 +130,8 @@ test('injects full Shelf workflow into a clean project', async () => {
   const shelfContinueSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-continue', 'SKILL.md'), 'utf8');
   const shelfFinishWorkSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-finish-work', 'SKILL.md'), 'utf8');
   const shelfBrainstormSkillContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-brainstorm', 'SKILL.md'), 'utf8');
+  const codexBrainstormSkillContent = fs.readFileSync(path.join(projectDirectory, '.codex', 'skills', 'brainstorm', 'SKILL.md'), 'utf8');
+  const codexStartSkillContent = fs.readFileSync(path.join(projectDirectory, '.codex', 'skills', 'start', 'SKILL.md'), 'utf8');
   const shelfMetaFilesContent = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-meta', 'references', 'core', 'files.md'), 'utf8');
   const workflowContent = fs.readFileSync(path.join(projectDirectory, '.shelf', 'workflow.md'), 'utf8');
   assert.match(codexImplementContent, /name = "shelf-implement"/);
@@ -161,8 +170,8 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(shelfBrainstormSkillContent, /^---\r?\nname: shelf-brainstorm\r?\ndescription:/);
   assert.match(shelfBrainstormSkillContent, /\$start/);
   assert.match(shelfBrainstormSkillContent, /\$update-spec/);
-  assert.match(shelfMetaFilesContent, /\.shelf\/templates\/common-skills\//);
-  assert.match(shelfMetaFilesContent, /\.shelf\/templates\/bundled-skills\//);
+  assert.match(codexBrainstormSkillContent, /^---\r?\nname: brainstorm\r?\ndescription:/);
+  assert.match(codexStartSkillContent, /^---\r?\nname: start\r?\ndescription:/);
   assert.match(shelfMetaFilesContent, /\.shelf\/skills\/` \| Project-local custom skills/);
   assert.match(workflowContent, /the AI should enter the workflow automatically/);
   assert.match(workflowContent, /do not ask the user to invoke `shelf-brainstorm`, `shelf-continue`, or another Shelf entrypoint first/);

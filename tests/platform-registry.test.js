@@ -44,9 +44,9 @@ test('platform registry describes Codex and Claude capabilities', () => {
   assert.equal(codex.capabilities.agentPullContext, true);
   assert.equal(codex.capabilities.hooks, true);
   assert.equal(codex.capabilities.settings, true);
-  assert.equal(codex.capabilities.toolScopedSkills, false);
+  assert.equal(codex.capabilities.toolScopedSkills, true);
   assert.equal(codex.rootDirectory, '.codex');
-  assert.equal(codex.skillsDirectory, null);
+  assert.equal(codex.skillsDirectory, '.codex/skills');
   assert.equal(claude.capabilities.hooks, true);
   assert.equal(claude.capabilities.agentPullContext, true);
   assert.equal(claude.capabilities.commands, true);
@@ -94,9 +94,10 @@ test('shared hook registry maps supported hooks by platform', () => {
 
 test('shared hook registry resolves real template files', () => {
   const agentOsDirectory = path.join(__dirname, '..', 'templates', 'core', '.shelf');
+  const sharedHooksDirectory = path.join(agentOsDirectory, 'templates', 'shared-hooks');
   const hooks = [
-    ...getSharedHookScriptsForPlatform('codex', agentOsDirectory),
-    ...getSharedHookScriptsForPlatform('claude', agentOsDirectory)
+    ...getSharedHookScriptsForPlatform('codex', { agentOsDirectory, sharedHooksDirectory }),
+    ...getSharedHookScriptsForPlatform('claude', { agentOsDirectory, sharedHooksDirectory })
   ];
 
   assert.equal(hooks.length, 3);

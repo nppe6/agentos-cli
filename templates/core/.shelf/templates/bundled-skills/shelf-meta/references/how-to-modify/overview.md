@@ -8,7 +8,7 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 
 | Task | Files to Modify | Platform |
 |------|-----------------|----------|
-| [Add slash command](#add-slash-command) | `.shelf/templates/common-commands/`, shelf-local | Codex/Claude |
+| [Add slash command](#add-slash-command) | generated platform files or upstream CLI common-command source, shelf-local | Codex/Claude |
 | [Add agent](#add-agent) | `.claude/agents/`, `.codex/agents/`, JSONL, shelf-local | Codex/Claude |
 | [Modify hook](#modify-hook) | `.claude/hooks/`, `.claude/settings.json`, shelf-local | Claude |
 | [Add spec category](#add-spec-category) | `.shelf/spec/`, JSONL, shelf-local | Codex/Claude |
@@ -30,7 +30,8 @@ Common AgentOS Shelf customization scenarios and what files need to be modified.
 **Files to modify**:
 
 ```
-.shelf/templates/common-commands/my-command.md   # Create: Shared command source
+.claude/commands/shelf/my-command.md             # Create/update generated local command
+.agents/skills/shelf-my-command/SKILL.md         # Create/update generated local shared skill
 .shelf-local/SKILL.md                            # Update: Document the change
 ```
 
