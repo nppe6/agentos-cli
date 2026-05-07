@@ -21,6 +21,10 @@ function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
+function writeJsonWithBom(filePath, value) {
+  fs.writeFileSync(filePath, `\uFEFF${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
 test('injects full Shelf workflow into a clean project', async () => {
   const projectDirectory = createTempProject();
   writeJson(path.join(projectDirectory, 'package.json'), {
@@ -101,7 +105,7 @@ test('injects full Shelf workflow into a clean project', async () => {
   const updateSpecSkill = fs.readFileSync(path.join(projectDirectory, '.agents', 'skills', 'shelf-update-spec', 'SKILL.md'), 'utf8');
   assert.match(updateSpecSkill, /Code-Spec First Rule/);
   assert.match(updateSpecSkill, /Mandatory Output \(7 Sections\)/);
-  assert.match(updateSpecSkill, /Code-specs are living documents/);
+  assert.match(updateSpecSkill, /Code-spec updates are NOT just for problems/);
   assert.match(updateSpecSkill, /\.shelf\/spec/);
   assert.doesNotMatch(updateSpecSkill, /\.trellis\/spec/);
   assert.doesNotMatch(updateSpecSkill, /Daily workflow rule/);
@@ -136,15 +140,16 @@ test('injects full Shelf workflow into a clean project', async () => {
   assert.match(codexSessionStartContent, /<task-status>/);
   assert.match(codexSessionStartContent, /\.shelf\/workflow\.md/);
   assert.match(codexSessionStartContent, /\.shelf\/spec/);
-  assert.match(codexSessionStartContent, /do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm`/);
+  assert.match(codexSessionStartContent, /Do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm` before you act\./);
   assert.match(codexSessionStartContent, /treat it as the default first-run flow/);
   assert.match(claudeSessionStartContent, /<workflow>/);
   assert.match(claudeSessionStartContent, /<guidelines>/);
   assert.match(claudeSessionStartContent, /<task-status>/);
-  assert.match(claudeSessionStartContent, /Do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm`/);
+  assert.match(claudeSessionStartContent, /Do not ask the user to invoke `shelf-start`, `shelf-continue`, or `shelf-brainstorm` before you act\./);
   assert.match(claudeWorkflowStateContent, /UserPromptSubmit/);
   assert.match(claudeWorkflowStateContent, /\.shelf\/workflow\.md/);
-  assert.match(claudeWorkflowStateContent, /shelf-brainstorm/);
+  assert.match(claudeWorkflowStateContent, /<workflow-state>/);
+  assert.match(claudeWorkflowStateContent, /Refer to \.shelf\/workflow\.md for the current step\./);
   assert.match(claudeContinueContent, /00-bootstrap-guidelines/);
   assert.match(claudeContinueContent, /python(?:3)? \.\/\.shelf\/scripts\/get_context\.py --mode phase --step <X\.X> --platform claude/);
   assert.match(shelfContinueSkillContent, /Bootstrap fast path/);
@@ -204,6 +209,25 @@ test('generates frontend-only bootstrap guidance for frontend projects', async (
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'frontend')), true);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'backend')), false);
   assert.equal(fs.existsSync(path.join(projectDirectory, '.shelf', 'spec', 'guides')), true);
+});
+
+test('accepts package.json files that include a UTF-8 BOM', async () => {
+  const projectDirectory = createTempProject();
+  writeJsonWithBom(path.join(projectDirectory, 'package.json'), {
+    name: 'bom-project',
+    dependencies: {
+      vue: '^3.0.0'
+    }
+  });
+
+  const result = await agentInit(projectDirectory, { stack: 'core', force: true, gitMode: 'track', tools: ['codex', 'claude'] });
+  const workflowContent = fs.readFileSync(path.join(projectDirectory, '.shelf', 'workflow.md'), 'utf8');
+
+  assert.equal(result.aborted, false);
+  assert.equal(result.projectType, 'frontend');
+  assert.match(workflowContent, /Development Workflow/);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.codex', 'hooks', 'shelf-session-start.py')), true);
+  assert.equal(fs.existsSync(path.join(projectDirectory, '.claude', 'commands', 'shelf', 'continue.md')), true);
 });
 
 test('generates backend-only bootstrap guidance for backend projects', async () => {
@@ -612,7 +636,7 @@ test('renders banner with accent logo, muted description, spacing, and developer
   assert.match(banner, /\x1b\[38;2;208;209;254m/);
   assert.match(banner, /  \x1b\[90mShared AI workflow memory for Codex & Claude Code\x1b\[0m/);
   assert.match(banner, /Developer:\x1b\[0m \x1b\[90mnppe6\x1b\[0m/);
-  assert.match(banner, /Code\x1b\[0m\n\n  \x1b\[38;2;208;209;254m👤 Developer:/);
+  assert.match(banner, /Code\x1b\[0m\n\n\x1b\[38;2;208;209;254m👤 Developer:/);
 });
 
 test('renders simple CLI lists as a readable tree', () => {

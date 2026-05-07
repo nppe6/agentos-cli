@@ -323,16 +323,16 @@ CLAUDE.md
 task create -> task start -> 自己写 prd -> 自己实现
 ```
 
-正确方式是在 AI 会话里说：
+正确方式是在 AI 会话里直接描述需求：
 
 ```text
-请使用 shelf-brainstorm 开始一个新需求：在 Vue 项目里新增用户设置页面。
+我要在 Vue 项目里新增用户设置页面，请按 Shelf 工作流处理。
 ```
 
 或者：
 
 ```text
-请按 Shelf 工作流处理这个需求：在 Vue 项目里新增用户设置页面。
+在 Vue 项目里新增用户设置页面。
 ```
 
 AI 应该按 `.shelf/workflow.md` 推进：
@@ -406,10 +406,10 @@ Trellis：
 .trellis/spec/frontend/
 ```
 
-可以让 AI 做：
+可以直接让 AI 继续 bootstrap：
 
 ```text
-请按 bootstrap-guidelines 任务，扫描当前 Vue 项目，把真实前端规范补充到 .shelf/spec/frontend/。
+请继续当前 bootstrap 任务，扫描当前 Vue 项目，把真实前端规范补充到 .shelf/spec/frontend/。
 重点包括目录结构、Vue 组件规范、Pinia 状态管理、API 请求方式、TypeScript 规则、测试和 lint 命令。
 ```
 
@@ -536,7 +536,7 @@ Shelf 在 Codex 中投影为共享技能入口：
 .agents/skills/shelf-finish-work/SKILL.md
 ```
 
-如果当前工具没有 slash command 入口，也可以直接对 AI 说：
+如果当前工具没有 slash command 入口，或者你想显式恢复/收尾，也可以直接对 AI 说：
 
 ```text
 请按 shelf-continue 继续当前任务。
@@ -597,10 +597,10 @@ agentos-cli shelf init --tools codex,claude --git-mode track -u XiaoSir
 开始任务：
 
 ```text
-请使用 shelf-brainstorm 开始一个新需求：新增用户设置页面。
+我要新增用户设置页面，请按 Shelf 工作流处理。
 ```
 
-继续任务：
+如果当前任务已经存在，但 AI 停住了或你想明确恢复流程：
 
 ```text
 请按 shelf-continue 继续当前任务。
@@ -679,9 +679,9 @@ Shelf / Trellis 不进入 Vue runtime。它们只是注入项目级 AI 工作流
 1. 准备一个真实 Vue 项目
 2. agentos-cli shelf init --tools codex,claude --git-mode track -u XiaoSir
 3. agentos-cli shelf doctor
-4. 让 AI 执行 00-bootstrap-guidelines
+4. 让 AI 继续当前 `00-bootstrap-guidelines` bootstrap 任务
 5. 把 .shelf/spec/frontend/ 补成真实 Vue 规范
-6. 让 AI 使用 shelf-brainstorm 开始一个小需求
+6. 直接描述一个小需求，让 AI 自动进入 Shelf workflow
 7. 确认 prd.md、implement.jsonl、check.jsonl 是否生成和被正确填写
 8. 让 AI 进入 shelf-implement
 9. 让 AI 进入 shelf-check
